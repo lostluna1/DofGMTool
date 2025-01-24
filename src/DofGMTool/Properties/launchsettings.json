@@ -1,0 +1,10 @@
+﻿{
+    "profiles": {
+      "DofGMTool (Package)": {
+        "commandName": "MsixPackage"
+      },
+      "DofGMTool (Unpackaged)": {
+        "commandName": "Project"
+      }
+    }
+}

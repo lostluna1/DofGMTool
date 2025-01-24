@@ -1,0 +1,98 @@
+﻿<Page
+    x:Class="DofGMTool.Views.InventoryManagePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:table="using:WinUI.TableView"
+    mc:Ignorable="d">
+
+    <Grid x:Name="ContentArea">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel
+            Grid.Row="0"
+            Orientation="Horizontal"
+            Style="{StaticResource StackPanelStyle}">
+            <TextBox Width="250" Header="物品ID" />
+            <AutoSuggestBox
+                Width="250"
+                Header="物品名称"
+                QueryIcon="Find" />
+            <ComboBox
+                Width="100"
+                Header="稀有度"
+                ItemsSource="{x:Bind ViewModel.RarityOptions}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Foreground="{Binding Color}" Text="{Binding Name}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Button Margin="15,0,0,0" Style="{StaticResource AccentButtonStyle}">
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="Find" />
+                    <TextBlock Margin="5,0,0,0" Text="查询" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        <StackPanel Grid.Row="1">
+            <Button
+                Margin="0,8,0,0"
+                Click="Button_Click"
+                Style="{StaticResource AccentButtonStyle}">
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="Add" />
+                    <TextBlock Margin="5,0,0,0" Text="从PVF导入" />
+                </StackPanel>
+            </Button>
+            <table:TableView
+                Height="500"
+                Margin="0,8,0,0"
+                AutoGenerateColumns="False"
+                IsReadOnly="True"
+                ItemsSource="{x:Bind ViewModel.InventoryItems, Mode=TwoWay}"
+                SelectedItem="{x:Bind ViewModel.SelectedInventoryItem, Mode=TwoWay}"
+                SelectionMode="Single"
+                SelectionUnit="Row">
+                <table:TableView.Columns>
+                    <table:TableViewTextColumn
+                        Width="200"
+                        Binding="{Binding ItemId}"
+                        Header="物品ID" />
+                    <table:TableViewTemplateColumn Width="200" Header="物品名称">
+                        <table:TableViewTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Foreground="{Binding ItemRarity.Color}" Text="{Binding ItemName}" />
+                            </DataTemplate>
+                        </table:TableViewTemplateColumn.CellTemplate>
+                    </table:TableViewTemplateColumn>
+                    <!--<table:TableViewTextColumn
+                        Width="200"
+                        Binding="{Binding ItemImportType}"
+                        Header="导入类型" />-->
+                    <table:TableViewTemplateColumn Width="200" Header="稀有度">
+                        <table:TableViewTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Foreground="{Binding ItemRarity.Color}" Text="{Binding ItemRarity.Name}" />
+                            </DataTemplate>
+                        </table:TableViewTemplateColumn.CellTemplate>
+                    </table:TableViewTemplateColumn>
+
+                    <table:TableViewTemplateColumn Width="200" Header="操作">
+                        <table:TableViewTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <HyperlinkButton Click="HyperlinkButton_Click" Content="删除" />
+                            </DataTemplate>
+                        </table:TableViewTemplateColumn.CellTemplate>
+                    </table:TableViewTemplateColumn>
+
+                </table:TableView.Columns>
+            </table:TableView>
+        </StackPanel>
+
+
+    </Grid>
+</Page>
