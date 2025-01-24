@@ -1,14 +1,10 @@
-﻿using System.Reflection;
-using System.Windows.Input;
-
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-
 using DofGMTool.Contracts.Services;
 using DofGMTool.Helpers;
-
 using Microsoft.UI.Xaml;
-
+using System.Reflection;
+using System.Windows.Input;
 using Windows.ApplicationModel;
 
 namespace DofGMTool.ViewModels;
@@ -51,7 +47,7 @@ public partial class SettingsViewModel : ObservableRecipient
 
         if (RuntimeHelper.IsMSIX)
         {
-            var packageVersion = Package.Current.Id.Version;
+            PackageVersion packageVersion = Package.Current.Id.Version;
 
             version = new(packageVersion.Major, packageVersion.Minor, packageVersion.Build, packageVersion.Revision);
         }

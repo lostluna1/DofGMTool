@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using DofGMTool.Activation;
+﻿using DofGMTool.Activation;
 using DofGMTool.Contracts.Services;
 using DofGMTool.Core.Contracts.Services;
 using DofGMTool.Core.Services;
@@ -11,6 +10,7 @@ using FreeSql;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
+using System.Diagnostics;
 using Windows.Storage;
 
 namespace DofGMTool;
@@ -96,10 +96,10 @@ public partial class App : Application
             };*/
             Func<IServiceProvider, IFreeSql<SqliteFlag>> fsqlSqlite = r =>
             {
-                var localFolder = ApplicationData.Current.LocalFolder.Path;
-                var sqlitePath = System.IO.Path.Combine(localFolder, "database.sqlite");
+                string localFolder = ApplicationData.Current.LocalFolder.Path;
+                string sqlitePath = System.IO.Path.Combine(localFolder, "database.sqlite");
 
-                var fsql2 = new FreeSqlBuilder().UseConnectionString(DataType.Sqlite, $"Data Source={sqlitePath};")
+                IFreeSql<SqliteFlag> fsql2 = new FreeSqlBuilder().UseConnectionString(DataType.Sqlite, $"Data Source={sqlitePath};")
                 .UseAdoConnectionPool(true)
                 .UseMonitorCommand(cmd => Debug.WriteLine($"Sql：{cmd.CommandText}"))
                 .Build<SqliteFlag>();
@@ -123,7 +123,7 @@ public partial class App : Application
     }
 
 
-    protected async override void OnLaunched(LaunchActivatedEventArgs args)
+    protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
         base.OnLaunched(args);
 

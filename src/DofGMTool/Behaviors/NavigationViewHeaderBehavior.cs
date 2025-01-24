@@ -52,7 +52,7 @@ public class NavigationViewHeaderBehavior : Behavior<NavigationView>
     {
         base.OnAttached();
 
-        var navigationService = App.GetService<INavigationService>();
+        INavigationService navigationService = App.GetService<INavigationService>();
         navigationService.Navigated += OnNavigated;
 
         _current = this;
@@ -62,7 +62,7 @@ public class NavigationViewHeaderBehavior : Behavior<NavigationView>
     {
         base.OnDetaching();
 
-        var navigationService = App.GetService<INavigationService>();
+        INavigationService navigationService = App.GetService<INavigationService>();
         navigationService.Navigated -= OnNavigated;
     }
 
@@ -81,7 +81,7 @@ public class NavigationViewHeaderBehavior : Behavior<NavigationView>
     {
         if (_currentPage != null)
         {
-            var headerMode = GetHeaderMode(_currentPage);
+            NavigationViewHeaderMode headerMode = GetHeaderMode(_currentPage);
             if (headerMode == NavigationViewHeaderMode.Never)
             {
                 AssociatedObject.Header = null;
@@ -89,7 +89,7 @@ public class NavigationViewHeaderBehavior : Behavior<NavigationView>
             }
             else
             {
-                var headerFromPage = GetHeaderContext(_currentPage);
+                object headerFromPage = GetHeaderContext(_currentPage);
                 if (headerFromPage != null)
                 {
                     AssociatedObject.Header = headerFromPage;
@@ -115,7 +115,7 @@ public class NavigationViewHeaderBehavior : Behavior<NavigationView>
     {
         if (_currentPage != null)
         {
-            var headerTemplate = GetHeaderTemplate(_currentPage);
+            DataTemplate headerTemplate = GetHeaderTemplate(_currentPage);
             AssociatedObject.HeaderTemplate = headerTemplate ?? DefaultHeaderTemplate;
         }
     }

@@ -1,8 +1,10 @@
-﻿using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using DofGMTool.Contracts.Services;
+using DofGMTool.Helpers;
 using DofGMTool.Models;
 using pvfLoaderXinyu;
+using System.Collections.ObjectModel;
 
 namespace DofGMTool.ViewModels;
 
@@ -34,10 +36,30 @@ public partial class InventoryManageViewModel : ObservableObject
         get; set;
     }
 
+    [ObservableProperty]
+    public partial int SelectedPageIndex { get; set; } = 1;
+    /// <summary>
+    /// 总页数
+    /// </summary>
+    [ObservableProperty]
+    public partial int NumberOfPages { get; set; } = 100;
+
+    [ObservableProperty]
+    public partial string ItemId { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string ItemName { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial RarityOption? SelectedRarityOption { get; set; }
+
     partial void OnSelectedInventoryItemChanged(Equipments? value)
     {
     }
-
+    partial void OnSelectedPageIndexChanged(int oldValue, int newValue)
+    {
+        _ = LoadDataAsync();
+    }
     public InventoryManageViewModel(IPvfExtensionsService pvfExtensionsService, IInventoryManageService inventoryManageService)
     {
         PvfExtensionsService = pvfExtensionsService;
@@ -53,20 +75,41 @@ public partial class InventoryManageViewModel : ObservableObject
         InventoryManageService = inventoryManageService;
 
         _ = LoadDataAsync();
+
+        PvfExtensionsService.PreLoadImagePacks();
     }
 
+    [RelayCommand]
+    private void ResetOption()
+    {
+        ItemId = string.Empty;
+        ItemName = string.Empty;
+        SelectedRarityOption = null;
+    }
+
+
+    [RelayCommand]
     public async Task LoadDataAsync()
     {
-        var equipments = await InventoryManageService.GetEquipmentData();
-        InventoryItems = equipments;
+        const int pageSize = 30;
+        (ObservableCollection<Equipments> Equipments, int TotalCount) result = await InventoryManageService.GetEquipmentDataPaged(SelectedPageIndex, pageSize, ItemId, ItemName, SelectedRarityOption);
+        InventoryItems = result.Equipments;
+        NumberOfPages = (int)Math.Ceiling((double)result.TotalCount / pageSize);
+
+        if (InventoryItems != null)
+        {
+            NPKHelper.GetBitMap(InventoryItems);
+
+        }
     }
 
     //[RelayCommand]
     public async Task LoadPvfCommandAsync(PvfFile pvfFilename)
     {
-        var equipments = await PvfExtensionsService.GetEquipments(pvfFilename);
-        InventoryItems = equipments;
+        ObservableCollection<Equipments> equipments = await PvfExtensionsService.GetEquipments(pvfFilename);
+        //InventoryItems = equipments;
         await InventoryManageService.InsertEquipmentData(equipments);
+
     }
 }
 

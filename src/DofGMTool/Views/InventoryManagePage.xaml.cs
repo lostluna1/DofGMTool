@@ -1,8 +1,8 @@
-﻿using System.Text;
-using DofGMTool.ViewModels;
+﻿using DofGMTool.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using pvfLoaderXinyu;
+using System.Text;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
 
@@ -51,13 +51,18 @@ public sealed partial class InventoryManagePage : Page
         filePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
         filePicker.FileTypeFilter.Add(".pvf");
 
-        var file = await filePicker.PickSingleFileAsync();
+        Windows.Storage.StorageFile file = await filePicker.PickSingleFileAsync();
         if (file != null)
         {
             pvfFilename = file.Path;
             using var pvf = new PvfFile(pvfFilename);
             await ViewModel.LoadPvfCommandAsync(pvf);
         }
+    }
+
+    private void PagerControl_SelectedIndexChanged(WinUICommunity.PagerControl sender, WinUICommunity.PagerControlSelectedIndexChangedEventArgs args)
+    {
+        ViewModel.SelectedPageIndex = args.NewPageIndex + 1;
     }
 }
 

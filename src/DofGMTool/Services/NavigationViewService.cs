@@ -1,10 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using DofGMTool.Contracts.Services;
+﻿using DofGMTool.Contracts.Services;
 using DofGMTool.Helpers;
 using DofGMTool.ViewModels;
-
 using Microsoft.UI.Xaml.Controls;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DofGMTool.Services;
 
@@ -74,14 +72,14 @@ public class NavigationViewService : INavigationViewService
 
     private NavigationViewItem? GetSelectedItem(IEnumerable<object> menuItems, Type pageType)
     {
-        foreach (var item in menuItems.OfType<NavigationViewItem>())
+        foreach (NavigationViewItem item in menuItems.OfType<NavigationViewItem>())
         {
             if (IsMenuItemForPageType(item, pageType))
             {
                 return item;
             }
 
-            var selectedChild = GetSelectedItem(item.MenuItems, pageType);
+            NavigationViewItem? selectedChild = GetSelectedItem(item.MenuItems, pageType);
             if (selectedChild != null)
             {
                 return selectedChild;

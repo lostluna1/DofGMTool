@@ -30,7 +30,9 @@
         </Grid>
         <NavigationView
             x:Name="NavigationViewControl"
+            CacheMode="BitmapCache"
             Canvas.ZIndex="0"
+            
             DisplayModeChanged="NavigationViewControl_DisplayModeChanged"
             ExpandedModeThresholdWidth="1280"
             Header="{x:Bind ((ContentControl)ViewModel.Selected).Content, Mode=OneWay}"

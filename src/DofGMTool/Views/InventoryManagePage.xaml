@@ -5,25 +5,37 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:table="using:WinUI.TableView"
+    xmlns:wuc="using:WinUICommunity"
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="0.8*" />
+            <RowDefinition Height="8*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel
             Grid.Row="0"
             Orientation="Horizontal"
             Style="{StaticResource StackPanelStyle}">
-            <TextBox Width="250" Header="物品ID" />
-            <AutoSuggestBox
+            <TextBox
+                Width="250"
+                Header="物品ID"
+                Text="{x:Bind ViewModel.ItemId, Mode=TwoWay}" />
+            <TextBox
                 Width="250"
                 Header="物品名称"
-                QueryIcon="Find" />
+                Text="{x:Bind ViewModel.ItemName, Mode=TwoWay}" />
+            <!--<AutoSuggestBox
+                Width="250"
+                Header="物品名称"
+                QueryIcon="Find" />-->
             <ComboBox
                 Width="100"
                 Header="稀有度"
+                
+                SelectedItem="{x:Bind ViewModel.SelectedRarityOption,Mode=TwoWay}"
                 ItemsSource="{x:Bind ViewModel.RarityOptions}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
@@ -31,68 +43,91 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            <Button Margin="15,0,0,0" Style="{StaticResource AccentButtonStyle}">
+            <Button
+                Margin="15,0,0,0"
+                Command="{x:Bind ViewModel.LoadDataCommand}"
+                Style="{StaticResource AccentButtonStyle}">
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Symbol="Find" />
                     <TextBlock Margin="5,0,0,0" Text="查询" />
                 </StackPanel>
             </Button>
-        </StackPanel>
-        <StackPanel Grid.Row="1">
             <Button
-                Margin="0,8,0,0"
-                Click="Button_Click"
-                Style="{StaticResource AccentButtonStyle}">
+                Margin="15,0,0,0"
+                Command="{x:Bind ViewModel.ResetOptionCommand}"
+                >
                 <StackPanel Orientation="Horizontal">
-                    <SymbolIcon Symbol="Add" />
-                    <TextBlock Margin="5,0,0,0" Text="从PVF导入" />
+                    <SymbolIcon Symbol="Refresh" />
+                    <TextBlock Margin="5,0,0,0" Text="重置" />
                 </StackPanel>
             </Button>
-            <table:TableView
-                Height="500"
-                Margin="0,8,0,0"
-                AutoGenerateColumns="False"
-                IsReadOnly="True"
-                ItemsSource="{x:Bind ViewModel.InventoryItems, Mode=TwoWay}"
-                SelectedItem="{x:Bind ViewModel.SelectedInventoryItem, Mode=TwoWay}"
-                SelectionMode="Single"
-                SelectionUnit="Row">
-                <table:TableView.Columns>
-                    <table:TableViewTextColumn
-                        Width="200"
-                        Binding="{Binding ItemId}"
-                        Header="物品ID" />
-                    <table:TableViewTemplateColumn Width="200" Header="物品名称">
-                        <table:TableViewTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Foreground="{Binding ItemRarity.Color}" Text="{Binding ItemName}" />
-                            </DataTemplate>
-                        </table:TableViewTemplateColumn.CellTemplate>
-                    </table:TableViewTemplateColumn>
-                    <!--<table:TableViewTextColumn
-                        Width="200"
-                        Binding="{Binding ItemImportType}"
-                        Header="导入类型" />-->
-                    <table:TableViewTemplateColumn Width="200" Header="稀有度">
-                        <table:TableViewTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Foreground="{Binding ItemRarity.Color}" Text="{Binding ItemRarity.Name}" />
-                            </DataTemplate>
-                        </table:TableViewTemplateColumn.CellTemplate>
-                    </table:TableViewTemplateColumn>
-
-                    <table:TableViewTemplateColumn Width="200" Header="操作">
-                        <table:TableViewTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <HyperlinkButton Click="HyperlinkButton_Click" Content="删除" />
-                            </DataTemplate>
-                        </table:TableViewTemplateColumn.CellTemplate>
-                    </table:TableViewTemplateColumn>
-
-                </table:TableView.Columns>
-            </table:TableView>
         </StackPanel>
-
+        <Button
+            Grid.Row="1"
+            Grid.RowSpan="1"
+            Margin="0,8,0,0"
+            Click="Button_Click"
+            Style="{StaticResource AccentButtonStyle}">
+            <StackPanel Orientation="Horizontal">
+                <SymbolIcon Symbol="Add" />
+                <TextBlock Margin="5,0,0,0" Text="从PVF导入" />
+            </StackPanel>
+        </Button>
+        <table:TableView
+            Grid.Row="2"
+            Margin="0,8,0,0"
+            AutoGenerateColumns="False"
+            IsReadOnly="True"
+            ItemsSource="{x:Bind ViewModel.InventoryItems, Mode=TwoWay}"
+            SelectedItem="{x:Bind ViewModel.SelectedInventoryItem, Mode=TwoWay}"
+            SelectionMode="Single"
+            SelectionUnit="Row">
+            <table:TableView.Columns>
+                <table:TableViewTextColumn
+                    Width="200"
+                    Binding="{Binding ItemId}"
+                    Header="物品ID" />
+                <table:TableViewTemplateColumn Width="*" Header="物品名称">
+                    <table:TableViewTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Image
+                                    Width="28"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Source="{Binding BitMap.UriSource.AbsoluteUri}" />
+                                <TextBlock
+                                    Margin="5,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Foreground="{Binding ItemRarity.Color}"
+                                    Text="{Binding ItemName}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </table:TableViewTemplateColumn.CellTemplate>
+                </table:TableViewTemplateColumn>
+                <table:TableViewTemplateColumn Width="200" Header="稀有度">
+                    <table:TableViewTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Foreground="{Binding ItemRarity.Color}" Text="{Binding ItemRarity.Name}" />
+                        </DataTemplate>
+                    </table:TableViewTemplateColumn.CellTemplate>
+                </table:TableViewTemplateColumn>
+                <table:TableViewTemplateColumn Width="200" Header="操作">
+                    <table:TableViewTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <HyperlinkButton Click="HyperlinkButton_Click" Content="删除" />
+                        </DataTemplate>
+                    </table:TableViewTemplateColumn.CellTemplate>
+                </table:TableViewTemplateColumn>
+            </table:TableView.Columns>
+        </table:TableView>
+        <wuc:PagerControl
+            x:Name="PagerControl"
+            Grid.Row="3"
+            DisplayMode="ComboBox"
+            NumberOfPages="{x:Bind ViewModel.NumberOfPages, Mode=TwoWay}"
+            SelectedIndexChanged="PagerControl_SelectedIndexChanged"
+            SelectedPageIndex="{x:Bind ViewModel.SelectedPageIndex}" />
 
     </Grid>
 </Page>

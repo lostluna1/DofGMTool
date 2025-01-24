@@ -35,11 +35,11 @@ public class HeaderTreeNode
         {
             fileNumber = BitConverter.ToUInt32(unpackedHeaderTree, offsite);
             filePathLength = BitConverter.ToInt32(unpackedHeaderTree, offsite + 4);
-            var filePath = new byte[filePathLength];
+            byte[] filePath = new byte[filePathLength];
             Array.Copy(unpackedHeaderTree, offsite + 8, filePath, 0, filePathLength);
-            fileLength = BitConverter.ToInt32(unpackedHeaderTree, (offsite + filePathLength) + 8);
-            fileCrc32 = BitConverter.ToUInt32(unpackedHeaderTree, (offsite + filePathLength) + 12);
-            relativeOffset = BitConverter.ToInt32(unpackedHeaderTree, (offsite + filePathLength) + 0x10);
+            fileLength = BitConverter.ToInt32(unpackedHeaderTree, offsite + filePathLength + 8);
+            fileCrc32 = BitConverter.ToUInt32(unpackedHeaderTree, offsite + filePathLength + 12);
+            relativeOffset = BitConverter.ToInt32(unpackedHeaderTree, offsite + filePathLength + 0x10);
             if (fileLength > 0)
             {
                 computedFileLength = (int)((fileLength + 3L) & 4294967292L);
@@ -47,7 +47,7 @@ public class HeaderTreeNode
                 fs.Seek(Marshal.SizeOf(typeof(PvfHeader)) + header.dirTreeLength + relativeOffset, SeekOrigin.Begin);
                 fs.Read(unpackedFileByteArr, 0, computedFileLength);
                 Util.UnpackHeaderTree(ref unpackedFileByteArr, computedFileLength, fileCrc32);
-                for (var i = 0; i < (computedFileLength - fileLength); i++)
+                for (int i = 0; i < (computedFileLength - fileLength); i++)
                 {
                     unpackedFileByteArr[fileLength + i] = 0;
                 }

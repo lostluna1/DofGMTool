@@ -1,12 +1,11 @@
-﻿using System.Collections.ObjectModel;
-using DofGMTool.Models;
+﻿using DofGMTool.Models;
 using pvfLoaderXinyu;
+using System.Collections.ObjectModel;
 
 namespace DofGMTool.Contracts.Services;
 public interface IPvfExtensionsService
 {
-
-
+    void PreLoadImagePacks();
     //List<string> GetPvfPart(List<string> orgStrs, string elementName, string endJugdeStr);
 
     /// <summary>
