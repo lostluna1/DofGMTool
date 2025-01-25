@@ -18,7 +18,7 @@ public partial class InventoryManageViewModel : ObservableObject
     {
         get;
     }
-    [ObservableProperty]
+    [ObservableProperty] // 比如这个可观察的集合,我只要修改它,前台UI就会自动更新
     public partial ObservableCollection<RarityOption>? RarityOptions
     {
         get; set;
@@ -103,7 +103,7 @@ public partial class InventoryManageViewModel : ObservableObject
 
         if (InventoryItems != null)
         {
-            //NPKHelper.GetBitMap(InventoryItems);
+            NPKHelper.GetBitMap(InventoryItems);
 
         }
     }

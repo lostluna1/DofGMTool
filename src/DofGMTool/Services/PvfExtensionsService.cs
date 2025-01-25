@@ -16,7 +16,7 @@ public class PvfExtensionsService : IPvfExtensionsService
     // 需要优化为仅加载当前需要的NPK
     public void PreLoadImagePacks()
     {
-        ImagePacks.ImagePacksPath = "D:\\DOF\\1031客户端\\ImagePacks2";
+        ImagePacks.ImagePacksPath = NPKHelper.LoadImagePacks2Path()??string.Empty;//"D:\\DOF\\ImagePacks2";
         if (string.IsNullOrWhiteSpace(ImagePacks.ImagePacksPath)) return;
         string[] files = Directory.GetFiles(ImagePacks.ImagePacksPath, "sprite_item*");
 

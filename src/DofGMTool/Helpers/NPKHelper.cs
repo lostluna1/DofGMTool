@@ -2,11 +2,14 @@
 using DofGMTool.Models;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System.Collections.ObjectModel;
+using Windows.Storage;
 
 namespace DofGMTool.Helpers;
 
 public static class NPKHelper
 {
+    private const string ImagePacks2PathKey = "ImagePacks2Path";
+    public static string? ImagePacks2Path { get; set; }
     public static BitmapImage? BitMap { get; set; }
 
     public static ObservableCollection<Equipments> EquipmentsCollection { get; set; } = new ObservableCollection<Equipments>();
@@ -89,4 +92,21 @@ public static class NPKHelper
         }
     }
 
+    public static void SaveImagePacks2Path(string path)
+    {
+        var localSettings = ApplicationData.Current.LocalSettings;
+        localSettings.Values[ImagePacks2PathKey] = path;
+        ImagePacks2Path = path;
+    }
+
+    public static string? LoadImagePacks2Path()
+    {
+        var localSettings = ApplicationData.Current.LocalSettings;
+        if (localSettings.Values.ContainsKey(ImagePacks2PathKey))
+        {
+            ImagePacks2Path = localSettings.Values[ImagePacks2PathKey] as string;
+            return ImagePacks2Path;
+        }
+        return null;
+    }
 }
