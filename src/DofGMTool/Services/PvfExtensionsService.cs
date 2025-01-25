@@ -12,6 +12,8 @@ namespace DofGMTool.Services;
 public class PvfExtensionsService : IPvfExtensionsService
 {
     private readonly ConcurrentDictionary<string, WeakReference<BitmapImage>> _imageCache = new();
+
+    // 需要优化为仅加载当前需要的NPK
     public void PreLoadImagePacks()
     {
         ImagePacks.ImagePacksPath = "D:\\DOF\\1031客户端\\ImagePacks2";
@@ -75,7 +77,7 @@ public class PvfExtensionsService : IPvfExtensionsService
         int total = itemArr.Count;
 
         var list = new ConcurrentBag<Equipments>();
-        IEnumerable<Task> tasks = itemArr.Select(async item =>
+        var tasks = itemArr.Select(async item =>
         {
             string[] arr = item.Split("\t", StringSplitOptions.RemoveEmptyEntries);
             if (arr.Length < 1)
@@ -98,8 +100,19 @@ public class PvfExtensionsService : IPvfExtensionsService
             }
 
             int index = eduInfos.IndexOf("[name]");
-            string name = eduInfos[index + 1].Replace("`", "").Replace($"<3::name_{id}", "").Replace(">", "");
+            if (index < 0 || index + 1 >= eduInfos.Count)
+            {
+                return;
+            }
+            //var index = eduInfos.IndexOf("[name]");
+            var name = eduInfos[index + 1].Replace("`", "");
+
             name = Encoding.GetEncoding("gb2312").GetString(_pvfEncoding.GetBytes(name));
+            /*string name = eduInfos[index + 1];
+            var sb = new StringBuilder(name);
+            sb.Replace("`", "").Replace($"<3::name_{id}", "").Replace(">", "");
+            name = Encoding.GetEncoding("gb2312").GetString(_pvfEncoding.GetBytes(name.ToString()));*/
+
             List<string> iconMark = GetPvfPart(eduInfos, "[icon]");
             if (iconMark.Count <= 0)
             {
@@ -139,6 +152,11 @@ public class PvfExtensionsService : IPvfExtensionsService
 
         await Task.WhenAll(tasks);
 
+        // 手动调用垃圾回收器
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+        pvf.Dispose();
         return new ObservableCollection<Equipments>(list);
     }
 

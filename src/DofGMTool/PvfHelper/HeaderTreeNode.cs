@@ -17,7 +17,6 @@ public struct PvfHeader
     public int numFilesInDirTree;//PVF文件总数
 }
 
-
 public class HeaderTreeNode
 {
     public byte[] unpackedFileByteArr;
@@ -47,12 +46,8 @@ public class HeaderTreeNode
                 fs.Seek(Marshal.SizeOf(typeof(PvfHeader)) + header.dirTreeLength + relativeOffset, SeekOrigin.Begin);
                 fs.Read(unpackedFileByteArr, 0, computedFileLength);
                 Util.UnpackHeaderTree(ref unpackedFileByteArr, computedFileLength, fileCrc32);
-                for (int i = 0; i < (computedFileLength - fileLength); i++)
-                {
-                    unpackedFileByteArr[fileLength + i] = 0;
-                }
+                Array.Clear(unpackedFileByteArr, fileLength, computedFileLength - fileLength);
             }
-            //filePathName = Encoding.GetEncoding("gb2312").GetString(filePath).TrimEnd(new char[1]);//CP949(韩语)
             filePathName = Encoding.GetEncoding(0x3b5).GetString(filePath).TrimEnd(new char[1]);//CP949(韩语)
             return filePathLength + 20;
         }

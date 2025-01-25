@@ -16,7 +16,6 @@ public static class NPKHelper
 
     public static List<NpkIndex>? _npkIndexes = new();
 
-    // 待优化，目前仅加载三十张图片就占用接近300MB内存
     public static void GetBitMap(ObservableCollection<Equipments> equipments)
     {
         // 懒得弄了，手动GC

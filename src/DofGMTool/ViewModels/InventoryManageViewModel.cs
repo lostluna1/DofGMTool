@@ -79,6 +79,11 @@ public partial class InventoryManageViewModel : ObservableObject
         PvfExtensionsService.PreLoadImagePacks();
     }
 
+    public async Task Delete(string id)
+    {
+        await InventoryManageService.DeleteEquipmentData(id);
+    }
+
     [RelayCommand]
     private void ResetOption()
     {
@@ -98,7 +103,7 @@ public partial class InventoryManageViewModel : ObservableObject
 
         if (InventoryItems != null)
         {
-            NPKHelper.GetBitMap(InventoryItems);
+            //NPKHelper.GetBitMap(InventoryItems);
 
         }
     }
@@ -107,9 +112,8 @@ public partial class InventoryManageViewModel : ObservableObject
     public async Task LoadPvfCommandAsync(PvfFile pvfFilename)
     {
         ObservableCollection<Equipments> equipments = await PvfExtensionsService.GetEquipments(pvfFilename);
-        //InventoryItems = equipments;
         await InventoryManageService.InsertEquipmentData(equipments);
-
+        await LoadDataAsync();
     }
 }
 

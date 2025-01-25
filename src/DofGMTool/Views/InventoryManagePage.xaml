@@ -34,9 +34,8 @@
             <ComboBox
                 Width="100"
                 Header="稀有度"
-                
-                SelectedItem="{x:Bind ViewModel.SelectedRarityOption,Mode=TwoWay}"
-                ItemsSource="{x:Bind ViewModel.RarityOptions}">
+                ItemsSource="{x:Bind ViewModel.RarityOptions}"
+                SelectedItem="{x:Bind ViewModel.SelectedRarityOption, Mode=TwoWay}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Foreground="{Binding Color}" Text="{Binding Name}" />
@@ -52,10 +51,7 @@
                     <TextBlock Margin="5,0,0,0" Text="查询" />
                 </StackPanel>
             </Button>
-            <Button
-                Margin="15,0,0,0"
-                Command="{x:Bind ViewModel.ResetOptionCommand}"
-                >
+            <Button Margin="15,0,0,0" Command="{x:Bind ViewModel.ResetOptionCommand}">
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Symbol="Refresh" />
                     <TextBlock Margin="5,0,0,0" Text="重置" />
@@ -115,11 +111,19 @@
                 <table:TableViewTemplateColumn Width="200" Header="操作">
                     <table:TableViewTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <HyperlinkButton Click="HyperlinkButton_Click" Content="删除" />
+                            <HyperlinkButton
+                                Click="HyperlinkButton_Click"
+                                Content="删除"
+                                Tag="{Binding}" />
                         </DataTemplate>
                     </table:TableViewTemplateColumn.CellTemplate>
                 </table:TableViewTemplateColumn>
             </table:TableView.Columns>
+            <!--<table:TableView.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="删除" Click="MenuFlyoutItem_Click" />
+                </MenuFlyout>
+            </table:TableView.ContextFlyout>-->
         </table:TableView>
         <wuc:PagerControl
             x:Name="PagerControl"

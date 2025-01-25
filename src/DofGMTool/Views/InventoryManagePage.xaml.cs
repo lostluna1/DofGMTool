@@ -1,4 +1,5 @@
-﻿using DofGMTool.ViewModels;
+﻿using DofGMTool.Models;
+using DofGMTool.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using pvfLoaderXinyu;
@@ -27,13 +28,19 @@ public sealed partial class InventoryManagePage : Page
 
     private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
     {
-        DeleteItem();
+        if (sender is HyperlinkButton button && button.Tag is Equipments equipment)
+        {
+            ViewModel.SelectedInventoryItem = equipment;
+            DeleteItem();
+        }
+        
     }
 
-    private void DeleteItem()
+    private async void DeleteItem()
     {
         if (ViewModel.SelectedInventoryItem != null && ViewModel.InventoryItems != null)
         {
+            await ViewModel.Delete(ViewModel.SelectedInventoryItem.Id);
             ViewModel.InventoryItems.Remove(ViewModel.SelectedInventoryItem);
         }
     }
@@ -57,6 +64,9 @@ public sealed partial class InventoryManagePage : Page
             pvfFilename = file.Path;
             using var pvf = new PvfFile(pvfFilename);
             await ViewModel.LoadPvfCommandAsync(pvf);
+            //GC.Collect();
+            //GC.WaitForPendingFinalizers();
+            //GC.Collect();
         }
     }
 
