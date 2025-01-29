@@ -5,6 +5,7 @@ using DofGMTool.Helpers;
 using DofGMTool.Models;
 using pvfLoaderXinyu;
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 
 namespace DofGMTool.ViewModels;
 
@@ -38,6 +39,9 @@ public partial class InventoryManageViewModel : ObservableObject
 
     [ObservableProperty]
     public partial int SelectedPageIndex { get; set; } = 1;
+
+    [ObservableProperty]
+    public partial bool IsLoading { get; set; } = false;
     /// <summary>
     /// 总页数
     /// </summary>
@@ -59,6 +63,8 @@ public partial class InventoryManageViewModel : ObservableObject
     partial void OnSelectedPageIndexChanged(int oldValue, int newValue)
     {
         _ = LoadDataAsync();
+        //var npkPaths = InventoryItems.Select(item => item.NpkPath).Where(path => !string.IsNullOrWhiteSpace(path));
+        //PvfExtensionsService.PreLoadImagePacks(npkPaths);
     }
     public InventoryManageViewModel(IPvfExtensionsService pvfExtensionsService, IInventoryManageService inventoryManageService)
     {
@@ -76,7 +82,8 @@ public partial class InventoryManageViewModel : ObservableObject
 
         _ = LoadDataAsync();
 
-        PvfExtensionsService.PreLoadImagePacks();
+
+
     }
 
     public async Task Delete(string id)
@@ -100,20 +107,47 @@ public partial class InventoryManageViewModel : ObservableObject
         (ObservableCollection<Equipments> Equipments, int TotalCount) result = await InventoryManageService.GetEquipmentDataPaged(SelectedPageIndex, pageSize, ItemId, ItemName, SelectedRarityOption);
         InventoryItems = result.Equipments;
         NumberOfPages = (int)Math.Ceiling((double)result.TotalCount / pageSize);
-
+        //foreach (var item in InventoryItems)
+        //{
+        //    if (!string.IsNullOrEmpty( item.SkillLevelUp))
+        //    {
+        //       var a = InventoryManageService.ParseSkillLevelUpInfo(item.SkillLevelUp);
+        //    }
+            
+        //}
         if (InventoryItems != null)
         {
-            NPKHelper.GetBitMap(InventoryItems);
-
+            //var npkPaths = InventoryItems.Select(item => item.NpkPath).Where(path => !string.IsNullOrWhiteSpace(path));
+            //PvfExtensionsService.PreLoadImagePacks();
+            //NPKHelper.GetBitMap(InventoryItems);
+            NPKHelper.GetBitMaps(InventoryItems);
+            
         }
     }
 
     //[RelayCommand]
     public async Task LoadPvfCommandAsync(PvfFile pvfFilename)
     {
+        IsLoading = true;
+        var skills = await PvfExtensionsService.AnalysisSkill(pvfFilename);
+        await InventoryManageService.InsertSkillData(skills);
         ObservableCollection<Equipments> equipments = await PvfExtensionsService.GetEquipments(pvfFilename);
+
+        PvfExtensionsService.PreLoadImagePacks();
+        NPKHelper.GetBitMap(equipments);
         await InventoryManageService.InsertEquipmentData(equipments);
         await LoadDataAsync();
+        /*await Task.Run(async() => {
+            var skills = await PvfExtensionsService.AnalysisSkill(pvfFilename);
+            await InventoryManageService.InsertSkillData(skills);
+            ObservableCollection<Equipments> equipments = await PvfExtensionsService.GetEquipments(pvfFilename);
+
+            PvfExtensionsService.PreLoadImagePacks();
+            NPKHelper.GetBitMap(equipments);
+            await InventoryManageService.InsertEquipmentData(equipments);
+            await LoadDataAsync();
+        });*/
+        IsLoading = false;
     }
 }
 

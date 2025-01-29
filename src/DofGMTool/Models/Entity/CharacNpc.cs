@@ -1,0 +1,26 @@
+﻿using FreeSql.DatabaseModel;using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using FreeSql.DataAnnotations;
+
+namespace DofGMTool.Models {
+
+	[JsonObject(MemberSerialization.OptIn), Table(Name = "charac_npc", DisableSyncStructure = true)]
+	public partial class CharacNpc {
+
+		[JsonProperty, Column(Name = "charac_no", IsPrimary = true)]
+		public int CharacNo { get; set; } = 0;
+
+		[JsonProperty, Column(Name = "npc_cnt")]
+		public byte NpcCnt { get; set; } = 0;
+
+		[JsonProperty, Column(Name = "npc_data", DbType = "blob")]
+		public byte[] NpcData { get; set; }
+
+	}
+
+}

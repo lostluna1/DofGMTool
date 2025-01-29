@@ -2,6 +2,7 @@
 using FreeSql.DataAnnotations;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+using System.Collections.ObjectModel;
 
 namespace DofGMTool.Models;
 
@@ -61,6 +62,22 @@ public partial class Equipments : ObservableObject
     {
         get; set;
     }
+    /// <summary>
+    /// 装备描述
+    /// </summary>
+    [ObservableProperty]
+    public partial string? DetailDescription
+    {
+        get; set;
+    }
+    /// <summary>
+    /// 趣味文本
+    /// </summary>
+    [ObservableProperty]
+    public partial string? FlavorText
+    {
+        get; set;
+    }
 
     /// <summary>
     /// 装备稀有度
@@ -108,6 +125,197 @@ public partial class Equipments : ObservableObject
             }
         }
     }
+
+    [ObservableProperty]
+    public partial int Grade
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial int MinimumLevel
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial int MagicalAttack
+    {
+        get; set;
+    }
+    [ObservableProperty]
+    public partial int PhysicalAttack
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial int? CastSpeed
+    {
+        get; set;
+    }
+    [ObservableProperty]
+    public partial int? AttackSpeed
+    {
+        get; set;
+    }
+    [ObservableProperty]
+    public partial int? MoveSpeed
+    {
+        get; set;
+    }
+    [ObservableProperty]
+    public partial int? HpMax
+    {
+        get; set;
+    }
+    [ObservableProperty]
+    public partial int? Stuck
+    {
+        get; set;
+    }
+    [ObservableProperty]
+    public partial int? MpMax
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial int Price
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial int? EquipmentPhysicalAttack
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial int? EquipmentMagicalAttack
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial int? SeparateAttack
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial int MagicalCriticalHit
+    {
+        get; set;
+    }
+
+
+    [ObservableProperty]
+    public partial int PhysicalCriticalHit
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial string? EquipmentType
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial int Weight
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial int? EquipmentPhysicalDefense
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial int? EquipmentMagicDefense
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial int MagicalDefense
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial int PhysicalDefense
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial string? UsableJob
+    {
+        get; set;
+    }
+    [ObservableProperty]
+    public partial string? LightAttack
+    {
+        get; set;
+    }
+    [ObservableProperty]
+    public partial string? FireAttack
+    {
+        get; set;
+    }
+    [ObservableProperty]
+    public partial string? WaterAttack
+    {
+        get; set;
+    }
+    [ObservableProperty]
+    public partial string? DarkAttack
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial string? AttachType
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial string? SubType
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial int Durability
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial string? ItemGroupName
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial string? ElementalProperty
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial string? SkillLevelUp { get; set; }
+    [ObservableProperty]
+    public partial ObservableCollection< SkillLevelUpInfo>? SkillLevelList { get; set; }
+
+    [ObservableProperty]
+    public partial ObservableCollection<Skill>? Skill { get; set; }
 }
 
 public static class ColorHelper

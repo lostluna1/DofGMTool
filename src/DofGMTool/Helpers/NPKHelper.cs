@@ -1,5 +1,6 @@
 ﻿using DofGMTool.Enums;
 using DofGMTool.Models;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System.Collections.ObjectModel;
 using Windows.Storage;
@@ -91,7 +92,22 @@ public static class NPKHelper
             selectedItem.BitMap = BitMap;
         }
     }
+    public static void GetBitMaps(ObservableCollection<Equipments> equipments)
+    {
+        foreach (var item in equipments)
+        {
+            string imgPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "ImagePacks");
+            imgPath = Path.Combine(imgPath, $"{item.ItemId}.png");
 
+            //if (File.Exists(imgPath))
+            {
+                BitMap = new BitmapImage(new Uri(imgPath));
+                item.BitMap = BitMap;
+                continue;
+            }
+            //item.BitMap = BitMap;
+        }
+    }
     public static void SaveImagePacks2Path(string path)
     {
         var localSettings = ApplicationData.Current.LocalSettings;

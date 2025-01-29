@@ -19,9 +19,9 @@ public class PvfFile : IDisposable
 
     public PvfFile(string file)
     {
-        headerTreeCache.Clear();
-        stringBinMap.Clear();
-        nStringMap.Clear();
+        //headerTreeCache.Clear();
+        //stringBinMap.Clear();
+        //nStringMap.Clear();
         fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read);
         header = (PvfHeader?)Util.ReadFileAsType(fs, typeof(PvfHeader)) ?? throw new InvalidOperationException("读取错误，格式非法");
 

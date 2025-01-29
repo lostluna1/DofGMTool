@@ -10,6 +10,7 @@ using FreeSql;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
+using MySql.Data.MySqlClient;
 using System.Diagnostics;
 using Windows.Storage;
 
@@ -87,13 +88,34 @@ public partial class App : Application
             services.AddTransient<MainPage>();
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
+            Func<IServiceProvider, IFreeSql<MySqlFlag>> fsqlMysql = r =>
+            {
+                var fsql1 = new FreeSqlBuilder().UseConnectionFactory(DataType.MySql, () =>
+                {
+                    var conn = new MySqlConnection("data source=192.168.200.131;port=3306;user id=game;password=uu5!^%jg;initial catalog=taiwan_cain;sslmode=none;max pool size=2;Charset=latin1;");
+                    conn.Open(); 
+                    var cmd = conn.CreateCommand();
+                    cmd.CommandText = "SET Charset latin1;";
+                    cmd.ExecuteNonQuery();
+                    return conn;
+                })
+                .UseMonitorCommand(cmd => Debug.WriteLine($"Sql：{cmd.CommandText}"))
+                .Build<MySqlFlag>();
+
+                return fsql1;
+            };
+
 
             /*Func<IServiceProvider, IFreeSql<MySqlFlag>> fsqlMysql = r =>
             {
-                var fsql1 = new FreeSqlBuilder().UseConnectionString(DataType.MySql, "str1")
-            .Build<MySqlFlag>();
+                string connectionString = "data source=192.168.200.131;port=3306;user id=game;password=uu5!^%jg;initial catalog=taiwan_cain;sslmode=none;max pool size=2;Charset=latin1;";
+
+                var fsql1 = new FreeSqlBuilder().UseConnectionString(DataType.MySql, connectionString)
+                .UseMonitorCommand(cmd => Debug.WriteLine($"Sql：{cmd.CommandText}"))
+                .Build<MySqlFlag>();
                 return fsql1;
             };*/
+
             Func<IServiceProvider, IFreeSql<SqliteFlag>> fsqlSqlite = r =>
             {
                 string localFolder = ApplicationData.Current.LocalFolder.Path;
@@ -105,8 +127,26 @@ public partial class App : Application
                 .Build<SqliteFlag>();
                 return fsql2;
             };
+            /*services.AddSingleton<ISqlSugarClient>(provider =>
+            {
+                var connectionString = "Server=192.168.200.131;Database=taiwan_cain;User Id=game;Password=uu5!^%jg;";
+                var db = new SqlSugarClient(new ConnectionConfig()
+                {
+                    ConnectionString = connectionString,
+                    DbType = DbType.MySql,
+                    IsAutoCloseConnection = true,
+                    InitKeyType = InitKeyType.Attribute
+                });
 
-            //services.AddSingleton<IFreeSql<MySqlFlag>>(fsqlMysql);
+                // 配置 SQL 监控
+                db.Aop.OnLogExecuting = (sql, pars) =>
+                {
+                    Debug.WriteLine($"Sql：{sql}");
+                };
+
+                return db;
+            });*/
+            services.AddSingleton<IFreeSql<MySqlFlag>>(fsqlMysql);
             services.AddSingleton<IFreeSql<SqliteFlag>>(fsqlSqlite);
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));

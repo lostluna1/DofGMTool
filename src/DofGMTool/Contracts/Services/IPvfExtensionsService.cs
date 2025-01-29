@@ -40,6 +40,12 @@ public interface IPvfExtensionsService
     void AnalysisJob(PvfFile pvf);
 
     /// <summary>
+    /// 解析技能
+    /// </summary>
+    /// <param name="pvf"></param>
+    Task<ObservableCollection<Skill>> AnalysisSkill(PvfFile pvf);
+
+    /// <summary>
     /// 解析任务
     /// </summary>
     /// <param name="pvf"></param>
