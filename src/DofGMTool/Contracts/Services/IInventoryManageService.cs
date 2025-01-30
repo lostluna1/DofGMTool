@@ -5,7 +5,7 @@ namespace DofGMTool.Contracts.Services;
 public interface IInventoryManageService
 {
     Task InsertEquipmentData(ObservableCollection<Equipments> equipments);
-    Task InsertSkillData(ObservableCollection<Skill> equipments);
+    Task InsertSkillData(ObservableCollection<SkillInfo> equipments);
 
     Task UpdateEquipmentData(ObservableCollection<Equipments> equipments);
 

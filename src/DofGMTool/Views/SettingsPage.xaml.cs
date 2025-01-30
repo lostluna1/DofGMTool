@@ -23,15 +23,17 @@ public sealed partial class SettingsPage : Page
 
     private async void Button_Click(object sender, RoutedEventArgs e)
     {
-        var picker = new FolderPicker();
-        picker.SuggestedStartLocation = PickerLocationId.Desktop;
+        var picker = new FolderPicker
+        {
+            SuggestedStartLocation = PickerLocationId.Desktop
+        };
         picker.FileTypeFilter.Add("*");
 
         // 获取当前窗口的句柄
-        var hwnd = WindowNative.GetWindowHandle(App.MainWindow);
+        nint hwnd = WindowNative.GetWindowHandle(App.MainWindow);
         InitializeWithWindow.Initialize(picker, hwnd);
 
-        var folder = await picker.PickSingleFolderAsync();
+        Windows.Storage.StorageFolder folder = await picker.PickSingleFolderAsync();
         if (folder != null)
         {
             NPKHelper.ImagePacks2Path = folder.Path;

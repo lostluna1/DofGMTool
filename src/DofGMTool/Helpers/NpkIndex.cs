@@ -22,7 +22,7 @@ public class NpkIndex
 
     public byte[] ImageDataBytes { get; private set; }
 
-    public List<ImageIndex> Images { get; } = new();
+    public List<ImageIndex> Images { get; } = [];
     public ImgData ImageData { get; }
 
     public NpkIndex()

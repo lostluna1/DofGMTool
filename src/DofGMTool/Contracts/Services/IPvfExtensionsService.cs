@@ -43,7 +43,7 @@ public interface IPvfExtensionsService
     /// 解析技能
     /// </summary>
     /// <param name="pvf"></param>
-    Task<ObservableCollection<Skill>> AnalysisSkill(PvfFile pvf);
+    Task<ObservableCollection<SkillInfo>> AnalysisSkill(PvfFile pvf);
 
     /// <summary>
     /// 解析任务

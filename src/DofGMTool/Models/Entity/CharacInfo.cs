@@ -1,6 +1,6 @@
 ﻿using FreeSql.DataAnnotations;
 using Newtonsoft.Json;
-//using SqlSugar;
+using SqlSugar;
 
 namespace DofGMTool.Models;
 
@@ -169,7 +169,7 @@ public partial class CharacInfo
 
 }
 
-/*
+
 [SugarTable("charac_info")]
 public partial class CharacInfoSqlSugar
 {
@@ -337,4 +337,4 @@ public partial class CharacInfoSqlSugar
     {
         get; set;
     }
-}*/
+}

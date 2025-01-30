@@ -5,7 +5,6 @@ using DofGMTool.Helpers;
 using DofGMTool.Models;
 using pvfLoaderXinyu;
 using System.Collections.ObjectModel;
-using System.Text.RegularExpressions;
 
 namespace DofGMTool.ViewModels;
 
@@ -113,7 +112,7 @@ public partial class InventoryManageViewModel : ObservableObject
         //    {
         //       var a = InventoryManageService.ParseSkillLevelUpInfo(item.SkillLevelUp);
         //    }
-            
+
         //}
         if (InventoryItems != null)
         {
@@ -121,7 +120,7 @@ public partial class InventoryManageViewModel : ObservableObject
             //PvfExtensionsService.PreLoadImagePacks();
             //NPKHelper.GetBitMap(InventoryItems);
             NPKHelper.GetBitMaps(InventoryItems);
-            
+
         }
     }
 
@@ -129,7 +128,7 @@ public partial class InventoryManageViewModel : ObservableObject
     public async Task LoadPvfCommandAsync(PvfFile pvfFilename)
     {
         IsLoading = true;
-        var skills = await PvfExtensionsService.AnalysisSkill(pvfFilename);
+        ObservableCollection<SkillInfo> skills = await PvfExtensionsService.AnalysisSkill(pvfFilename);
         await InventoryManageService.InsertSkillData(skills);
         ObservableCollection<Equipments> equipments = await PvfExtensionsService.GetEquipments(pvfFilename);
 

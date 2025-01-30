@@ -1,6 +1,5 @@
 ﻿using DofGMTool.Enums;
 using DofGMTool.Models;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System.Collections.ObjectModel;
 using Windows.Storage;
@@ -13,12 +12,12 @@ public static class NPKHelper
     public static string? ImagePacks2Path { get; set; }
     public static BitmapImage? BitMap { get; set; }
 
-    public static ObservableCollection<Equipments> EquipmentsCollection { get; set; } = new ObservableCollection<Equipments>();
+    public static ObservableCollection<Equipments> EquipmentsCollection { get; set; } = [];
 
     public static bool DetailIsOpen { get; set; }
     public static string? DetailInfo { get; set; }
 
-    public static List<NpkIndex>? _npkIndexes = new();
+    public static List<NpkIndex>? _npkIndexes = [];
 
     public static void GetBitMap(ObservableCollection<Equipments> equipments)
     {
@@ -94,7 +93,7 @@ public static class NPKHelper
     }
     public static void GetBitMaps(ObservableCollection<Equipments> equipments)
     {
-        foreach (var item in equipments)
+        foreach (Equipments item in equipments)
         {
             string imgPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "ImagePacks");
             imgPath = Path.Combine(imgPath, $"{item.ItemId}.png");
@@ -110,14 +109,14 @@ public static class NPKHelper
     }
     public static void SaveImagePacks2Path(string path)
     {
-        var localSettings = ApplicationData.Current.LocalSettings;
+        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         localSettings.Values[ImagePacks2PathKey] = path;
         ImagePacks2Path = path;
     }
 
     public static string? LoadImagePacks2Path()
     {
-        var localSettings = ApplicationData.Current.LocalSettings;
+        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         if (localSettings.Values.ContainsKey(ImagePacks2PathKey))
         {
             ImagePacks2Path = localSettings.Values[ImagePacks2PathKey] as string;

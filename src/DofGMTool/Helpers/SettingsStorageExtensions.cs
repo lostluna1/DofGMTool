@@ -51,12 +51,7 @@ public static class SettingsStorageExtensions
     {
         object? obj;
 
-        if (settings.Values.TryGetValue(key, out obj))
-        {
-            return await Json.ToObjectAsync<T>((string)obj);
-        }
-
-        return default;
+        return settings.Values.TryGetValue(key, out obj) ? await Json.ToObjectAsync<T>((string)obj) : default;
     }
 
     public static async Task<StorageFile> SaveFileAsync(this StorageFolder folder, byte[] content, string fileName, CreationCollisionOption options = CreationCollisionOption.ReplaceExisting)

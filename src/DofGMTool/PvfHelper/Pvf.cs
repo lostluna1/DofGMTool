@@ -1,6 +1,4 @@
-using System.Diagnostics;
 using System.Text;
-using Windows.Foundation.Collections;
 
 namespace pvfLoaderXinyu;
 
@@ -8,9 +6,9 @@ public class PvfFile : IDisposable
 {
     private PvfHeader header;
     private readonly FileStream fs;
-    public Dictionary<string, HeaderTreeNode> headerTreeCache = new();
-    public Dictionary<int, string> stringBinMap = new();
-    public Dictionary<string, string> nStringMap = new();
+    public Dictionary<string, HeaderTreeNode> headerTreeCache = [];
+    public Dictionary<int, string> stringBinMap = [];
+    public Dictionary<string, string> nStringMap = [];
 
     static PvfFile()
     {
@@ -68,7 +66,7 @@ public class PvfFile : IDisposable
             if (unpackedFileByteArr.Length - i >= 10)
             {
                 string k = stringBinMap[BitConverter.ToInt32(unpackedFileByteArr, i + 6)];
-                if (headerTreeCache.TryGetValue(k.ToLower().Trim(), out var node))
+                if (headerTreeCache.TryGetValue(k.ToLower().Trim(), out HeaderTreeNode? node))
                 {
                     string full = Encoding.GetEncoding("BIG5").GetString(node.unpackedFileByteArr).TrimEnd(new char[1]);
                     foreach (string line in full.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
@@ -88,18 +86,14 @@ public class PvfFile : IDisposable
 
     public string? GetPvfFileByPath(string path, Encoding encoding)
     {
-        if (headerTreeCache.TryGetValue(path.ToLower().Trim(), out var node))
-        {
-            return GetPvfFileByPath(node, encoding);
-        }
-        return null;
+        return headerTreeCache.TryGetValue(path.ToLower().Trim(), out HeaderTreeNode? node) ? GetPvfFileByPath(node, encoding) : null;
     }
 
     public string GetPvfFileByPath(HeaderTreeNode node, Encoding encoding)
     {
         byte[] unpackedStrBytes = node.unpackedFileByteArr;
         int strpos = 0;
-        Dictionary<int, byte[]> arr = new();
+        Dictionary<int, byte[]> arr = [];
         byte[] bts = encoding.GetBytes("#PVF_File\r\n");
         arr.Add(strpos, bts);
         strpos = bts.Length;
@@ -155,7 +149,7 @@ public class PvfFile : IDisposable
         }
 
         byte[] bytes = new byte[strpos];
-        foreach (var kvp in arr)
+        foreach (KeyValuePair<int, byte[]> kvp in arr)
         {
             Array.Copy(kvp.Value, 0, bytes, kvp.Key, kvp.Value.Length);
         }

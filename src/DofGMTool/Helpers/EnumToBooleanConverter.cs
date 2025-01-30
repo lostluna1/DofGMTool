@@ -28,11 +28,8 @@ public class EnumToBooleanConverter : IValueConverter
 
     public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
-        if (parameter is string enumString)
-        {
-            return Enum.Parse(typeof(ElementTheme), enumString);
-        }
-
-        throw new ArgumentException("ExceptionEnumToBooleanConverterParameterMustBeAnEnumName");
+        return parameter is string enumString
+            ? Enum.Parse(typeof(ElementTheme), enumString)
+            : throw new ArgumentException("ExceptionEnumToBooleanConverterParameterMustBeAnEnumName");
     }
 }

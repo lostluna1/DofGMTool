@@ -2,13 +2,390 @@
     x:Class="DofGMTool.Views.CharacterManagePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:DofGMTool.Helpers"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:table ="using:WinUI.TableView"
+    xmlns:table="using:WinUI.TableView"
+    xmlns:wuc="using:WinUICommunity"
     mc:Ignorable="d">
+    <Page.Resources>
+        <!--  判断字符串是否为空转换为可见性的转换器  -->
+        <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
+        <!--  重量转换为千克的转换器  -->
+        <converters:WeightToKgConverter x:Key="WeightToKgConverter" />
+        <!--  换行符转换为换行符的转换器  -->
+        <converters:NewlineToBreakConverter x:Key="NewlineToBreakConverter" />
+        <!--  整数转换为速度的转换器  -->
+        <converters:IntSpeedConverter x:Key="IntSpeedConverter" />
+        <!--  属性转换为颜色的转换器  -->
+        <converters:AttributeToColorConverter x:Key="AttributeToColorConverter" />
+        <!--  整数转换为可见性的转换器  -->
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
+        <!--  定义ToolTip的DataTemplate  -->
+        <DataTemplate x:Key="ItemToolTipTemplate">
+            <ToolTip x:Name="ItemToolTip" Opened="ItemToolTip_Opened">
+                <ToolTip.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="F4" Invoked="KeyboardAccelerator_Invoked" />
+                </ToolTip.KeyboardAccelerators>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Image
+                            Width="28"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Source="{Binding BitMap.UriSource.AbsoluteUri}" />
+                        <StackPanel Orientation="Horizontal">
+                            <!--  这里先随便用个转换器，后面再改成如果是0则设置不可见  -->
+                            <TextBlock
+                                Margin="8,0,0,0"
+                                VerticalAlignment="Center"
+                                Foreground="{Binding ItemRarity.Color}"
+                                Visibility="{Binding EquipSlot.EnhancementLevel, Converter={StaticResource IntSpeedConverter}}">
+                                <Run Text="+" />
+                                <Run Text="{Binding EquipSlot.EnhancementLevel}" />
+                            </TextBlock>
+                            <TextBlock
+                                Margin="8,0,0,0"
+                                VerticalAlignment="Center"
+                                Foreground="{Binding ItemRarity.Color}">
+
+                                <Run Text="{Binding ItemName}" />
+                            </TextBlock>
+                        </StackPanel>
+
+                    </StackPanel>
+                    <wuc:Divider />
+                    <TextBlock
+                        HorizontalAlignment="Right"
+                        Foreground="{Binding ItemRarity.Color}"
+                        Text="{Binding ItemRarity.Name}" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding Weight, Converter={StaticResource WeightToKgConverter}}" />
+                        <StackPanel
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                            <TextBlock Text="{Binding Price}" />
+                            <TextBlock>金币</TextBlock>
+                        </StackPanel>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding ItemGroupName}" />
+                        <TextBlock
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            Text="{Binding EquipmentType}" />
+                    </Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding UsableJob}" />
+                        <TextBlock>可使用</TextBlock>
+                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel
+                            Grid.Column="0"
+                            Orientation="Horizontal"
+                            Visibility="{Binding Durability, Converter={StaticResource StringToVisibilityConverter}}">
+                            <TextBlock Text="耐久度 :" />
+                            <TextBlock Text="{Binding Durability}" />
+                        </StackPanel>
+                        <TextBlock
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            Text="{Binding AttachType}" />
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                            <TextBlock Foreground="Red" Text="Lv" />
+                            <TextBlock Foreground="Red" Text="{Binding MinimumLevel}" />
+                            <TextBlock Foreground="Red">以上可以使用</TextBlock>
+                        </StackPanel>
+                        <TextBlock
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            Foreground="Gold"
+                            Text="最上级" />
+                    </Grid>
+                    <TextBlock Visibility="{Binding EquipmentPhysicalAttack, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Text="物理攻击力 +" />
+                        <Run Text="{Binding EquipmentPhysicalAttack}" />
+                    </TextBlock>
+                    <TextBlock Visibility="{Binding EquipmentMagicalAttack, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Text="魔法攻击力 +" />
+                        <Run Text="{Binding EquipmentMagicalAttack}" />
+                    </TextBlock>
+                    <TextBlock Visibility="{Binding SeparateAttack, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Text="独立攻击力 +" />
+                        <Run Text="{Binding SeparateAttack}" />
+                    </TextBlock>
+                    <TextBlock Visibility="{Binding EquipmentPhysicalDefense, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Text="物理防御力 +" />
+                        <Run Text="{Binding EquipmentPhysicalDefense}" />
+                    </TextBlock>
+                    <TextBlock Visibility="{Binding EquipmentMagicDefense, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Text="魔法防御力 +" />
+                        <Run Text="{Binding EquipmentMagicDefense}" />
+                    </TextBlock>
+                    <TextBlock Visibility="{Binding MagicalAttack, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Text="智力 +" />
+                        <Run Text="{Binding MagicalAttack}" />
+                    </TextBlock>
+                    <TextBlock Visibility="{Binding PhysicalAttack, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Text="力量 +" />
+                        <Run Text="{Binding PhysicalAttack}" />
+                    </TextBlock>
+                    <TextBlock Visibility="{Binding MagicalDefense, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Text="精神 +" />
+                        <Run Text="{Binding MagicalDefense}" />
+                    </TextBlock>
+                    <TextBlock Visibility="{Binding PhysicalDefense, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Text="体力 +" />
+                        <Run Text="{Binding PhysicalDefense}" />
+                    </TextBlock>
+                    <TextBlock Visibility="{Binding DarkAttack, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Foreground="Purple" Text="暗属性强化" />
+                        <Run Text="{Binding DarkAttack}" />
+                    </TextBlock>
+                    <TextBlock Visibility="{Binding WaterAttack, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Foreground="CornflowerBlue" Text="冰属性强化" />
+                        <Run Text="{Binding WaterAttack}" />
+                    </TextBlock>
+                    <TextBlock Visibility="{Binding FireAttack, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Foreground="Red" Text="火属性强化" />
+                        <Run Text="{Binding FireAttack}" />
+                    </TextBlock>
+                    <TextBlock Visibility="{Binding LightAttack, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Foreground="LightSkyBlue" Text="光属性强化" />
+                        <Run Text="{Binding LightAttack}" />
+                    </TextBlock>
+                    <TextBlock Visibility="{Binding PhysicalCriticalHit, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Text="物理暴击率 +" />
+                        <Run Text="{Binding PhysicalCriticalHit}" />
+                        <Run Text="%" />
+                    </TextBlock>
+                    <TextBlock Visibility="{Binding MagicalCriticalHit, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Text="魔法暴击率 +" />
+                        <Run Text="{Binding MagicalCriticalHit}" />
+                        <Run Text="%" />
+                    </TextBlock>
+                    <wuc:Divider />
+                    <TextBlock Foreground="CornflowerBlue" Visibility="{Binding HpMax, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Text="HP 最大值 +" />
+                        <Run Text="{Binding HpMax}" />
+                    </TextBlock>
+                    <TextBlock Foreground="CornflowerBlue" Visibility="{Binding MpMax, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Text="MP 最大值 +" />
+                        <Run Text="{Binding MpMax}" />
+                    </TextBlock>
+                    <TextBlock Visibility="{Binding ElementalProperty, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Foreground="{Binding ElementalProperty, Converter={StaticResource AttributeToColorConverter}}" Text="{Binding ElementalProperty}" />
+                        <Run Text="攻击" />
+                    </TextBlock>
+                    <TextBlock Foreground="CornflowerBlue" Visibility="{Binding AttackSpeed, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Text="攻击速度 +" />
+                        <Run Text="{Binding AttackSpeed, Converter={StaticResource IntSpeedConverter}}" />
+                    </TextBlock>
+                    <TextBlock Foreground="CornflowerBlue" Visibility="{Binding MoveSpeed, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Text="移动速度 +" />
+                        <Run Text="{Binding MoveSpeed, Converter={StaticResource IntSpeedConverter}}" />
+                    </TextBlock>
+                    <TextBlock Foreground="CornflowerBlue" Visibility="{Binding CastSpeed, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Text="施放速度 +" />
+                        <Run Text="{Binding CastSpeed, Converter={StaticResource IntSpeedConverter}}" />
+                    </TextBlock>
+                    <TextBlock Foreground="CornflowerBlue" Visibility="{Binding Stuck, Converter={StaticResource StringToVisibilityConverter}}">
+                        <Run Text="命中率减少" />
+                        <Run Text="{Binding Stuck}" />
+                        <Run Text="%" />
+                    </TextBlock>
+                    <StackPanel Orientation="Horizontal">
+                        <ItemsControl ItemsSource="{Binding Skill}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock>
+                                            <Run Text="[" />
+                                            <Run Foreground="OrangeRed" Text="{Binding Name}" />
+                                            <Run Text="]" />
+                                            <Run Text="(" />
+                                            <Run Text="{Binding SourceList}" />
+                                            <Run Text=")" />
+                                            <Run Text="技能等级" />
+                                        </TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <ItemsControl ItemsSource="{Binding SkillLevelList}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock>
+                                            <Run Text="+" />
+                                            <Run Foreground="DarkOrange" Text="{Binding LevelUp}" />
+                                        </TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                    <TextBlock
+                        x:Name="ItemDesc"
+                        Foreground="CornflowerBlue"
+                        Text="{Binding Description, Converter={StaticResource NewlineToBreakConverter}}"
+                        TextWrapping="Wrap"
+                        Visibility="{Binding Description, Converter={StaticResource StringToVisibilityConverter}}" />
+                    <TextBlock
+                        x:Name="ItemDescDTL"
+                        Foreground="CornflowerBlue"
+                        Text="{Binding DetailDescription, Converter={StaticResource NewlineToBreakConverter}}"
+                        TextWrapping="Wrap"
+                        Visibility="Collapsed" />
+                    <wuc:Divider Visibility="{Binding FlavorText, Converter={StaticResource StringToVisibilityConverter}}" />
+                    <TextBlock
+                        Foreground="DarkGray"
+                        Text="{Binding FlavorText, Converter={StaticResource NewlineToBreakConverter}}"
+                        TextWrapping="Wrap"
+                        Visibility="{Binding FlavorText, Converter={StaticResource StringToVisibilityConverter}}" />
+                    <TextBlock
+                        x:Name="ShowDtl"
+                        HorizontalAlignment="Center"
+                        Visibility="{Binding DetailDescription, Converter={StaticResource StringToVisibilityConverter}}">
+                        查看详细说明(F4)
+                    </TextBlock>
+                </StackPanel>
+            </ToolTip>
+        </DataTemplate>
+    </Page.Resources>
     <Grid x:Name="ContentArea">
-        <TextBlock Text="CharacterManagePage" />
-		<!--<table:TableView ItemsSource="{x:Bind ViewModel.CharacInfo}" />-->
-	</Grid> 
+        <Canvas>
+            <Image Canvas.ZIndex="0" Source="ms-appx:///Assets/inventory.png" />
+            <Image
+                x:Name="护肩"
+                Canvas.Left="4"
+                Canvas.Top="4"
+                Width="28"
+                Height="28"
+                Source="{x:Bind ViewModel.Shoulder.BitMap.UriSource.AbsoluteUri}">
+                <ToolTipService.ToolTip>
+                    <ContentControl Content="{x:Bind ViewModel.Shoulder}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                </ToolTipService.ToolTip>
+            </Image>
+            <Image
+                x:Name="上衣"
+                Canvas.Left="36"
+                Canvas.Top="4"
+                Width="28"
+                Height="28"
+                Source="{x:Bind ViewModel.Jacket.BitMap.UriSource.AbsoluteUri}">
+                <ToolTipService.ToolTip>
+                    <ContentControl Content="{x:Bind ViewModel.Jacket}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                </ToolTipService.ToolTip>
+            </Image>
+            <Image
+                x:Name="护腿"
+                Canvas.Left="4"
+                Canvas.Top="36"
+                Width="28"
+                Height="28"
+                Source="{x:Bind ViewModel.Pants.BitMap.UriSource.AbsoluteUri}">
+                <ToolTipService.ToolTip>
+                    <ContentControl Content="{x:Bind ViewModel.Pants}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                </ToolTipService.ToolTip>
+            </Image>
+            <Image
+                x:Name="腰带"
+                Canvas.Left="36"
+                Canvas.Top="36"
+                Width="28"
+                Height="28"
+                Source="{x:Bind ViewModel.Belt.BitMap.UriSource.AbsoluteUri}">
+                <ToolTipService.ToolTip>
+                    <ContentControl Content="{x:Bind ViewModel.Belt}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                </ToolTipService.ToolTip>
+            </Image>
+            <Image
+                x:Name="鞋子"
+                Canvas.Left="4"
+                Canvas.Top="68"
+                Width="28"
+                Height="28"
+                Source="{x:Bind ViewModel.Shoes.BitMap.UriSource.AbsoluteUri}">
+                <ToolTipService.ToolTip>
+                    <ContentControl Content="{x:Bind ViewModel.Shoes}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                </ToolTipService.ToolTip>
+            </Image>
+            <Image
+                x:Name="武器"
+                Canvas.Left="178"
+                Canvas.Top="4"
+                Width="28"
+                Height="28"
+                Source="{x:Bind ViewModel.Weapon.BitMap.UriSource.AbsoluteUri}">
+                <ToolTipService.ToolTip>
+                    <ContentControl Content="{x:Bind ViewModel.Weapon}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                </ToolTipService.ToolTip>
+            </Image>
+            <Image
+                x:Name="称号"
+                Canvas.Left="210"
+                Canvas.Top="4"
+                Width="28"
+                Height="28"
+                Source="{x:Bind ViewModel.Title.BitMap.UriSource.AbsoluteUri}">
+                <ToolTipService.ToolTip>
+                    <ContentControl Content="{x:Bind ViewModel.Title}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                </ToolTipService.ToolTip>
+            </Image>
+            <Image
+                x:Name="手镯"
+                Canvas.Left="178"
+                Canvas.Top="36"
+                Width="28"
+                Height="28"
+                Source="{x:Bind ViewModel.Wrist.BitMap.UriSource.AbsoluteUri}">
+                <ToolTipService.ToolTip>
+                    <ContentControl Content="{x:Bind ViewModel.Wrist}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                </ToolTipService.ToolTip>
+            </Image>
+            <Image
+                x:Name="项链"
+                Canvas.Left="210"
+                Canvas.Top="36"
+                Width="28"
+                Height="28"
+                Source="{x:Bind ViewModel.Amulet.BitMap.UriSource.AbsoluteUri}">
+                <ToolTipService.ToolTip>
+                    <ContentControl Content="{x:Bind ViewModel.Amulet}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                </ToolTipService.ToolTip>
+            </Image>
+            <Image
+                x:Name="戒指"
+                Canvas.Left="210"
+                Canvas.Top="68"
+                Width="28"
+                Height="28"
+                Source="{x:Bind ViewModel.Ring.BitMap.UriSource.AbsoluteUri}">
+                <ToolTipService.ToolTip>
+                    <ContentControl Content="{x:Bind ViewModel.Ring}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                </ToolTipService.ToolTip>
+            </Image>
+        </Canvas>
+    </Grid>
 </Page>

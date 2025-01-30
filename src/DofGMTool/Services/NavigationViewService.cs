@@ -43,12 +43,9 @@ public class NavigationViewService : INavigationViewService
 
     public NavigationViewItem? GetSelectedItem(Type pageType)
     {
-        if (_navigationView != null)
-        {
-            return GetSelectedItem(_navigationView.MenuItems, pageType) ?? GetSelectedItem(_navigationView.FooterMenuItems, pageType);
-        }
-
-        return null;
+        return _navigationView != null
+            ? GetSelectedItem(_navigationView.MenuItems, pageType) ?? GetSelectedItem(_navigationView.FooterMenuItems, pageType)
+            : null;
     }
 
     private void OnBackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args) => _navigationService.GoBack();
@@ -91,11 +88,8 @@ public class NavigationViewService : INavigationViewService
 
     private bool IsMenuItemForPageType(NavigationViewItem menuItem, Type sourcePageType)
     {
-        if (menuItem.GetValue(NavigationHelper.NavigateToProperty) is string pageKey)
-        {
-            return _pageService.GetPageType(pageKey) == sourcePageType;
-        }
-
-        return false;
+        return menuItem.GetValue(NavigationHelper.NavigateToProperty) is string pageKey
+            ? _pageService.GetPageType(pageKey) == sourcePageType
+            : false;
     }
 }

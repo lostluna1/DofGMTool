@@ -2,10 +2,10 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using FreeSql.DataAnnotations;
 
 namespace DofGMTool.Models;
-public partial class Skill : ObservableValidator
+public partial class SkillInfo : ObservableValidator
 {
     [ObservableProperty]
-    [Column(IsPrimary =true)]
+    [Column(IsPrimary = true)]
     public partial string SkillId { get; set; }
     [ObservableProperty]
     public partial string Name { get; set; }
@@ -62,7 +62,7 @@ public partial class Skill : ObservableValidator
     [ObservableProperty]
     public partial string SkillPreloadingImage { get; set; }
     [ObservableProperty]
-    [Column(IsPrimary =true)]
+    [Column(IsPrimary = true)]
     public partial string SourceList { get; set; }
 }
 

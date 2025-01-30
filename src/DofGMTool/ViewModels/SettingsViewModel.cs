@@ -20,7 +20,7 @@ public partial class SettingsViewModel : ObservableRecipient
     public partial string VersionDescription { get; set; }
 
     [ObservableProperty]
-    public partial string ImagePacks2Path {get;set;} = string.Empty;
+    public partial string ImagePacks2Path { get; set; } = string.Empty;
     public ICommand SwitchThemeCommand
     {
         get;

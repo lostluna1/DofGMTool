@@ -50,10 +50,6 @@ internal class Util
         if (b == "")
             return str;
         int num = str.IndexOf(b, StringComparison.Ordinal);
-        if (num == -1)
-        {
-            return "";
-        }
-        return str[..num];
+        return num == -1 ? "" : str[..num];
     }
 }

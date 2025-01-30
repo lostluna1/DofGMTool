@@ -10,6 +10,8 @@ namespace DofGMTool.Models;
 [Table(Name = "Equipments")]
 public partial class Equipments : ObservableObject
 {
+    [ObservableProperty]
+    public partial EquipSlotModel? EquipSlot { get; set; }
     public string Id { get; set; } = Guid.NewGuid().ToString("n");
 
     [ObservableProperty]
@@ -312,10 +314,10 @@ public partial class Equipments : ObservableObject
     [ObservableProperty]
     public partial string? SkillLevelUp { get; set; }
     [ObservableProperty]
-    public partial ObservableCollection< SkillLevelUpInfo>? SkillLevelList { get; set; }
+    public partial ObservableCollection<SkillLevelUpInfo>? SkillLevelList { get; set; }
 
     [ObservableProperty]
-    public partial ObservableCollection<Skill>? Skill { get; set; }
+    public partial ObservableCollection<SkillInfo>? Skill { get; set; }
 }
 
 public static class ColorHelper

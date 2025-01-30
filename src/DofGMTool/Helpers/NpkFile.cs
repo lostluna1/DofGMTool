@@ -7,7 +7,7 @@ public class NpkFile
     private static string checkString = "puchikon@neople dungeon and fighter DNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNF ";
     private static byte[] checkBytes = Encoding.ASCII.GetBytes(checkString);
 
-    public List<NpkIndex> NpkFiles { get; set; } = new();
+    public List<NpkIndex> NpkFiles { get; set; } = [];
 
     public NpkFile(string filePath)
     {

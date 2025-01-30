@@ -33,7 +33,7 @@ public sealed partial class InventoryManagePage : Page
             ViewModel.SelectedInventoryItem = equipment;
             DeleteItem();
         }
-        
+
     }
 
     private async void DeleteItem()
@@ -63,7 +63,7 @@ public sealed partial class InventoryManagePage : Page
         {
             pvfFilename = file.Path;
             using var pvf = new PvfFile(pvfFilename);
-             await ViewModel.LoadPvfCommandAsync(pvf);
+            await ViewModel.LoadPvfCommandAsync(pvf);
             //GC.Collect();
             //GC.WaitForPendingFinalizers();
             //GC.Collect();

@@ -17,6 +17,9 @@
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Assets\inventory.png" />
+  </ItemGroup>
 
   <ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
@@ -31,12 +34,14 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250108002" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <PackageReference Include="SqlSugarCore" Version="5.1.4.175" />
     <PackageReference Include="System.Drawing.Common" Version="9.0.1" />
     <PackageReference Include="TraditionalChineseToSimplifiedConverter" Version="1.0.0" />
     <PackageReference Include="WinUI.TableView" Version="1.2.2" />
     <PackageReference Include="WinUICommunity.Components" Version="7.1.0" />
     <PackageReference Include="WinUICommunity.Core" Version="7.1.0" />
     <PackageReference Include="WinUIEx" Version="2.5.1" />
+    <PackageReference Include="zlib.net" Version="1.0.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,6 +60,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Update="Assets\inventory.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">

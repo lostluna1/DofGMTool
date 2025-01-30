@@ -1,5 +1,4 @@
 ﻿using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Documents;
 
 namespace DofGMTool.Helpers;
 public class NewlineToBreakConverter : IValueConverter

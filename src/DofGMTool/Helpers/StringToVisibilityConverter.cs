@@ -11,7 +11,7 @@ public class StringToVisibilityConverter : IValueConverter
         {
             value = string.Empty;//return string.Empty;
         }
-        
+
         return string.IsNullOrEmpty(value?.ToString()) ? Visibility.Collapsed : Visibility.Visible;
     }
 

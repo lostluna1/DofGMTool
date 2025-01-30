@@ -1,26 +1,19 @@
-﻿using FreeSql.DatabaseModel;using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
+﻿using FreeSql.DataAnnotations;
 using Newtonsoft.Json;
-using FreeSql.DataAnnotations;
 
-namespace DofGMTool.Models {
+namespace DofGMTool.Models;
 
-	[JsonObject(MemberSerialization.OptIn), Table(Name = "stat_game_channel", DisableSyncStructure = true)]
-	public partial class StatGameChannel {
+[JsonObject(MemberSerialization.OptIn), Table(Name = "stat_game_channel", DisableSyncStructure = true)]
+public partial class StatGameChannel
+{
 
-		[JsonProperty, Column(Name = "gc_channel", StringLength = 10, IsNullable = false)]
-		public string GcChannel { get; set; }
+    [JsonProperty, Column(Name = "gc_channel", StringLength = 10, IsNullable = false)]
+    public string GcChannel { get; set; }
 
-		[JsonProperty, Column(Name = "gc_now")]
-		public short GcNow { get; set; } = 0;
+    [JsonProperty, Column(Name = "gc_now")]
+    public short GcNow { get; set; } = 0;
 
-		[JsonProperty, Column(Name = "gc_up_time", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
-		public DateTime GcUpTime { get; set; }
-
-	}
+    [JsonProperty, Column(Name = "gc_up_time", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
+    public DateTime GcUpTime { get; set; }
 
 }
