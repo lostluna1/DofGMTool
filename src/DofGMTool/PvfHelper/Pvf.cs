@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text;
 
 namespace pvfLoaderXinyu;
@@ -9,6 +10,7 @@ public class PvfFile : IDisposable
     public Dictionary<string, HeaderTreeNode> headerTreeCache = [];
     public Dictionary<int, string> stringBinMap = [];
     public Dictionary<string, string> nStringMap = [];
+    public string fileName = "";
 
     static PvfFile()
     {
@@ -58,30 +60,38 @@ public class PvfFile : IDisposable
 
     private void LoadNStringLst(byte[] unpackedFileByteArr)
     {
-        if (BitConverter.ToUInt16(unpackedFileByteArr, 0) != 53424)
+        if (BitConverter.ToUInt16(unpackedFileByteArr, 0) != 53424)//第一位一定是53424，如果不是那你pvf有问题
             return;
-
-        for (int i = 2; i < unpackedFileByteArr.Length; i += 10)
+        for (int i = 2; i < unpackedFileByteArr.Length; i += 10)//从第二位开始每次读取十个字节
         {
-            if (unpackedFileByteArr.Length - i >= 10)
+            if (unpackedFileByteArr.Length - i >= 10)//如果是最后十个字节或者最后不满十个字节就不执行
             {
-                string k = stringBinMap[BitConverter.ToInt32(unpackedFileByteArr, i + 6)];
-                if (headerTreeCache.TryGetValue(k.ToLower().Trim(), out HeaderTreeNode? node))
+                string k = stringBinMap[BitConverter.ToInt32(unpackedFileByteArr, i + 6)];//前6位干嘛的不知道，6-10位的int值是stringtable的键，取出来
+                var node = headerTreeCache[k.ToLower().Trim()];//取出来的stringtable的值是文件列表的一个文件的文件名，不过使用了驼峰命名需要将其置为小写并清除空格。
+                if (node != null)//如果找到了这个文件
                 {
-                    string full = Encoding.GetEncoding("BIG5").GetString(node.unpackedFileByteArr).TrimEnd(new char[1]);
-                    foreach (string line in full.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
+                    string full = Encoding.GetEncoding("BIG5").GetString(node.unpackedFileByteArr).TrimEnd(new char[1]);//直接用编码取这个文件的内容
+                    foreach (string line in full.Split(new char[2] { '\r', '\n' }))//根据换行分割，逐行遍历
                     {
-                        if (line.Contains('>'))
+                        if (node.filePathName == "character/common/jacket/leather/vest_crleather.equ")
                         {
-                            string key = Util.FindTagKeyVal(line, "", ">");
-                            string val = Util.FindTagKeyVal(line, ">", "");
+                            Debug.WriteLine(line);
+                        }
+                        if (line.IndexOf('>') >= 0)//行包含符号'>'，如name_xxx>格斗家
+                        {
+                            string key = Util.FindTagKeyVal(line, "", ">");//取键 name_xxx
+                            string val = Util.FindTagKeyVal(line, ">", "");//取值 格斗家
                             if (key.Length > 0 && val.Length > 0)
-                                nStringMap[key] = val;
+                            {
+                                string uniqueKey = $"{k.ToLower().Trim()}_{key}";//将文件路径和键组合成唯一键
+                                nStringMap[uniqueKey] = val;//放到索引表中备用
+                            }
                         }
                     }
                 }
             }
         }
+        return;
     }
 
     public string? GetPvfFileByPath(string path, Encoding encoding)
@@ -91,6 +101,8 @@ public class PvfFile : IDisposable
 
     public string GetPvfFileByPath(HeaderTreeNode node, Encoding encoding)
     {
+        fileName = string.Empty;
+        fileName = node.filePathName;
         byte[] unpackedStrBytes = node.unpackedFileByteArr;
         int strpos = 0;
         Dictionary<int, byte[]> arr = [];
@@ -170,9 +182,17 @@ public class PvfFile : IDisposable
         };
     }
 
-    private string GetNString(string str)
+    private string GetNString( string str)
     {
-        return nStringMap.ContainsKey(str) ? nStringMap[str] : "";
+        string strPrefix = fileName.Split('/')[0];
+        foreach (var item in nStringMap)
+        {
+            if (item.Key.Contains(str) && item.Key.Split('/')[0] == strPrefix)
+            {
+                return item.Value;
+            }
+        }
+        return "";
     }
 
     public void Dispose()

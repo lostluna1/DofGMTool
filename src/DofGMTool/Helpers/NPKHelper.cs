@@ -21,6 +21,7 @@ public static class NPKHelper
 
     public static void GetBitMap(ObservableCollection<Equipments> equipments)
     {
+
         // 懒得弄了，手动GC
         GC.Collect();
         GC.WaitForPendingFinalizers();
