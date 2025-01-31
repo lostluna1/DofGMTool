@@ -276,26 +276,20 @@
     <Grid x:Name="ContentArea">
         <Canvas>
             <Image Canvas.ZIndex="0" Source="ms-appx:///Assets/inventory.png" />
-            <Image
-                x:Name="护肩"
-                Canvas.Left="4"
-                Canvas.Top="4"
-                Width="28"
-                Height="28"
-                Source="{x:Bind ViewModel.Shoulder.BitMap.UriSource.AbsoluteUri}">
-                <ToolTipService.ToolTip>
-                    <ContentControl Content="{x:Bind ViewModel.Shoulder}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
-                </ToolTipService.ToolTip>
-            </Image>
+
             <Image
                 x:Name="上衣"
                 Canvas.Left="36"
                 Canvas.Top="4"
                 Width="28"
                 Height="28"
+                PointerEntered="Image_PointerEntered"
+                PointerExited="Image_PointerExited"
                 Source="{x:Bind ViewModel.Jacket.BitMap.UriSource.AbsoluteUri}">
                 <ToolTipService.ToolTip>
-                    <ContentControl Content="{x:Bind ViewModel.Jacket}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                    <ToolTip x:Name="JacketToolTip">
+                        <ContentControl Content="{x:Bind ViewModel.Jacket}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                    </ToolTip>
                 </ToolTipService.ToolTip>
             </Image>
             <Image
@@ -304,9 +298,13 @@
                 Canvas.Top="36"
                 Width="28"
                 Height="28"
+                PointerEntered="Image_PointerEntered"
+                PointerExited="Image_PointerExited"
                 Source="{x:Bind ViewModel.Pants.BitMap.UriSource.AbsoluteUri}">
                 <ToolTipService.ToolTip>
-                    <ContentControl Content="{x:Bind ViewModel.Pants}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                    <ToolTip x:Name="PantsToolTip">
+                        <ContentControl Content="{x:Bind ViewModel.Pants}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                    </ToolTip>
                 </ToolTipService.ToolTip>
             </Image>
             <Image
@@ -315,9 +313,13 @@
                 Canvas.Top="36"
                 Width="28"
                 Height="28"
+                PointerEntered="Image_PointerEntered"
+                PointerExited="Image_PointerExited"
                 Source="{x:Bind ViewModel.Belt.BitMap.UriSource.AbsoluteUri}">
                 <ToolTipService.ToolTip>
-                    <ContentControl Content="{x:Bind ViewModel.Belt}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                    <ToolTip x:Name="BeltToolTip">
+                        <ContentControl Content="{x:Bind ViewModel.Belt}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                    </ToolTip>
                 </ToolTipService.ToolTip>
             </Image>
             <Image
@@ -326,31 +328,54 @@
                 Canvas.Top="68"
                 Width="28"
                 Height="28"
+                PointerEntered="Image_PointerEntered"
+                PointerExited="Image_PointerExited"
                 Source="{x:Bind ViewModel.Shoes.BitMap.UriSource.AbsoluteUri}">
                 <ToolTipService.ToolTip>
-                    <ContentControl Content="{x:Bind ViewModel.Shoes}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                    <ToolTip x:Name="ShoesToolTip">
+
+                        <ContentControl Content="{x:Bind ViewModel.Shoes}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                    </ToolTip>
                 </ToolTipService.ToolTip>
             </Image>
+
             <Image
                 x:Name="武器"
                 Canvas.Left="178"
                 Canvas.Top="4"
                 Width="28"
                 Height="28"
+                PointerEntered="Image_PointerEntered"
+                PointerExited="Image_PointerExited"
                 Source="{x:Bind ViewModel.Weapon.BitMap.UriSource.AbsoluteUri}">
+                <Image.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="强化" />
+                        <MenuFlyoutItem Text="增幅" />
+                        <MenuFlyoutItem Text="更换装备" />
+                    </MenuFlyout>
+                </Image.ContextFlyout>
                 <ToolTipService.ToolTip>
-                    <ContentControl Content="{x:Bind ViewModel.Weapon}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                    <ToolTip x:Name="WeaponToolTip">
+                        <ContentControl Content="{x:Bind ViewModel.Weapon}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                    </ToolTip>
                 </ToolTipService.ToolTip>
             </Image>
+
+
             <Image
                 x:Name="称号"
                 Canvas.Left="210"
                 Canvas.Top="4"
                 Width="28"
                 Height="28"
+                PointerEntered="Image_PointerEntered"
+                PointerExited="Image_PointerExited"
                 Source="{x:Bind ViewModel.Title.BitMap.UriSource.AbsoluteUri}">
                 <ToolTipService.ToolTip>
-                    <ContentControl Content="{x:Bind ViewModel.Title}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                    <ToolTip x:Name="TitleToolTip">
+                        <ContentControl Content="{x:Bind ViewModel.Title}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                    </ToolTip>
                 </ToolTipService.ToolTip>
             </Image>
             <Image
@@ -359,9 +384,13 @@
                 Canvas.Top="36"
                 Width="28"
                 Height="28"
+                PointerEntered="Image_PointerEntered"
+                PointerExited="Image_PointerExited"
                 Source="{x:Bind ViewModel.Wrist.BitMap.UriSource.AbsoluteUri}">
                 <ToolTipService.ToolTip>
-                    <ContentControl Content="{x:Bind ViewModel.Wrist}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                    <ToolTip x:Name="WristToolTip">
+                        <ContentControl Content="{x:Bind ViewModel.Wrist}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                    </ToolTip>
                 </ToolTipService.ToolTip>
             </Image>
             <Image
@@ -370,9 +399,13 @@
                 Canvas.Top="36"
                 Width="28"
                 Height="28"
+                PointerEntered="Image_PointerEntered"
+                PointerExited="Image_PointerExited"
                 Source="{x:Bind ViewModel.Amulet.BitMap.UriSource.AbsoluteUri}">
                 <ToolTipService.ToolTip>
-                    <ContentControl Content="{x:Bind ViewModel.Amulet}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                    <ToolTip x:Name="AmuletToolTip">
+                        <ContentControl Content="{x:Bind ViewModel.Amulet}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                    </ToolTip>
                 </ToolTipService.ToolTip>
             </Image>
             <Image
@@ -381,9 +414,13 @@
                 Canvas.Top="68"
                 Width="28"
                 Height="28"
+                PointerEntered="Image_PointerEntered"
+                PointerExited="Image_PointerExited"
                 Source="{x:Bind ViewModel.Ring.BitMap.UriSource.AbsoluteUri}">
                 <ToolTipService.ToolTip>
-                    <ContentControl Content="{x:Bind ViewModel.Ring}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                    <ToolTip x:Name="RingToolTip">
+                        <ContentControl Content="{x:Bind ViewModel.Ring}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                    </ToolTip>
                 </ToolTipService.ToolTip>
             </Image>
         </Canvas>

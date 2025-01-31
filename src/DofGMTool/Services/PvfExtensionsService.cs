@@ -161,6 +161,10 @@ public class PvfExtensionsService : IPvfExtensionsService
                 }
 
                 string id = arr[0];
+                if (id=="10400")
+                {
+                    Debug.WriteLine("10400");
+                }
                 string path = arr[1].Replace("`", "");
                 string? equipEdu = pvf.GetPvfFileByPath($"equipment/{path}", Encoding.UTF8);
                 if (string.IsNullOrWhiteSpace(equipEdu))

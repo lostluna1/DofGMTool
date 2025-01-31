@@ -113,7 +113,7 @@ public partial class CharacterManageViewModel : ObservableRecipient
         CharacInfo = new ObservableCollection<CharacInfoSqlSugar>(characInfo);
         _fsql_2nd = databaseService.GetMySqlConnection("taiwan_cain_2nd");
         _equipSlotProcessor = equipSlotProcessor;
-        int charac_no = 6;
+        int charac_no =7;
         _Inventory a = _fsql_2nd.Ado.QuerySingle<_Inventory>($"SELECT UNCOMPRESS(equipslot) as EquipSlot  FROM inventory WHERE charac_no = {charac_no}");
         var b = _fsql_2nd.Select<_Inventory>().Where(w => w.CharacNo == charac_no).ToList();
         //byte[] decompressedData = Decompress(b[0].Equipslot);

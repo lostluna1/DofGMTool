@@ -1,6 +1,7 @@
 ﻿using DofGMTool.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 
 namespace DofGMTool.Views;
 
@@ -67,4 +68,25 @@ public sealed partial class CharacterManagePage : Page
             }
         }
     }
+
+    private void Image_PointerEntered(object sender, PointerRoutedEventArgs e)
+    {
+        var image = sender as Image;
+        var toolTip = ToolTipService.GetToolTip(image) as ToolTip;
+        if (toolTip != null)
+        {
+            toolTip.IsOpen = true;
+        }
+    }
+
+    private void Image_PointerExited(object sender, PointerRoutedEventArgs e)
+    {
+        var image = sender as Image;
+        var toolTip = ToolTipService.GetToolTip(image) as ToolTip;
+        if (toolTip != null)
+        {
+            toolTip.IsOpen = false;
+        }
+    }
+
 }
