@@ -288,7 +288,7 @@
                 Source="{x:Bind ViewModel.Jacket.BitMap.UriSource.AbsoluteUri}">
                 <ToolTipService.ToolTip>
                     <ToolTip x:Name="JacketToolTip">
-                        <ContentControl Content="{x:Bind ViewModel.Jacket}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                        <ContentControl Content="{x:Bind ViewModel.Jacket, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
                     </ToolTip>
                 </ToolTipService.ToolTip>
             </Image>

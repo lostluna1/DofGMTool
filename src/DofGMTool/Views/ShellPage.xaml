@@ -7,32 +7,43 @@
     xmlns:helpers="using:DofGMTool.Helpers"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:winuiex="using:WinUIEx"
+    xmlns:wuc="using:WinUICommunity"
     Loaded="OnLoaded">
 
     <Grid>
-        <Grid
-            x:Name="AppTitleBar"
-            Height="{Binding ElementName=NavigationViewControl, Path=CompactPaneLength}"
+        <winuiex:TitleBar
+            Title="DOF GMTool 2025"
+            Margin="20,0,0,0"
             VerticalAlignment="Top"
-            Canvas.ZIndex="1"
-            IsHitTestVisible="True">
-            <Image
-                Width="16"
-                Height="16"
-                HorizontalAlignment="Left"
-                Source="/Assets/baidu_tieba_dof.jpg" />
-            <TextBlock
-                x:Name="AppTitleBarText"
-                Margin="28,0,0,0"
-                VerticalAlignment="Center"
-                Style="{StaticResource CaptionTextBlockStyle}"
-                TextWrapping="NoWrap" />
-        </Grid>
+            IconSource="{wuc:BitmapIconSource Source=ms-appx:///Assets/baidu_tieba_dof.jpg}"
+            IsBackButtonVisible="False"
+            IsPaneToggleButtonVisible="False"
+            Subtitle="beta">
+            <winuiex:TitleBar.Footer>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="当前角色:" />
+                    <ComboBox
+                        x:Name="ServerComboBox"
+                        Width="200"
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        DisplayMemberPath="CharacName"
+                        ItemsSource="{x:Bind ViewModel.CharacInfos, Mode=TwoWay}"
+                        SelectedItem="{x:Bind ViewModel.SelectedCharacInfo, Mode=TwoWay}"
+                        SelectedValuePath="CharacNo" />
+
+                </StackPanel>
+
+            </winuiex:TitleBar.Footer>
+        </winuiex:TitleBar>
         <NavigationView
             x:Name="NavigationViewControl"
             CacheMode="BitmapCache"
             Canvas.ZIndex="0"
-            
             DisplayModeChanged="NavigationViewControl_DisplayModeChanged"
             ExpandedModeThresholdWidth="1280"
             Header="{x:Bind ((ContentControl)ViewModel.Selected).Content, Mode=OneWay}"

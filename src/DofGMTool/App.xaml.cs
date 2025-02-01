@@ -10,7 +10,7 @@ using FreeSql;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
-using SqlSugar;
+using MySqlConnector;
 using System.Diagnostics;
 using Windows.Storage;
 
@@ -69,6 +69,7 @@ public partial class App : Application
             services.AddSingleton<IPvfExtensionsService, PvfExtensionsService>();
             services.AddSingleton<IInventoryManageService, InventoryManageService>();
             services.AddSingleton<IEquipSlotProcessor, EquipSlotProcessor>();
+            services.AddSingleton<CharacInfo>();// 注册角色信息服务
 
             // Core Services
             services.AddSingleton<IFileService, FileService>();
@@ -86,15 +87,34 @@ public partial class App : Application
             services.AddTransient<MainPage>();
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
+            services.AddSingleton<IFreeSql<MySqlFlag>>(provider =>
+            {
+                return new FreeSqlBuilder()
+                    .UseConnectionFactory(DataType.MySql, () =>
+                    {
+                        var conn = new MySqlConnection("data source=192.168.200.131;port=3306;user id=game;password=uu5!^%jg;initial catalog=taiwan_cain;sslmode=none;max pool size=50;Charset=latin1;");
+                        conn.Open();
+                        MySqlCommand cmd = conn.CreateCommand();
+                        cmd.CommandText = "SET Charset latin1;";
+                        cmd.ExecuteNonQuery();
+                        return conn;
+                    })
+                    .UseMonitorCommand(cmd => Debug.WriteLine($"Sql：{cmd.CommandText}"))
+                    .Build<MySqlFlag>();
+            });
             //Func<IServiceProvider, IFreeSql<MySqlFlag>> fsqlMysql = r =>
             //{
-            //    var fsql1 = new FreeSqlBuilder().UseConnectionFactory(DataType.MySql, () =>
+            //    IFreeSql<MySqlFlag> fsql1 = new FreeSqlBuilder().UseConnectionFactory(DataType.MySql, () =>
             //    {
-            //        var conn = new MySqlConnection("data source=192.168.200.131;port=3306;user id=game;password=uu5!^%jg;initial catalog=taiwan_cain;sslmode=none;max pool size=2;Charset=latin1;");
-            //        conn.Open(); 
-            //        var cmd = conn.CreateCommand();
+
+
+
+            //        var conn = new MySqlConnection("data source=192.168.200.131;port=3306;user id=game;password=uu5!^%jg;initial catalog=taiwan_cain;sslmode=none;max pool size=12;Charset=latin1;");
+            //        conn.Open();
+            //        MySqlCommand cmd = conn.CreateCommand();
             //        cmd.CommandText = "SET Charset latin1;";
             //        cmd.ExecuteNonQuery();
+            //        //conn.Close();
             //        return conn;
             //    })
             //    .UseMonitorCommand(cmd => Debug.WriteLine($"Sql：{cmd.CommandText}"))
@@ -103,16 +123,6 @@ public partial class App : Application
             //    return fsql1;
             //};
 
-
-            Func<IServiceProvider, IFreeSql<MySqlFlag>> fsqlMysql = r =>
-            {
-                string connectionString = "data source=192.168.200.131;port=3306;user id=game;password=uu5!^%jg;initial catalog=taiwan_cain;sslmode=none;max pool size=2;Charset=latin1;";
-
-                IFreeSql<MySqlFlag> fsql1 = new FreeSqlBuilder().UseConnectionString(DataType.MySql, connectionString)
-                .UseMonitorCommand(cmd => Debug.WriteLine($"Sql：{cmd.CommandText}"))
-                .Build<MySqlFlag>();
-                return fsql1;
-            };
 
             Func<IServiceProvider, IFreeSql<SqliteFlag>> fsqlSqlite = r =>
             {
@@ -125,26 +135,8 @@ public partial class App : Application
                 .Build<SqliteFlag>();
                 return fsql2;
             };
-            services.AddSingleton<ISqlSugarClient>(provider =>
-            {
-                string connectionString = "Server=192.168.200.131;Database=taiwan_cain;User Id=game;Password=uu5!^%jg;";
-                var db = new SqlSugarClient(new ConnectionConfig()
-                {
-                    ConnectionString = connectionString,
-                    DbType = DbType.MySql,
-                    IsAutoCloseConnection = true,
-                    InitKeyType = InitKeyType.Attribute
-                });
 
-                // 配置 SQL 监控
-                db.Aop.OnLogExecuting = (sql, pars) =>
-                {
-                    Debug.WriteLine($"Sql：{sql}");
-                };
-
-                return db;
-            });
-            services.AddSingleton<IFreeSql<MySqlFlag>>(fsqlMysql);
+            //services.AddSingleton<IFreeSql<MySqlFlag>>(fsqlMysql);
             services.AddSingleton<IFreeSql<SqliteFlag>>(fsqlSqlite);
             services.AddSingleton<IDatabaseService, DatabaseService>();// 注册动态数据库服务
             // Configuration

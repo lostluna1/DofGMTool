@@ -41,10 +41,10 @@ public sealed partial class CharacterManagePage : Page
         args.Handled = true;
     }
 
-    public TextBlock _textBlockDescDtl { get; set; }
-    public TextBlock _textBlockDesc { get; set; }
+    public TextBlock? _textBlockDescDtl { get; set; }
+    public TextBlock? _textBlockDesc { get; set; }
 
-    public TextBlock _showDtlCommand { get; set; }
+    public TextBlock? _showDtlCommand { get; set; }
 
     private void ItemToolTip_Opened(object sender, RoutedEventArgs e)
     {

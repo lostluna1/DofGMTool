@@ -2,25 +2,23 @@
 using DofGMTool.Contracts.Services;
 using DofGMTool.Helpers;
 using DofGMTool.Models;
-using Microsoft.UI.Xaml.Media.Imaging;
-using SqlSugar;
 using System.Collections.ObjectModel;
 
 namespace DofGMTool.ViewModels;
 
 public partial class CharacterManageViewModel : ObservableRecipient
 {
-    public ISqlSugarClient _sqlSugarClient;
+
     public IFreeSql<MySqlFlag> _fsql_2nd;
+    public IFreeSql<MySqlFlag> taiwan_cain;
     public IFreeSql<SqliteFlag> _fsql;
     private readonly IEquipSlotProcessor _equipSlotProcessor;
-    public static BitmapImage? BitMap { get; set; }
 
-    [ObservableProperty]
-    public partial CharacInfoSqlSugar? SelectedChr { get; set; }
 
-    [ObservableProperty]
-    public partial ObservableCollection<CharacInfoSqlSugar>? CharacInfo { get; set; }
+
+
+
+
 
     [ObservableProperty]
     public partial ObservableCollection<EquipSlotModel>? EquipSlotModels { get; set; }
@@ -101,21 +99,36 @@ public partial class CharacterManageViewModel : ObservableRecipient
     public partial Equipments? Support { get; set; }
     #endregion
 
-
+    [ObservableProperty]
+    public partial string? TestText { get; set; }
     // 新增一个集合来存储所有的结果
-    public ObservableCollection<Equipments> AllEquipments { get; set; } = [];
+    [ObservableProperty]
+    public partial ObservableCollection<Equipments> AllEquipments { get; set; } = [];
 
-    public CharacterManageViewModel(ISqlSugarClient sqlSugarClient, IDatabaseService databaseService, IEquipSlotProcessor equipSlotProcessor, IFreeSql<SqliteFlag> freeSql)
+
+
+    public CharacterManageViewModel(IFreeSql<MySqlFlag> mysqlFree, IDatabaseService databaseService, IEquipSlotProcessor equipSlotProcessor, IFreeSql<SqliteFlag> freeSql)
     {
+
         _fsql = freeSql;
-        _sqlSugarClient = sqlSugarClient;
-        var characInfo = _sqlSugarClient.SqlQueryable<CharacInfoSqlSugar>("Set Charset latin1; select *  from charac_info;").ToList();
-        CharacInfo = new ObservableCollection<CharacInfoSqlSugar>(characInfo);
+        taiwan_cain = mysqlFree;
         _fsql_2nd = databaseService.GetMySqlConnection("taiwan_cain_2nd");
         _equipSlotProcessor = equipSlotProcessor;
-        int charac_no =7;
-        _Inventory a = _fsql_2nd.Ado.QuerySingle<_Inventory>($"SELECT UNCOMPRESS(equipslot) as EquipSlot  FROM inventory WHERE charac_no = {charac_no}");
-        var b = _fsql_2nd.Select<_Inventory>().Where(w => w.CharacNo == charac_no).ToList();
+
+        LoadCurrentCharacinfo();
+    }
+    public void LoadCurrentCharacinfo()
+    {
+        //TestText = newVal?.CharacName;
+        if (GlobalVariables.Instance?.GlobalCurrentCharacInfo == null)
+        {
+            return;
+        }
+        CharacInfo currentCharacInfo = GlobalVariables.Instance.GlobalCurrentCharacInfo; //taiwan_cain.Select<CharacInfo>().Where(a => a.CharacNo == newVal.CharacNo).First();
+
+
+        _Inventory a = _fsql_2nd.Ado.QuerySingle<_Inventory>($"SELECT UNCOMPRESS(equipslot) as EquipSlot  FROM inventory WHERE charac_no = {currentCharacInfo.CharacNo}");
+        var b = _fsql_2nd.Select<_Inventory>().Where(w => w.CharacNo == currentCharacInfo.CharacNo).ToList();
         //byte[] decompressedData = Decompress(b[0].Equipslot);
         byte[] decompressedData = a.Equipslot;
         List<byte[]> equipSlots = _equipSlotProcessor.ExtractEquipSlots(decompressedData);
@@ -128,23 +141,23 @@ public partial class CharacterManageViewModel : ObservableRecipient
         List<byte[]> updatedBytes = _equipSlotProcessor.UpdateEquipSlotData(equipSlots, slotIndex, newEquipId, bitStartIndex, bitLength);
         byte[] updatedData = _equipSlotProcessor.CompressEquipSlots(updatedBytes);
 
-        #region 更改当前武器为简易的武士刀
-        byte[] compressedCombinedData = _equipSlotProcessor.CompressBytes(updatedData);
-        _fsql_2nd.Update<_Inventory>()
-            .Set(a => a.Equipslot, compressedCombinedData)
-            .Where(w => w.CharacNo == charac_no)
-            .ExecuteAffrows();
-        #endregion
-        #region 强化等级设置为+15
-        List<byte[]> updatedBytes1 = _equipSlotProcessor.UpdateEquipSlotData(equipSlots, 0, 15, 48, 8);
-        byte[] updatedData1 = _equipSlotProcessor.CompressEquipSlots(updatedBytes1);
+        /*        #region 更改当前武器为简易的武士刀
+                byte[] compressedCombinedData = _equipSlotProcessor.CompressBytes(updatedData);
+                _fsql_2nd.Update<_Inventory>()
+                    .Set(a => a.Equipslot, compressedCombinedData)
+                    .Where(w => w.CharacNo == charac_no)
+                    .ExecuteAffrows();
+                #endregion
+                #region 强化等级设置为+15
+                List<byte[]> updatedBytes1 = _equipSlotProcessor.UpdateEquipSlotData(equipSlots, 0, 15, 48, 8);
+                byte[] updatedData1 = _equipSlotProcessor.CompressEquipSlots(updatedBytes1);
 
-        byte[] compressedCombinedData1 = _equipSlotProcessor.CompressBytes(updatedData1);
-        _fsql_2nd.Update<_Inventory>()
-            .Set(a => a.Equipslot, compressedCombinedData1)
-            .Where(w => w.CharacNo == charac_no)
-            .ExecuteAffrows();
-        #endregion
+                byte[] compressedCombinedData1 = _equipSlotProcessor.CompressBytes(updatedData1);
+                _fsql_2nd.Update<_Inventory>()
+                    .Set(a => a.Equipslot, compressedCombinedData1)
+                    .Where(w => w.CharacNo == charac_no)
+                    .ExecuteAffrows();
+                #endregion*/
 
 
         IEnumerable<EquipSlotModel> equipSlotModels = _equipSlotProcessor.ConvertSlotsToEquipSlotModels(equipSlots).Where(a => a.EquipId != 0);
@@ -169,7 +182,21 @@ public partial class CharacterManageViewModel : ObservableRecipient
 
             //GetBitMaps(EquipSlotModels);
         }
+
     }
+
+    /*    
+        partial void OnSelectedCharacInfoChanged(CharacInfo? value)
+        {
+            if (value == null)
+            {
+                return;
+            }
+            GlobalVariables.Instance.GlobalCurrentCharacInfo = value;
+            _GlobalVariables.GlobalCurrentCharacInfo = value;
+            SelectedCharacInfo = value;
+            LoadCurrentCharacinfo(_GlobalVariables.GlobalCurrentCharacInfo!);
+        }*/
 
     public ObservableCollection<Equipments> GetEquipment(ObservableCollection<EquipSlotModel> Equips)
     {
