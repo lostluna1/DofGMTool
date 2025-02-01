@@ -134,12 +134,12 @@ public partial class CharacterManageViewModel : ObservableRecipient
         List<byte[]> equipSlots = _equipSlotProcessor.ExtractEquipSlots(decompressedData);
 
 
-        int slotIndex = 0;
-        ulong newEquipId = 27746; // 新的装备ID
-        int bitStartIndex = 16;
-        int bitLength = 32;
-        List<byte[]> updatedBytes = _equipSlotProcessor.UpdateEquipSlotData(equipSlots, slotIndex, newEquipId, bitStartIndex, bitLength);
-        byte[] updatedData = _equipSlotProcessor.CompressEquipSlots(updatedBytes);
+        //int slotIndex = 0;
+        //ulong newEquipId = 27746; // 新的装备ID
+        //int bitStartIndex = 16;
+        //int bitLength = 32;
+        //List<byte[]> updatedBytes = _equipSlotProcessor.UpdateEquipSlotData(equipSlots, slotIndex, newEquipId, bitStartIndex, bitLength);
+        //byte[] updatedData = _equipSlotProcessor.CompressEquipSlots(updatedBytes);
 
         /*        #region 更改当前武器为简易的武士刀
                 byte[] compressedCombinedData = _equipSlotProcessor.CompressBytes(updatedData);

@@ -14,11 +14,19 @@ public class EquipSlotProcessor : IEquipSlotProcessor
         const int totalSlots = 12;
         var equipSlots = new List<byte[]>(totalSlots);
 
-        for (int i = 0; i < totalSlots; i++)
+        try
         {
-            byte[] slotData = new byte[slotSize];
-            Array.Copy(decompressedData, i * slotSize, slotData, 0, slotSize);
-            equipSlots.Add(slotData);
+            for (int i = 0; i < totalSlots; i++)
+            {
+                byte[] slotData = new byte[slotSize];
+                Array.Copy(decompressedData, i * slotSize, slotData, 0, slotSize);
+                equipSlots.Add(slotData);
+            }
+        }
+        catch (Exception e)
+        {
+
+            Debug.WriteLine(e.Message);
         }
 
         return equipSlots;

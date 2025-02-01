@@ -10,7 +10,19 @@
     xmlns:winuiex="using:WinUIEx"
     xmlns:wuc="using:WinUICommunity"
     Loaded="OnLoaded">
-
+    <Page.Resources>
+        <helpers:JobTypeToImageConverter x:Key="JobTypeToImageConverter" />
+        <DataTemplate x:Key="CharacInfoTemplate">
+            <StackPanel Orientation="Horizontal">
+                <Image
+                    Width="24"
+                    Height="24"
+                    Margin="0,0,10,0"
+                    Source="{Binding Job, Converter={StaticResource JobTypeToImageConverter}}" />
+                <TextBlock VerticalAlignment="Center" Text="{Binding CharacName}" />
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
     <Grid>
         <winuiex:TitleBar
             Title="DOF GMTool 2025"
@@ -31,10 +43,23 @@
                         Width="200"
                         Margin="10,0,0,0"
                         VerticalAlignment="Center"
-                        DisplayMemberPath="CharacName"
                         ItemsSource="{x:Bind ViewModel.CharacInfos, Mode=TwoWay}"
                         SelectedItem="{x:Bind ViewModel.SelectedCharacInfo, Mode=TwoWay}"
-                        SelectedValuePath="CharacNo" />
+                        SelectedValuePath="CharacNo">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image
+                                        Width="21"
+                                        Height="21"
+                                        Margin="0,0,10,0"
+                                        Source="{Binding Job, Converter={StaticResource JobTypeToImageConverter}}" />
+                                    <TextBlock VerticalAlignment="Center" Text="{Binding CharacName}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
 
                 </StackPanel>
 
