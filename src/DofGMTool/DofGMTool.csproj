@@ -19,6 +19,8 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\inventory.png" />
+    <None Remove="Views\CharacterInfoDialog\ChangeEquipDialog.xaml" />
+    <None Remove="Views\CharacterInfoDialog\PowerupEquip.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -92,6 +94,12 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\CharacterInfoDialog\ChangeEquipDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\CharacterInfoDialog\PowerupEquip.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Content Update="Assets\inventory.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

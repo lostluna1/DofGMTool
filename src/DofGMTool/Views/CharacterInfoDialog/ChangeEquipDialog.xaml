@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentDialog
+    x:Class="DofGMTool.Views.ChangeEquipmentDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:DofGMTool.Views"
+    Title="更换装备"
+    Width="600"
+    Height="400"
+    DefaultButton="Primary"
+    PrimaryButtonCommand="{x:Bind ViewModel.ChangeCurrentEquipCommand}"
+    PrimaryButtonText="确定"
+    SecondaryButtonText="取消"
+    Style="{StaticResource DefaultContentDialogStyle}">
+
+    <StackPanel Orientation="Vertical">
+        <TextBox Text="{x:Bind ViewModel.newEquipId, Mode=TwoWay}" />
+        <!--<NumberBox Value="{x:Bind ViewModel.CurrentSlot, Mode=TwoWay}" />-->
+    </StackPanel>
+</ContentDialog>

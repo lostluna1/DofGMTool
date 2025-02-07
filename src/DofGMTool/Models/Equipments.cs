@@ -16,7 +16,7 @@ public partial class Equipments : ObservableObject
 
     [ObservableProperty]
     [Column(IsIgnore = true)]
-    public partial BitmapImage? BitMap { get; set; }
+    public partial BitmapImage? BitMap { get; set; } = new BitmapImage(new Uri("ms-appx:///Assets/defaultEquip.png"));
 
 
     /// <summary>

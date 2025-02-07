@@ -69,6 +69,7 @@ public partial class App : Application
             services.AddSingleton<IPvfExtensionsService, PvfExtensionsService>();
             services.AddSingleton<IInventoryManageService, InventoryManageService>();
             services.AddSingleton<IEquipSlotProcessor, EquipSlotProcessor>();
+            services.AddSingleton<ICharacterManagerService, CharacterManagerService>();
             services.AddSingleton<CharacInfo>();// 注册角色信息服务
 
             // Core Services
