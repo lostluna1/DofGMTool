@@ -13,7 +13,7 @@ public partial class CharacterManageViewModel : ObservableRecipient
     public IFreeSql<MySqlFlag> _fsql_2nd;
     public IFreeSql<MySqlFlag> taiwan_cain;
     public IFreeSql<SqliteFlag> _fsql;
-
+    public IInventoryManageService _inventoryManageService;
     public ICharacterManagerService _characterManagerService;
     private readonly IEquipSlotProcessor _equipSlotProcessor;
 
@@ -134,8 +134,10 @@ public partial class CharacterManageViewModel : ObservableRecipient
 
     public CharacterManageViewModel(IFreeSql<MySqlFlag> mysqlFree, IDatabaseService databaseService,
         ICharacterManagerService characterManagerService,
+        IInventoryManageService inventoryManageService,
         IEquipSlotProcessor equipSlotProcessor, IFreeSql<SqliteFlag> freeSql)
     {
+        _inventoryManageService = inventoryManageService;
         _characterManagerService = characterManagerService;
         _fsql = freeSql;
         taiwan_cain = mysqlFree;

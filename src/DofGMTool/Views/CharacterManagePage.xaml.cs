@@ -136,4 +136,25 @@ public sealed partial class CharacterManagePage : Page
         };
         await dialog.ShowAsync();
     }
+
+    private void DeleteEquipMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+    {
+        var menuItem = sender as MenuFlyoutItem;
+        ViewModel.CurrentSlot = (menuItem?.Tag) switch
+        {
+            "上衣" => 2,
+            "头肩" => 1,
+            "戒指" => 6,
+            "项链" => 7,
+            "手镯" => 8,
+            "称号" => 9,
+            "武器" => 0,
+            "鞋子" => 5,
+            "腰带" => 3,
+            "护腿" => 4,
+            _ => 0,
+        };
+        ViewModel.newEquipId = 0;
+        ViewModel.ChangeCurrentEquip();
+    }
 }

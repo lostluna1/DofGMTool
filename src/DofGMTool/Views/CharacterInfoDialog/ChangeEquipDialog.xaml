@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:DofGMTool.Views"
+    xmlns:models="using:DofGMTool.Models"
     Title="更换装备"
     Width="600"
     Height="400"
@@ -15,7 +16,42 @@
     Style="{StaticResource DefaultContentDialogStyle}">
 
     <StackPanel Orientation="Vertical">
-        <TextBox Text="{x:Bind ViewModel.newEquipId, Mode=TwoWay}" />
+        <AutoSuggestBox
+            x:Name="controlsSearchBox"
+            MinWidth="200"
+            VerticalAlignment="Center"
+            x:FieldModifier="public"
+            KeyboardAcceleratorPlacementMode="Hidden"
+            PlaceholderText="以装备名称搜索..."
+            QueryIcon="Find"
+            QuerySubmitted="OnControlsSearchBoxQuerySubmitted"
+            SuggestionChosen="AutoSuggestBoxSuggestionChosen"
+            TextChanged="OnControlsSearchBoxTextChanged"
+            TextMemberPath="ItemName">
+            <AutoSuggestBox.ItemTemplate>
+                <DataTemplate x:DataType="models:Equipments">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{Binding BitMap.UriSource.AbsoluteUri}" />
+                        <TextBlock
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Foreground="{Binding ItemRarity.Color}"
+                            Text="{x:Bind ItemName}"
+                            TextWrapping="Wrap" />
+                    </Grid>
+                </DataTemplate>
+            </AutoSuggestBox.ItemTemplate>
+        </AutoSuggestBox>
+
+        <TextBox
+            Header="已选择装备的代码"
+            IsReadOnly="True"
+            Text="{x:Bind ViewModel.newEquipId, Mode=TwoWay}" />
         <!--<NumberBox Value="{x:Bind ViewModel.CurrentSlot, Mode=TwoWay}" />-->
     </StackPanel>
 </ContentDialog>
