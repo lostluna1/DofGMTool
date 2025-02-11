@@ -19,9 +19,12 @@ public static class NPKHelper
 
     public static List<NpkIndex>? _npkIndexes = [];
 
+    /// <summary>
+    /// 从NPK中获取图片
+    /// </summary>
+    /// <param name="equipments"></param>
     public static void GetBitMap(ObservableCollection<Equipments> equipments)
     {
-
         // 懒得弄了，手动GC
         GC.Collect();
         GC.WaitForPendingFinalizers();
@@ -70,7 +73,7 @@ public static class NPKHelper
                 img = imgFile.Images[(int)img.VectorIndex];
             }
 
-            string imgPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "ImagePacks");
+            string imgPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "ImagePacks");
             if (!Directory.Exists(imgPath))
                 Directory.CreateDirectory(imgPath);
             imgPath = Path.Combine(imgPath, $"{selectedItem.ItemId}.png");
@@ -92,20 +95,23 @@ public static class NPKHelper
             selectedItem.BitMap = BitMap;
         }
     }
+
+    /// <summary>
+    /// 从本地获取图片
+    /// </summary>
+    /// <param name="equipments"></param>
     public static void GetBitMaps(ObservableCollection<Equipments> equipments)
     {
         foreach (Equipments item in equipments)
         {
-            string imgPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "ImagePacks");
+            string imgPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "ImagePacks");
             imgPath = Path.Combine(imgPath, $"{item.ItemId}.png");
 
-            //if (File.Exists(imgPath))
+            if (File.Exists(imgPath))
             {
                 BitMap = new BitmapImage(new Uri(imgPath));
                 item.BitMap = BitMap;
-                continue;
             }
-            //item.BitMap = BitMap;
         }
     }
     public static void SaveImagePacks2Path(string path)

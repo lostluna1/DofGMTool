@@ -12,8 +12,8 @@
 
   <Identity
     Name="cccc3012-8d3e-44a9-8b04-479960018156"
-    Publisher="CN=xiaoxiao_wei"
-    Version="1.0.0.0" />
+    Publisher="CN=lostluna"
+    Version="1.0.8.0" />
     
   <mp:PhoneIdentity PhoneProductId="cccc3012-8d3e-44a9-8b04-479960018156" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
     

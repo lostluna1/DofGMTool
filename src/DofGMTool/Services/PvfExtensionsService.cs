@@ -47,7 +47,7 @@ public class PvfExtensionsService : IPvfExtensionsService
         if (itemDic == null)
         {
             Debug.WriteLine("No equipment list found.");
-            return new ObservableCollection<Equipments>();
+            return [];
         }
 
         var itemArr = itemDic.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Where(t => !t.StartsWith('#')).ToList();
