@@ -18,7 +18,10 @@
         <converters:UInt64ToDoubleConverter x:Key="UInt64ToDoubleConverter" />
     </ContentDialog.Resources>
     <StackPanel Orientation="Vertical">
-        <NumberBox Header="强化等级" Value="{x:Bind ViewModel.PowerupLevel, Mode=TwoWay, Converter={StaticResource UInt64ToDoubleConverter}}" />
+        <NumberBox
+            Header="强化等级"
+            Maximum="31"
+            Value="{x:Bind ViewModel.PowerupLevel, Mode=TwoWay, Converter={StaticResource UInt64ToDoubleConverter}}" />
         <!--<NumberBox Value="{x:Bind ViewModel.CurrentSlot, Mode=TwoWay}" />-->
     </StackPanel>
 </ContentDialog>

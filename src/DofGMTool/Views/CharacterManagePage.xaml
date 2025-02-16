@@ -21,7 +21,7 @@
         <converters:AttributeToColorConverter x:Key="AttributeToColorConverter" />
         <!--  整数转换为可见性的转换器  -->
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-
+        <converters:EnumDescriptionConverter x:Key="EnumDescriptionConverter" />
         <!--  定义ToolTip的DataTemplate  -->
         <DataTemplate x:Key="ItemToolTipTemplate">
             <ToolTip x:Name="ItemToolTip" Opened="ItemToolTip_Opened">
@@ -277,7 +277,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="0.15*" />
             <RowDefinition Height="0.2*" />
-            <RowDefinition Height="1*" />
+            <RowDefinition Height="0.5*" />
+            <RowDefinition Height="0.2*" />
         </Grid.RowDefinitions>
         <InfoBar
             Title="Tips"
@@ -291,353 +292,420 @@
             IsOpen="True"
             Message="对装备的操作至少需要拥有AB两个角色，对A角色操作时，需要切换至B角色"
             Severity="Informational" />
-        <Canvas Grid.Row="2">
-            <Image Canvas.ZIndex="0" Source="ms-appx:///Assets/inventory.png" />
+        <Button
+            Grid.Row="3"
+            Command="{x:Bind ViewModel.SetGMCommand}"
+            Content="设为GM" />
 
-            <Image
-                x:Name="上衣"
-                Canvas.Left="36"
-                Canvas.Top="4"
-                Width="28"
-                Height="28"
-                PointerEntered="Image_PointerEntered"
-                PointerExited="Image_PointerExited"
-                Source="{x:Bind ViewModel.Jacket.BitMap.UriSource.AbsoluteUri, Mode=OneWay, FallbackValue='ms-appx:///Assets/defaultEquip.png'}">
-                <Image.ContextFlyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem
-                            Click="DeleteEquipMenuFlyoutItem_Click"
-                            Tag="上衣"
-                            Text="删除这个装备" />
-                        <MenuFlyoutItem
-                            Click="PowerupEquipMenuFlyoutItem_Click"
-                            Tag="上衣"
-                            Text="强化" />
-                        <MenuFlyoutItem
-                            IsEnabled="False"
-                            Tag="上衣"
-                            Text="增幅" />
-                        <MenuFlyoutItem
-                            Click="ChangeEquipMenuFlyoutItem_Click"
-                            Tag="上衣"
-                            Text="更换装备" />
-                    </MenuFlyout>
-                </Image.ContextFlyout>
-                <ToolTipService.ToolTip>
-                    <ToolTip x:Name="JacketToolTip">
-                        <ContentControl Content="{x:Bind ViewModel.Jacket, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
-                    </ToolTip>
-                </ToolTipService.ToolTip>
-            </Image>
-            <Image
-                x:Name="护腿"
-                Canvas.Left="4"
-                Canvas.Top="36"
-                Width="28"
-                Height="28"
-                PointerEntered="Image_PointerEntered"
-                PointerExited="Image_PointerExited"
-                Source="{x:Bind ViewModel.Pants.BitMap.UriSource.AbsoluteUri, Mode=OneWay, FallbackValue='ms-appx:///Assets/defaultEquip.png'}">
-                <Image.ContextFlyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem
-                            Click="DeleteEquipMenuFlyoutItem_Click"
-                            Tag="护腿"
-                            Text="删除这个装备" />
-                        <MenuFlyoutItem
-                            Click="PowerupEquipMenuFlyoutItem_Click"
-                            Tag="护腿"
-                            Text="强化" />
-                        <MenuFlyoutItem
-                            IsEnabled="False"
-                            Tag="护腿"
-                            Text="增幅" />
-                        <MenuFlyoutItem
-                            Click="ChangeEquipMenuFlyoutItem_Click"
-                            Tag="护腿"
-                            Text="更换装备" />
-                    </MenuFlyout>
-                </Image.ContextFlyout>
-                <ToolTipService.ToolTip>
-                    <ToolTip x:Name="PantsToolTip">
-                        <ContentControl Content="{x:Bind ViewModel.Pants, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
-                    </ToolTip>
-                </ToolTipService.ToolTip>
-            </Image>
-            <Image
-                x:Name="腰带"
-                Canvas.Left="36"
-                Canvas.Top="36"
-                Width="28"
-                Height="28"
-                PointerEntered="Image_PointerEntered"
-                PointerExited="Image_PointerExited"
-                Source="{x:Bind ViewModel.Belt.BitMap.UriSource.AbsoluteUri, Mode=OneWay, FallbackValue='ms-appx:///Assets/defaultEquip.png'}">
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+            <!--  装备栏  -->
+            <Canvas>
+                <Image Canvas.ZIndex="0" Source="ms-appx:///Assets/inventory.png" />
 
-                <Image.ContextFlyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem
-                            Click="DeleteEquipMenuFlyoutItem_Click"
-                            Tag="腰带"
-                            Text="删除这个装备" />
-                        <MenuFlyoutItem
-                            Click="PowerupEquipMenuFlyoutItem_Click"
-                            Tag="腰带"
-                            Text="强化" />
-                        <MenuFlyoutItem
-                            IsEnabled="False"
-                            Tag="腰带"
-                            Text="增幅" />
-                        <MenuFlyoutItem
-                            Click="ChangeEquipMenuFlyoutItem_Click"
-                            Tag="腰带"
-                            Text="更换装备" />
-                    </MenuFlyout>
-                </Image.ContextFlyout>
-                <ToolTipService.ToolTip>
-                    <ToolTip x:Name="BeltToolTip">
-                        <ContentControl Content="{x:Bind ViewModel.Belt, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
-                    </ToolTip>
-                </ToolTipService.ToolTip>
-            </Image>
-            <Image
-                x:Name="鞋子"
-                Canvas.Left="5"
-                Canvas.Top="68"
-                Width="28"
-                Height="28"
-                PointerEntered="Image_PointerEntered"
-                PointerExited="Image_PointerExited"
-                Source="{x:Bind ViewModel.Shoes.BitMap.UriSource.AbsoluteUri, Mode=OneWay, FallbackValue='ms-appx:///Assets/defaultEquip.png'}">
-                <Image.ContextFlyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem
-                            Click="DeleteEquipMenuFlyoutItem_Click"
-                            Tag="鞋子"
-                            Text="删除这个装备" />
-                        <MenuFlyoutItem
-                            Click="PowerupEquipMenuFlyoutItem_Click"
-                            Tag="鞋子"
-                            Text="强化" />
-                        <MenuFlyoutItem
-                            IsEnabled="False"
-                            Tag="鞋子"
-                            Text="增幅" />
-                        <MenuFlyoutItem
-                            Click="ChangeEquipMenuFlyoutItem_Click"
-                            Tag="鞋子"
-                            Text="更换装备" />
-                    </MenuFlyout>
-                </Image.ContextFlyout>
-                <ToolTipService.ToolTip>
-                    <ToolTip x:Name="ShoesToolTip">
+                <Image
+                    x:Name="上衣"
+                    Canvas.Left="36"
+                    Canvas.Top="4"
+                    Width="28"
+                    Height="28"
+                    PointerEntered="Image_PointerEntered"
+                    PointerExited="Image_PointerExited"
+                    Source="{x:Bind ViewModel.Jacket.BitMap.UriSource.AbsoluteUri, Mode=OneWay, FallbackValue='ms-appx:///Assets/defaultEquip.png'}">
+                    <Image.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem
+                                Click="DeleteEquipMenuFlyoutItem_Click"
+                                Tag="上衣"
+                                Text="删除这个装备" />
+                            <MenuFlyoutItem
+                                Click="PowerupEquipMenuFlyoutItem_Click"
+                                Tag="上衣"
+                                Text="强化" />
+                            <MenuFlyoutItem
+                                IsEnabled="False"
+                                Tag="上衣"
+                                Text="增幅" />
+                            <MenuFlyoutItem
+                                Click="ChangeEquipMenuFlyoutItem_Click"
+                                Tag="上衣"
+                                Text="更换装备" />
+                        </MenuFlyout>
+                    </Image.ContextFlyout>
+                    <ToolTipService.ToolTip>
+                        <ToolTip x:Name="JacketToolTip">
+                            <ContentControl Content="{x:Bind ViewModel.Jacket, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                        </ToolTip>
+                    </ToolTipService.ToolTip>
+                </Image>
+                <Image
+                    x:Name="护腿"
+                    Canvas.Left="4"
+                    Canvas.Top="36"
+                    Width="28"
+                    Height="28"
+                    PointerEntered="Image_PointerEntered"
+                    PointerExited="Image_PointerExited"
+                    Source="{x:Bind ViewModel.Pants.BitMap.UriSource.AbsoluteUri, Mode=OneWay, FallbackValue='ms-appx:///Assets/defaultEquip.png'}">
+                    <Image.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem
+                                Click="DeleteEquipMenuFlyoutItem_Click"
+                                Tag="护腿"
+                                Text="删除这个装备" />
+                            <MenuFlyoutItem
+                                Click="PowerupEquipMenuFlyoutItem_Click"
+                                Tag="护腿"
+                                Text="强化" />
+                            <MenuFlyoutItem
+                                IsEnabled="False"
+                                Tag="护腿"
+                                Text="增幅" />
+                            <MenuFlyoutItem
+                                Click="ChangeEquipMenuFlyoutItem_Click"
+                                Tag="护腿"
+                                Text="更换装备" />
+                        </MenuFlyout>
+                    </Image.ContextFlyout>
+                    <ToolTipService.ToolTip>
+                        <ToolTip x:Name="PantsToolTip">
+                            <ContentControl Content="{x:Bind ViewModel.Pants, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                        </ToolTip>
+                    </ToolTipService.ToolTip>
+                </Image>
+                <Image
+                    x:Name="腰带"
+                    Canvas.Left="36"
+                    Canvas.Top="36"
+                    Width="28"
+                    Height="28"
+                    PointerEntered="Image_PointerEntered"
+                    PointerExited="Image_PointerExited"
+                    Source="{x:Bind ViewModel.Belt.BitMap.UriSource.AbsoluteUri, Mode=OneWay, FallbackValue='ms-appx:///Assets/defaultEquip.png'}">
 
-                        <ContentControl Content="{x:Bind ViewModel.Shoes, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
-                    </ToolTip>
-                </ToolTipService.ToolTip>
-            </Image>
+                    <Image.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem
+                                Click="DeleteEquipMenuFlyoutItem_Click"
+                                Tag="腰带"
+                                Text="删除这个装备" />
+                            <MenuFlyoutItem
+                                Click="PowerupEquipMenuFlyoutItem_Click"
+                                Tag="腰带"
+                                Text="强化" />
+                            <MenuFlyoutItem
+                                IsEnabled="False"
+                                Tag="腰带"
+                                Text="增幅" />
+                            <MenuFlyoutItem
+                                Click="ChangeEquipMenuFlyoutItem_Click"
+                                Tag="腰带"
+                                Text="更换装备" />
+                        </MenuFlyout>
+                    </Image.ContextFlyout>
+                    <ToolTipService.ToolTip>
+                        <ToolTip x:Name="BeltToolTip">
+                            <ContentControl Content="{x:Bind ViewModel.Belt, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                        </ToolTip>
+                    </ToolTipService.ToolTip>
+                </Image>
+                <Image
+                    x:Name="鞋子"
+                    Canvas.Left="5"
+                    Canvas.Top="68"
+                    Width="28"
+                    Height="28"
+                    PointerEntered="Image_PointerEntered"
+                    PointerExited="Image_PointerExited"
+                    Source="{x:Bind ViewModel.Shoes.BitMap.UriSource.AbsoluteUri, Mode=OneWay, FallbackValue='ms-appx:///Assets/defaultEquip.png'}">
+                    <Image.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem
+                                Click="DeleteEquipMenuFlyoutItem_Click"
+                                Tag="鞋子"
+                                Text="删除这个装备" />
+                            <MenuFlyoutItem
+                                Click="PowerupEquipMenuFlyoutItem_Click"
+                                Tag="鞋子"
+                                Text="强化" />
+                            <MenuFlyoutItem
+                                IsEnabled="False"
+                                Tag="鞋子"
+                                Text="增幅" />
+                            <MenuFlyoutItem
+                                Click="ChangeEquipMenuFlyoutItem_Click"
+                                Tag="鞋子"
+                                Text="更换装备" />
+                        </MenuFlyout>
+                    </Image.ContextFlyout>
+                    <ToolTipService.ToolTip>
+                        <ToolTip x:Name="ShoesToolTip">
 
-            <Image
-                x:Name="武器"
-                Canvas.Left="178"
-                Canvas.Top="4"
-                Width="28"
-                Height="28"
-                PointerEntered="Image_PointerEntered"
-                PointerExited="Image_PointerExited"
-                Source="{x:Bind ViewModel.Weapon.BitMap.UriSource.AbsoluteUri, Mode=OneWay, FallbackValue='ms-appx:///Assets/defaultEquip.png'}">
-                <Image.ContextFlyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem
-                            Click="DeleteEquipMenuFlyoutItem_Click"
-                            Tag="武器"
-                            Text="删除这个装备" />
-                        <MenuFlyoutItem
-                            Click="PowerupEquipMenuFlyoutItem_Click"
-                            Tag="武器"
-                            Text="强化" />
-                        <MenuFlyoutItem
-                            IsEnabled="False"
-                            Tag="武器"
-                            Text="增幅" />
-                        <MenuFlyoutItem Click="ChangeEquipMenuFlyoutItem_Click" Text="更换装备" />
-                    </MenuFlyout>
-                </Image.ContextFlyout>
-                <ToolTipService.ToolTip>
-                    <ToolTip x:Name="WeaponToolTip">
-                        <ContentControl Content="{x:Bind ViewModel.Weapon, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
-                    </ToolTip>
-                </ToolTipService.ToolTip>
-            </Image>
+                            <ContentControl Content="{x:Bind ViewModel.Shoes, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                        </ToolTip>
+                    </ToolTipService.ToolTip>
+                </Image>
+
+                <Image
+                    x:Name="武器"
+                    Canvas.Left="178"
+                    Canvas.Top="4"
+                    Width="28"
+                    Height="28"
+                    PointerEntered="Image_PointerEntered"
+                    PointerExited="Image_PointerExited"
+                    Source="{x:Bind ViewModel.Weapon.BitMap.UriSource.AbsoluteUri, Mode=OneWay, FallbackValue='ms-appx:///Assets/defaultEquip.png'}">
+                    <Image.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem
+                                Click="DeleteEquipMenuFlyoutItem_Click"
+                                Tag="武器"
+                                Text="删除这个装备" />
+                            <MenuFlyoutItem
+                                Click="PowerupEquipMenuFlyoutItem_Click"
+                                Tag="武器"
+                                Text="强化" />
+                            <MenuFlyoutItem
+                                IsEnabled="False"
+                                Tag="武器"
+                                Text="增幅" />
+                            <MenuFlyoutItem Click="ChangeEquipMenuFlyoutItem_Click" Text="更换装备" />
+                        </MenuFlyout>
+                    </Image.ContextFlyout>
+                    <ToolTipService.ToolTip>
+                        <ToolTip x:Name="WeaponToolTip">
+                            <ContentControl Content="{x:Bind ViewModel.Weapon, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                        </ToolTip>
+                    </ToolTipService.ToolTip>
+                </Image>
 
 
-            <Image
-                x:Name="称号"
-                Canvas.Left="210"
-                Canvas.Top="4"
-                Width="28"
-                Height="28"
-                PointerEntered="Image_PointerEntered"
-                PointerExited="Image_PointerExited"
-                Source="{x:Bind ViewModel.Title.BitMap.UriSource.AbsoluteUri, Mode=OneWay, FallbackValue='ms-appx:///Assets/defaultEquip.png'}">
-                <Image.ContextFlyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem
-                            Click="DeleteEquipMenuFlyoutItem_Click"
-                            Tag="称号"
-                            Text="删除这个装备" />
-                        <MenuFlyoutItem
-                            Click="ChangeEquipMenuFlyoutItem_Click"
-                            Tag="称号"
-                            Text="更换装备" />
-                    </MenuFlyout>
-                </Image.ContextFlyout>
-                <ToolTipService.ToolTip>
-                    <ToolTip x:Name="TitleToolTip">
-                        <ContentControl Content="{x:Bind ViewModel.Title, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
-                    </ToolTip>
-                </ToolTipService.ToolTip>
-            </Image>
-            <Image
-                x:Name="手镯"
-                Canvas.Left="178"
-                Canvas.Top="36"
-                Width="28"
-                Height="28"
-                PointerEntered="Image_PointerEntered"
-                PointerExited="Image_PointerExited"
-                Source="{x:Bind ViewModel.Wrist.BitMap.UriSource.AbsoluteUri, Mode=OneWay, FallbackValue='ms-appx:///Assets/defaultEquip.png'}">
-                <Image.ContextFlyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem
-                            Click="DeleteEquipMenuFlyoutItem_Click"
-                            Tag="手镯"
-                            Text="删除这个装备" />
-                        <MenuFlyoutItem
-                            Click="PowerupEquipMenuFlyoutItem_Click"
-                            Tag="手镯"
-                            Text="强化" />
-                        <MenuFlyoutItem
-                            IsEnabled="False"
-                            Tag="手镯"
-                            Text="增幅" />
-                        <MenuFlyoutItem
-                            Click="ChangeEquipMenuFlyoutItem_Click"
-                            Tag="手镯"
-                            Text="更换装备" />
-                    </MenuFlyout>
-                </Image.ContextFlyout>
-                <ToolTipService.ToolTip>
-                    <ToolTip x:Name="WristToolTip">
-                        <ContentControl Content="{x:Bind ViewModel.Wrist, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
-                    </ToolTip>
-                </ToolTipService.ToolTip>
-            </Image>
-            <Image
-                x:Name="项链"
-                Canvas.Left="210"
-                Canvas.Top="36"
-                Width="28"
-                Height="28"
-                PointerEntered="Image_PointerEntered"
-                PointerExited="Image_PointerExited"
-                Source="{x:Bind ViewModel.Amulet.BitMap.UriSource.AbsoluteUri, Mode=OneWay, FallbackValue='ms-appx:///Assets/defaultEquip.png'}">
-                <Image.ContextFlyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem
-                            Click="DeleteEquipMenuFlyoutItem_Click"
-                            Tag="项链"
-                            Text="删除这个装备" />
-                        <MenuFlyoutItem
-                            Click="PowerupEquipMenuFlyoutItem_Click"
-                            Tag="项链"
-                            Text="强化" />
-                        <MenuFlyoutItem
-                            IsEnabled="False"
-                            Tag="项链"
-                            Text="增幅" />
-                        <MenuFlyoutItem
-                            Click="ChangeEquipMenuFlyoutItem_Click"
-                            Tag="项链"
-                            Text="更换装备" />
-                    </MenuFlyout>
-                </Image.ContextFlyout>
-                <ToolTipService.ToolTip>
-                    <ToolTip x:Name="AmuletToolTip">
-                        <ContentControl Content="{x:Bind ViewModel.Amulet, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
-                    </ToolTip>
-                </ToolTipService.ToolTip>
-            </Image>
-            <Image
-                x:Name="戒指"
-                Canvas.Left="210"
-                Canvas.Top="68"
-                Width="28"
-                Height="28"
-                PointerEntered="Image_PointerEntered"
-                PointerExited="Image_PointerExited"
-                Source="{x:Bind ViewModel.Ring.BitMap.UriSource.AbsoluteUri, Mode=OneWay, FallbackValue='ms-appx:///Assets/defaultEquip.png'}">
-                <Image.ContextFlyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem
-                            Click="DeleteEquipMenuFlyoutItem_Click"
-                            Tag="戒指"
-                            Text="删除这个装备" />
-                        <MenuFlyoutItem
-                            Click="PowerupEquipMenuFlyoutItem_Click"
-                            Tag="戒指"
-                            Text="强化" />
-                        <MenuFlyoutItem
-                            IsEnabled="False"
-                            Tag="戒指"
-                            Text="增幅" />
-                        <MenuFlyoutItem
-                            Click="ChangeEquipMenuFlyoutItem_Click"
-                            Tag="戒指"
-                            Text="更换装备" />
-                    </MenuFlyout>
-                </Image.ContextFlyout>
-                <ToolTipService.ToolTip>
-                    <ToolTip x:Name="RingToolTip">
-                        <ContentControl Content="{x:Bind ViewModel.Ring, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
-                    </ToolTip>
-                </ToolTipService.ToolTip>
-            </Image>
-            <Image
-                x:Name="头肩"
-                Canvas.Left="4"
-                Canvas.Top="4"
-                Width="28"
-                Height="28"
-                PointerEntered="Image_PointerEntered"
-                PointerExited="Image_PointerExited"
-                Source="{x:Bind ViewModel.Shoulder.BitMap.UriSource.AbsoluteUri, Mode=OneWay, FallbackValue='ms-appx:///Assets/defaultEquip.png'}">
-                <Image.ContextFlyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem
-                            Click="DeleteEquipMenuFlyoutItem_Click"
-                            Tag="头肩"
-                            Text="删除这个装备" />
-                        <MenuFlyoutItem
-                            Click="PowerupEquipMenuFlyoutItem_Click"
-                            Tag="头肩"
-                            Text="强化" />
-                        <MenuFlyoutItem
-                            IsEnabled="False"
-                            Tag="头肩"
-                            Text="增幅" />
-                        <MenuFlyoutItem
-                            Click="ChangeEquipMenuFlyoutItem_Click"
-                            Tag="头肩"
-                            Text="更换装备" />
-                    </MenuFlyout>
-                </Image.ContextFlyout>
-                <ToolTipService.ToolTip>
-                    <ToolTip x:Name="ShoulderToolTip">
-                        <ContentControl Content="{x:Bind ViewModel.Shoulder, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
-                    </ToolTip>
-                </ToolTipService.ToolTip>
-            </Image>
-        </Canvas>
+                <Image
+                    x:Name="称号"
+                    Canvas.Left="210"
+                    Canvas.Top="4"
+                    Width="28"
+                    Height="28"
+                    PointerEntered="Image_PointerEntered"
+                    PointerExited="Image_PointerExited"
+                    Source="{x:Bind ViewModel.Title.BitMap.UriSource.AbsoluteUri, Mode=OneWay, FallbackValue='ms-appx:///Assets/defaultEquip.png'}">
+                    <Image.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem
+                                Click="DeleteEquipMenuFlyoutItem_Click"
+                                Tag="称号"
+                                Text="删除这个装备" />
+                            <MenuFlyoutItem
+                                Click="ChangeEquipMenuFlyoutItem_Click"
+                                Tag="称号"
+                                Text="更换装备" />
+                        </MenuFlyout>
+                    </Image.ContextFlyout>
+                    <ToolTipService.ToolTip>
+                        <ToolTip x:Name="TitleToolTip">
+                            <ContentControl Content="{x:Bind ViewModel.Title, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                        </ToolTip>
+                    </ToolTipService.ToolTip>
+                </Image>
+                <Image
+                    x:Name="手镯"
+                    Canvas.Left="178"
+                    Canvas.Top="36"
+                    Width="28"
+                    Height="28"
+                    PointerEntered="Image_PointerEntered"
+                    PointerExited="Image_PointerExited"
+                    Source="{x:Bind ViewModel.Wrist.BitMap.UriSource.AbsoluteUri, Mode=OneWay, FallbackValue='ms-appx:///Assets/defaultEquip.png'}">
+                    <Image.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem
+                                Click="DeleteEquipMenuFlyoutItem_Click"
+                                Tag="手镯"
+                                Text="删除这个装备" />
+                            <MenuFlyoutItem
+                                Click="PowerupEquipMenuFlyoutItem_Click"
+                                Tag="手镯"
+                                Text="强化" />
+                            <MenuFlyoutItem
+                                IsEnabled="False"
+                                Tag="手镯"
+                                Text="增幅" />
+                            <MenuFlyoutItem
+                                Click="ChangeEquipMenuFlyoutItem_Click"
+                                Tag="手镯"
+                                Text="更换装备" />
+                        </MenuFlyout>
+                    </Image.ContextFlyout>
+                    <ToolTipService.ToolTip>
+                        <ToolTip x:Name="WristToolTip">
+                            <ContentControl Content="{x:Bind ViewModel.Wrist, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                        </ToolTip>
+                    </ToolTipService.ToolTip>
+                </Image>
+                <Image
+                    x:Name="项链"
+                    Canvas.Left="210"
+                    Canvas.Top="36"
+                    Width="28"
+                    Height="28"
+                    PointerEntered="Image_PointerEntered"
+                    PointerExited="Image_PointerExited"
+                    Source="{x:Bind ViewModel.Amulet.BitMap.UriSource.AbsoluteUri, Mode=OneWay, FallbackValue='ms-appx:///Assets/defaultEquip.png'}">
+                    <Image.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem
+                                Click="DeleteEquipMenuFlyoutItem_Click"
+                                Tag="项链"
+                                Text="删除这个装备" />
+                            <MenuFlyoutItem
+                                Click="PowerupEquipMenuFlyoutItem_Click"
+                                Tag="项链"
+                                Text="强化" />
+                            <MenuFlyoutItem
+                                IsEnabled="False"
+                                Tag="项链"
+                                Text="增幅" />
+                            <MenuFlyoutItem
+                                Click="ChangeEquipMenuFlyoutItem_Click"
+                                Tag="项链"
+                                Text="更换装备" />
+                        </MenuFlyout>
+                    </Image.ContextFlyout>
+                    <ToolTipService.ToolTip>
+                        <ToolTip x:Name="AmuletToolTip">
+                            <ContentControl Content="{x:Bind ViewModel.Amulet, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                        </ToolTip>
+                    </ToolTipService.ToolTip>
+                </Image>
+                <Image
+                    x:Name="戒指"
+                    Canvas.Left="210"
+                    Canvas.Top="68"
+                    Width="28"
+                    Height="28"
+                    PointerEntered="Image_PointerEntered"
+                    PointerExited="Image_PointerExited"
+                    Source="{x:Bind ViewModel.Ring.BitMap.UriSource.AbsoluteUri, Mode=OneWay, FallbackValue='ms-appx:///Assets/defaultEquip.png'}">
+                    <Image.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem
+                                Click="DeleteEquipMenuFlyoutItem_Click"
+                                Tag="戒指"
+                                Text="删除这个装备" />
+                            <MenuFlyoutItem
+                                Click="PowerupEquipMenuFlyoutItem_Click"
+                                Tag="戒指"
+                                Text="强化" />
+                            <MenuFlyoutItem
+                                IsEnabled="False"
+                                Tag="戒指"
+                                Text="增幅" />
+                            <MenuFlyoutItem
+                                Click="ChangeEquipMenuFlyoutItem_Click"
+                                Tag="戒指"
+                                Text="更换装备" />
+                        </MenuFlyout>
+                    </Image.ContextFlyout>
+                    <ToolTipService.ToolTip>
+                        <ToolTip x:Name="RingToolTip">
+                            <ContentControl Content="{x:Bind ViewModel.Ring, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                        </ToolTip>
+                    </ToolTipService.ToolTip>
+                </Image>
+                <Image
+                    x:Name="头肩"
+                    Canvas.Left="4"
+                    Canvas.Top="4"
+                    Width="28"
+                    Height="28"
+                    PointerEntered="Image_PointerEntered"
+                    PointerExited="Image_PointerExited"
+                    Source="{x:Bind ViewModel.Shoulder.BitMap.UriSource.AbsoluteUri, Mode=OneWay, FallbackValue='ms-appx:///Assets/defaultEquip.png'}">
+                    <Image.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem
+                                Click="DeleteEquipMenuFlyoutItem_Click"
+                                Tag="头肩"
+                                Text="删除这个装备" />
+                            <MenuFlyoutItem
+                                Click="PowerupEquipMenuFlyoutItem_Click"
+                                Tag="头肩"
+                                Text="强化" />
+                            <MenuFlyoutItem
+                                IsEnabled="False"
+                                Tag="头肩"
+                                Text="增幅" />
+                            <MenuFlyoutItem
+                                Click="ChangeEquipMenuFlyoutItem_Click"
+                                Tag="头肩"
+                                Text="更换装备" />
+                        </MenuFlyout>
+                    </Image.ContextFlyout>
+                    <ToolTipService.ToolTip>
+                        <ToolTip x:Name="ShoulderToolTip">
+                            <ContentControl Content="{x:Bind ViewModel.Shoulder, Mode=TwoWay}" ContentTemplate="{StaticResource ItemToolTipTemplate}" />
+                        </ToolTip>
+                    </ToolTipService.ToolTip>
+                </Image>
+            </Canvas>
+            <!--  充值栏  -->
+            <StackPanel
+                Margin="550,0,0,0"
+                Orientation="Vertical"
+                Style="{ThemeResource StackPanelStyle}">
+                <NumberBox
+                    Width="200"
+                    HorizontalAlignment="Left"
+                    Header="账户"
+                    Visibility="{x:Bind ViewModel.IsPayForAccount, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    Value="{x:Bind ViewModel.AccountId, Mode=TwoWay}" />
+                <ComboBox
+                    Width="200"
+                    HorizontalAlignment="Left"
+                    Header="充值类型"
+                    ItemsSource="{x:Bind ViewModel.PayOptions, Mode=TwoWay}"
+                    SelectedItem="{x:Bind ViewModel.SelectedPay, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <NumberBox
+                    Width="200"
+                    HorizontalAlignment="Left"
+                    Header="充值额度"
+                    Maximum="2100000000"
+                    Value="{x:Bind ViewModel.PayValue, Mode=TwoWay}" />
+
+                <Button
+                    Width="200"
+                    Content="充值"
+                    Style="{StaticResource AccentButtonStyle}">
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel>
+                                <TextBlock
+                                    Margin="0,0,0,12"
+                                    Style="{ThemeResource BaseTextBlockStyle}"
+                                    Text="如果要为A角色充值，则必须先切换至B角色" />
+                                <Button
+                                    HorizontalAlignment="Center"
+                                    Command="{x:Bind ViewModel.AccountRechargeCommand}"
+                                    Content="立即充值"
+                                    Style="{StaticResource AccentButtonStyle}" />
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+                <InfoBar
+                    IsClosable="False"
+                    IsOpen="True"
+                    Message="当前是为角色充值"
+                    Severity="Informational"
+                    Visibility="{x:Bind ViewModel.IsPayForRole, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+            </StackPanel>
+        </StackPanel>
+
     </Grid>
 </Page>

@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DofGMTool.Constant;
 using DofGMTool.Contracts.Services;
 using DofGMTool.Helpers;
 using DofGMTool.Models;
@@ -10,7 +11,8 @@ namespace DofGMTool.ViewModels;
 public partial class CharacterManageViewModel : ObservableRecipient
 {
 
-    public IFreeSql<MySqlFlag> _fsql_2nd;
+    public IFreeSql<MySqlFlag> taiwan_cain_2nd;
+    public IFreeSql<MySqlFlag> taiwan_login;
     public IFreeSql<MySqlFlag> taiwan_cain;
     public IFreeSql<SqliteFlag> _fsql;
     public IInventoryManageService _inventoryManageService;
@@ -117,6 +119,44 @@ public partial class CharacterManageViewModel : ObservableRecipient
     [ObservableProperty]
     public partial ObservableCollection<Equipments> AllEquipments { get; set; } = [];
 
+    [ObservableProperty]
+    public partial int AccountId { get; set; }
+
+    [ObservableProperty]
+    public partial int PayValue { get; set; }
+
+    [ObservableProperty]
+    public partial ObservableCollection<Pay> PayOptions { get; set; }
+
+    [ObservableProperty]
+    public partial Pay SelectedPay { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsPayForAccount { get; set; } = true;
+
+    [ObservableProperty]
+    public partial bool IsPayForRole { get; set; } = false;
+
+    partial void OnSelectedPayChanged(Pay value)
+    {
+        if (value==Pay.DMoney || value == Pay.DDot)
+        {
+            IsPayForAccount = true;
+            IsPayForRole = false;
+        }
+        else
+        {
+            IsPayForAccount = false;
+            IsPayForRole = true;
+        }
+    }
+
+    [RelayCommand]
+    public void AccountRecharge()
+    {
+        _characterManagerService.AccountRecharge(AccountId, PayValue, SelectedPay);
+    }
+
     [RelayCommand]
     public void ChangeCurrentEquip(/*int curSlot*/)
     {
@@ -132,7 +172,7 @@ public partial class CharacterManageViewModel : ObservableRecipient
 
     }
 
-    public CharacterManageViewModel(IFreeSql<MySqlFlag> mysqlFree, IDatabaseService databaseService,
+    public CharacterManageViewModel(IFreeSql<MySqlFlag> mysqlFree, IDatabaseService databaseService,IDatabaseService databaseService2,
         ICharacterManagerService characterManagerService,
         IInventoryManageService inventoryManageService,
         IEquipSlotProcessor equipSlotProcessor, IFreeSql<SqliteFlag> freeSql)
@@ -141,9 +181,10 @@ public partial class CharacterManageViewModel : ObservableRecipient
         _characterManagerService = characterManagerService;
         _fsql = freeSql;
         taiwan_cain = mysqlFree;
-        _fsql_2nd = databaseService.GetMySqlConnection("taiwan_cain_2nd");
+        taiwan_cain_2nd = databaseService.GetMySqlConnection(DBNames.TaiwanCain2nd);
+        taiwan_login = databaseService2.GetMySqlConnection(DBNames.TaiwanLogin);
         _equipSlotProcessor = equipSlotProcessor;
-
+        PayOptions = new ObservableCollection<Pay>(Enum.GetValues(typeof(Pay)).Cast<Pay>());
         LoadCurrentCharacinfo();
     }
     public void LoadCurrentCharacinfo()
@@ -156,8 +197,8 @@ public partial class CharacterManageViewModel : ObservableRecipient
         CharacInfo currentCharacInfo = GlobalVariables.Instance.GlobalCurrentCharacInfo; //taiwan_cain.Select<CharacInfo>().Where(a => a.CharacNo == newVal.CharacNo).First();
 
 
-        _Inventory a = _fsql_2nd.Ado.QuerySingle<_Inventory>($"SELECT UNCOMPRESS(equipslot) as EquipSlot  FROM inventory WHERE charac_no = {currentCharacInfo.CharacNo}");
-        //var b = _fsql_2nd.Select<_Inventory>().Where(w => w.CharacNo == currentCharacInfo.CharacNo).ToList();
+        _Inventory a = taiwan_cain_2nd.Ado.QuerySingle<_Inventory>($"SELECT UNCOMPRESS(equipslot) as EquipSlot  FROM inventory WHERE charac_no = {currentCharacInfo.CharacNo}");
+        //var b = taiwan_cain_2nd.Select<_Inventory>().Where(w => w.CharacNo == currentCharacInfo.CharacNo).ToList();
         //byte[] decompressedData = Decompress(b[0].Equipslot);
         byte[] decompressedData = a.Equipslot;
         List<byte[]> equipSlots = _equipSlotProcessor.ExtractEquipSlots(decompressedData);
@@ -188,6 +229,21 @@ public partial class CharacterManageViewModel : ObservableRecipient
 
     }
 
+    [RelayCommand]
+    public void SetGM()
+    {
+
+        if (GlobalVariables.Instance.GlobalCurrentCharacInfo!=null)
+        {
+            taiwan_login.Delete<GmManifest>().Where(w => w.MId == GlobalVariables.Instance.GlobalCurrentCharacInfo.MId);
+            var data = new GmManifest
+            {
+                Level = 7,
+                MId = GlobalVariables.Instance.GlobalCurrentCharacInfo.MId
+            };
+           var a= taiwan_login.Insert<GmManifest>(data).ExecuteAffrows(); 
+        }
+    }
     /*    
         partial void OnSelectedCharacInfoChanged(CharacInfo? value)
         {
