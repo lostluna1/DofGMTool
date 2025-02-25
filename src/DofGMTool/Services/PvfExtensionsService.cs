@@ -41,6 +41,7 @@ public class PvfExtensionsService : IPvfExtensionsService
 
     public async Task<ObservableCollection<Equipments>> GetEquipments(PvfFile pvf)
     {
+        //GetPartsets(pvf);
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         var _pvfEncoding = Encoding.GetEncoding("gb2312");
         string? itemDic = pvf.GetPvfFileByPath("equipment/equipment.lst", Encoding.UTF8);
@@ -79,7 +80,7 @@ public class PvfExtensionsService : IPvfExtensionsService
                     }
 
                     Dictionary<string, List<string>> parsedContent = ParsePvfContent(equipEdu);
-                    
+
                     string name = parsedContent.ContainsKey("[name]") && parsedContent["[name]"].Any() ? parsedContent["[name]"].First().Replace("`", "") : string.Empty;
                     if (string.IsNullOrWhiteSpace(name))
                     {
@@ -131,9 +132,13 @@ public class PvfExtensionsService : IPvfExtensionsService
                     string lightAttack = parsedContent.ContainsKey("[light attack]") ? string.Join("\n", parsedContent["[light attack]"].First()) : string.Empty;
                     string waterAttack = parsedContent.ContainsKey("[water attack]") ? string.Join("\n", parsedContent["[water attack]"].First()) : string.Empty;
                     string fireAttack = parsedContent.ContainsKey("[fire attack]") ? string.Join("\n", parsedContent["[fire attack]"].First()) : string.Empty;
-
+                    var setName = parsedContent.ContainsKey("[set name]") ? string.Join("\n", parsedContent["[set name]"]) : string.Empty;
                     list.Add(new Equipments
                     {
+                        
+                        SetName = ChineseConverter.Convert(setName, ChineseConversionDirection.TraditionalToSimplified),
+                        PartsetItemArr = parsedContent.ContainsKey("[set item]") ? string.Join("\n", parsedContent["[set item]"]) : string.Empty,
+                        PartsetIndex = parsedContent.ContainsKey("[part set index]") ? int.Parse(parsedContent["[part set index]"].First()) : 0,
                         ItemId = id,
                         ItemName = ChineseConverter.Convert(name, ChineseConversionDirection.TraditionalToSimplified),
                         NpkPath = npkPath,
@@ -194,6 +199,91 @@ public class PvfExtensionsService : IPvfExtensionsService
         return new ObservableCollection<Equipments>(list);
     }
 
+    public async Task<ObservableCollection<EquipmentPartset>> GetPartsets(PvfFile pvf)
+    {
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        var _pvfEncoding = Encoding.GetEncoding("gb2312");
+        string? itemDic = pvf.GetPvfFileByPath("etc/equipmentpartset.etc", Encoding.UTF8);
+        if (itemDic == null)
+        {
+            Debug.WriteLine("No equipment list found.");
+            return [];
+        }
+
+        var partsets = await Task.Run(() => ParseEquipmentPartsets(pvf, itemDic));
+        return new ObservableCollection<EquipmentPartset>(partsets);
+    }
+
+
+    public List<EquipmentPartset> ParseEquipmentPartsets(PvfFile pvf, string itemDic)
+    {
+        var partsets = new List<EquipmentPartset>();
+        string[] lines = itemDic.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries);
+        int? currentId = null;
+        string? currentPath = null;
+
+        foreach (string line in lines)
+        {
+            if (line.StartsWith("[equipment part set]"))
+            {
+                currentId = null;
+                currentPath = null;
+            }
+            else if (line.StartsWith("[/equipment part set]"))
+            {
+                if (currentId.HasValue && !string.IsNullOrWhiteSpace(currentPath))
+                {
+                    string fullPath = $"equipment/{currentPath}";
+                    string? fileContent = pvf.GetPvfFileByPath(fullPath, Encoding.UTF8);
+                    string? partsetName = ParsePartsetName(fileContent);
+
+                    partsets.Add(new EquipmentPartset
+                    {
+                        Id = currentId.Value,
+                        Path = fullPath,
+                        PartsetName = ChineseConverter.Convert(partsetName, ChineseConversionDirection.TraditionalToSimplified)
+                    });
+                }
+            }
+            else if (currentId == null && currentPath == null)
+            {
+                string[] parts = line.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length >= 2 && int.TryParse(parts[0], out int id))
+                {
+                    currentId = id;
+                    currentPath = parts[1].Trim('`');
+                }
+            }
+        }
+
+        return partsets;
+    }
+
+    private static string? ParsePartsetName(string? fileContent)
+    {
+        if (string.IsNullOrWhiteSpace(fileContent))
+        {
+            return null;
+        }
+
+        string[] lines = fileContent.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (string line in lines)
+        {
+            if (line.StartsWith("[set name]"))
+            {
+                int index = Array.IndexOf(lines, line) + 1;
+                if (index < lines.Length)
+                {
+                    return lines[index].Trim('`', '\t', ' ');
+                }
+            }
+        }
+
+        return null;
+    }
+
+
+
     /*    光属性强化
     [light attack]
     火属性强化
@@ -208,20 +298,20 @@ public class PvfExtensionsService : IPvfExtensionsService
         string[] lines = content.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
         string? currentTag = null;
         var validTags = new HashSet<string>
-    {
-        "[name]", "[basic explain]", "[flavor text]", "[grade]", "[rarity]", "[minimum level]",
-        "[magical attack]", "[cast speed]", "[price]", "[equipment physical attack]","[icon]","[icon mark]",
-        "[equipment magical attack]","[physical attack]", "[separate attack]","[physical critical hit]", "[magical critical hit]","[detail explain]","[flavor text]",
-        "[skill levelup]", "[equipment type]", "[weight]", "[equipment physical defense]", "[magical defense]",
-        "[usable job]", "[attach type]", "[sub type]", "[durability]", "[item group name]", "[elemental property]",
-        "[attack speed]","[move speed]","[stuck]","[HP MAX]","[MP MAX]","[light attack]","[fire attack]","[water attack]","[dark attack]","[physical defense]",
-        "[equipment magical defense]"
-    };
+        {
+            "[name]", "[basic explain]", "[flavor text]", "[grade]", "[rarity]", "[minimum level]",
+            "[magical attack]", "[cast speed]", "[price]", "[equipment physical attack]","[icon]","[icon mark]",
+            "[equipment magical attack]","[physical attack]", "[separate attack]","[physical critical hit]", "[magical critical hit]","[detail explain]","[flavor text]",
+            "[skill levelup]", "[equipment type]", "[weight]", "[equipment physical defense]", "[magical defense]",
+            "[usable job]", "[attach type]", "[sub type]", "[durability]", "[item group name]", "[elemental property]",
+            "[attack speed]","[move speed]","[stuck]","[HP MAX]","[MP MAX]","[light attack]","[fire attack]","[water attack]","[dark attack]","[physical defense]",
+            "[equipment magical defense]","[part set index]","[set name]","[set item]"
+        };
 
         var skipTags = new HashSet<string>
-    {
-        "[level linear ability]"
-    };
+        {
+            "[level linear ability]"
+        };
 
         bool skipSection = false;
 
@@ -251,7 +341,7 @@ public class PvfExtensionsService : IPvfExtensionsService
                 {
                     if (!result.ContainsKey(currentTag))
                     {
-                        result[currentTag] = [];
+                        result[currentTag] = new List<string>();
                     }
                 }
                 else
@@ -261,12 +351,30 @@ public class PvfExtensionsService : IPvfExtensionsService
             }
             else if (currentTag != null && !skipSection)
             {
-                result[currentTag].Add(line.Trim());
+                if (currentTag == "[set item]")
+                {
+                    // 处理 [set item] 标签
+                    var items = line.Split(new[] { '\t', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (items.Length > 0)
+                    {
+                        result[currentTag].Add($"[{string.Join(",", items)}]");
+                    }
+                }
+                else
+                {
+                    result[currentTag].Add(line.Trim());
+                }
             }
         }
 
         return result;
     }
+
+    /// <summary>
+    /// 解析技能
+    /// </summary>
+    /// <param name="contentLines"></param>
+    /// <returns></returns>
     public Dictionary<string, List<string>> ParsePvfContent(List<string> contentLines)
     {
         var result = new Dictionary<string, List<string>>();
@@ -309,7 +417,160 @@ public class PvfExtensionsService : IPvfExtensionsService
 
     public void AnalysisJob(PvfFile pvf) => throw new NotImplementedException();
     public void AnalysisQuest(PvfFile pvf) => throw new NotImplementedException();
-    public void AnalysisStackables(PvfFile pvf) => throw new NotImplementedException();
+    public async Task<ObservableCollection<Equipments>> GetStackables(PvfFile pvf)
+    {
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        var _pvfEncoding = Encoding.GetEncoding("gb2312");
+        string? itemDic = pvf.GetPvfFileByPath("stackable/stackable.lst", Encoding.UTF8);
+        if (itemDic == null)
+        {
+            Debug.WriteLine("No stackable list found.");
+            return [];
+        }
+
+        var itemArr = itemDic.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Where(t => !t.StartsWith('#')).ToList();
+        int total = itemArr.Count;
+        Debug.WriteLine($"Total items to process: {total}");
+
+        var list = new ConcurrentBag<Equipments>();
+
+        await Task.Run(() =>
+        {
+            Parallel.ForEach(itemArr, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount }, item =>
+            {
+                try
+                {
+                    string[] arr = item.Split("\t", StringSplitOptions.RemoveEmptyEntries);
+                    if (arr.Length < 1)
+                    {
+                        Debug.WriteLine("Invalid item format.");
+                        return;
+                    }
+
+                    string id = arr[0];
+                    string path = arr[1].Replace("`", "");
+                    string? equipEdu = pvf.GetPvfFileByPath($"stackable/{path}", Encoding.UTF8);
+                    if (string.IsNullOrWhiteSpace(equipEdu))
+                    {
+                        Debug.WriteLine($"No data found for item ID: {id}");
+                        return;
+                    }
+
+                    Dictionary<string, List<string>> parsedContent = ParsePvfContent(equipEdu);
+
+                    string name = parsedContent.ContainsKey("[name]") && parsedContent["[name]"].Any() ? parsedContent["[name]"].First().Replace("`", "") : string.Empty;
+                    if (string.IsNullOrWhiteSpace(name))
+                    {
+                        name = "未定名";
+                    }
+                    name = Encoding.GetEncoding("gb2312").GetString(_pvfEncoding.GetBytes(name));
+
+                    List<string> iconMark = parsedContent.ContainsKey("[icon]") ? parsedContent["[icon]"] : new List<string>();
+                    if (iconMark.Count <= 0)
+                    {
+                        iconMark = parsedContent.ContainsKey("[icon mark]") ? parsedContent["[icon mark]"] : new List<string>();
+                    }
+
+                    string npkPath = string.Empty;
+                    uint no = 0u;
+                    if (iconMark.Count > 0)
+                    {
+                        npkPath = iconMark[0].Replace("`", "");
+                        no = iconMark[1].Contains("`") ? uint.Parse(iconMark[2]) : uint.Parse(iconMark[1]);
+                    }
+
+                    int rarity = parsedContent.ContainsKey("[rarity]") && parsedContent["[rarity]"].Any() ? int.Parse(parsedContent["[rarity]"].First()) : 0;
+                    RarityOption rarityOption = rarity switch
+                    {
+                        0 => RarityOption.Common,
+                        1 => RarityOption.Rare,
+                        2 => RarityOption.Epic,
+                        3 => RarityOption.God,
+                        4 => RarityOption.Legendary,
+                        5 => RarityOption.Artifact,
+                        _ => RarityOption.Common
+                    };
+
+                    Dictionary<string, string> tagTranslations = TagDictionary.EquipmentTypeTranslations;
+                    string equipmentType = parsedContent.ContainsKey("[equipment type]") ? tagTranslations.GetValueOrDefault(parsedContent["[equipment type]"].First().Replace("`", ""), string.Empty) : string.Empty;
+                    string? usableJob = parsedContent.ContainsKey("[usable job]") ? TagDictionary.UsableJobTranslations.GetValueOrDefault(parsedContent["[usable job]"].First().Replace("`", "")) : string.Empty;
+                    string? attachType = parsedContent.ContainsKey("[attach type]") ? TagDictionary.AttachTypeTranslations.GetValueOrDefault(parsedContent["[attach type]"].First().Replace("`", "")) : string.Empty;
+                    string? itemGroupName = parsedContent.ContainsKey("[item group name]") ? TagDictionary.EquipmentGroupTypeTranslations.GetValueOrDefault(parsedContent["[item group name]"].First().Replace("`", "")) : string.Empty;
+                    //string? elementalProperty = parsedContent.ContainsKey("[elemental property]") ? TagDictionary.ElementTranslations.GetValueOrDefault(parsedContent["[elemental property]"].First().Replace("`", "")) : string.Empty;
+
+                    string convertedEquipmentType = string.IsNullOrEmpty(equipmentType) ? equipmentType : ChineseConverter.Convert(equipmentType, ChineseConversionDirection.TraditionalToSimplified);
+                    usableJob = string.IsNullOrEmpty(usableJob) ? usableJob : ChineseConverter.Convert(usableJob, ChineseConversionDirection.TraditionalToSimplified);
+                    attachType = string.IsNullOrEmpty(attachType) ? attachType : ChineseConverter.Convert(attachType, ChineseConversionDirection.TraditionalToSimplified);
+                    itemGroupName = string.IsNullOrEmpty(itemGroupName) ? itemGroupName : ChineseConverter.Convert(itemGroupName, ChineseConversionDirection.TraditionalToSimplified);
+                    //elementalProperty = string.IsNullOrEmpty(elementalProperty) ? elementalProperty : ChineseConverter.Convert(elementalProperty, ChineseConversionDirection.TraditionalToSimplified);
+
+                    string skillLevelUp = parsedContent.ContainsKey("[skill levelup]") ? string.Join("\n", parsedContent["[skill levelup]"]) : string.Empty;
+                    //string darkAttack = parsedContent.ContainsKey("[dark attack]") ? string.Join("\n", parsedContent["[dark attack]"].First()) : string.Empty;
+                    //string lightAttack = parsedContent.ContainsKey("[light attack]") ? string.Join("\n", parsedContent["[light attack]"].First()) : string.Empty;
+                    //string waterAttack = parsedContent.ContainsKey("[water attack]") ? string.Join("\n", parsedContent["[water attack]"].First()) : string.Empty;
+                    //string fireAttack = parsedContent.ContainsKey("[fire attack]") ? string.Join("\n", parsedContent["[fire attack]"].First()) : string.Empty;
+
+                    list.Add(new Equipments
+                    {
+                        ItemId = id,
+                        ItemName = ChineseConverter.Convert(name, ChineseConversionDirection.TraditionalToSimplified),
+                        NpkPath = npkPath,
+                        FrameNo = no,
+                        ItemRarity = rarityOption,
+                        Description = parsedContent.ContainsKey("[basic explain]") ? string.Join("\n", parsedContent["[basic explain]"]) : string.Empty,
+                        DetailDescription = parsedContent.ContainsKey("[detail explain]") ? string.Join("\n", parsedContent["[detail explain]"]) : string.Empty,
+                        //FireAttack = fireAttack,
+                        //LightAttack = lightAttack,
+                        //DarkAttack = darkAttack,
+                        //WaterAttack = waterAttack,
+                        FlavorText = parsedContent.ContainsKey("[flavor text]") ? string.Join("\n", parsedContent["[flavor text]"]) : string.Empty,
+                        Grade = parsedContent.ContainsKey("[grade]") ? int.Parse(parsedContent["[grade]"].First()) : 0,
+                        MinimumLevel = parsedContent.ContainsKey("[minimum level]") ? int.Parse(parsedContent["[minimum level]"].First()) : 0,
+                        //MagicalAttack = parsedContent.ContainsKey("[magical attack]") ? int.Parse(parsedContent["[magical attack]"].First()) : 0,
+                        //PhysicalAttack = parsedContent.ContainsKey("[physical attack]") ? int.Parse(parsedContent["[physical attack]"].First()) : 0,
+                        //CastSpeed = parsedContent.ContainsKey("[cast speed]") ? int.Parse(parsedContent["[cast speed]"].First()) : 0,
+                        Price = parsedContent.ContainsKey("[price]") ? int.Parse(parsedContent["[price]"].First()) : 0,
+                        //EquipmentPhysicalAttack = parsedContent.ContainsKey("[equipment physical attack]") ? parsedContent["[equipment physical attack]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
+                        //EquipmentMagicalAttack = parsedContent.ContainsKey("[equipment magical attack]") ? parsedContent["[equipment magical attack]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
+                        //SeparateAttack = parsedContent.ContainsKey("[separate attack]") ? parsedContent["[separate attack]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
+                        //MagicalCriticalHit = parsedContent.ContainsKey("[magical critical hit]") ? int.Parse(parsedContent["[magical critical hit]"].First()) : 0,
+                        //PhysicalCriticalHit = parsedContent.ContainsKey("[physical critical hit]") ? int.Parse(parsedContent["[physical critical hit]"].First()) : 0,
+                        //PhysicalDefense = parsedContent.ContainsKey("[physical defense]") ? int.Parse(parsedContent["[physical defense]"].First()) : 0,
+                        EquipmentType = "消耗品/材料",//convertedEquipmentType,
+                        Weight = parsedContent.ContainsKey("[weight]") ? int.Parse(parsedContent["[weight]"].First()) : 0,
+                        //EquipmentPhysicalDefense = parsedContent.ContainsKey("[equipment physical defense]") ? parsedContent["[equipment physical defense]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
+                        //EquipmentMagicDefense = parsedContent.ContainsKey("[equipment magical defense]") ? parsedContent["[equipment magical defense]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
+                        //MagicalDefense = parsedContent.ContainsKey("[magical defense]") ? int.Parse(parsedContent["[magical defense]"].First()) : 0,
+                        UsableJob = usableJob,
+                        AttachType = attachType,
+                        SubType = parsedContent.ContainsKey("[sub type]") ? parsedContent["[sub type]"].First() : string.Empty,
+                        //Durability = parsedContent.ContainsKey("[durability]") ? int.Parse(parsedContent["[durability]"].First()) : 0,
+                        ItemGroupName = itemGroupName,
+                        //ElementalProperty = elementalProperty,
+                        HpMax = parsedContent.ContainsKey("[HP MAX]") ? parsedContent["[HP MAX]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
+                        MpMax = parsedContent.ContainsKey("[MP MAX]") ? parsedContent["[MP MAX]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
+                        //AttackSpeed = parsedContent.ContainsKey("[attack speed]") ? parsedContent["[attack speed]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
+                        //MoveSpeed = parsedContent.ContainsKey("[move speed]") ? parsedContent["[move speed]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
+                        //Stuck = parsedContent.ContainsKey("[stuck]") ? parsedContent["[stuck]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
+                        SkillLevelUp = skillLevelUp
+                    });
+                }
+                catch (Exception ex)
+                {
+                    // 记录出错的 item 信息
+                    Debug.WriteLine($"Error processing item: {item}");
+                    Debug.WriteLine(ex);
+                }
+            });
+        });
+
+        // 手动调用垃圾回收器
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+
+        return new ObservableCollection<Equipments>(list);
+    }
 
     public List<string> GetPvfPart(List<string> orgStrs, string elementName, string endJugdeStr = "[")
     {
@@ -341,7 +602,7 @@ public class PvfExtensionsService : IPvfExtensionsService
         var skills = new ConcurrentBag<SkillInfo>();
         await Task.Run(() =>
         {
-            
+
             Parallel.ForEach(skillListPaths, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount }, skillListPath =>
             //IEnumerable <Task> tasks = skillListPaths.Select(async skillListPath =>
             {
@@ -413,7 +674,7 @@ public class PvfExtensionsService : IPvfExtensionsService
                 }
             });
         });
-        
+
 
         //await Task.WhenAll(tasks);
 

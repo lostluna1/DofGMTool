@@ -24,7 +24,7 @@ namespace DofGMTool.Models {
 		[JsonProperty, Column(Name = "apply_flag", DbType = "tinyint(4)")]
 		public sbyte ApplyFlag { get; set; } = 0;
 
-		[JsonProperty, Column(Name = "reg_date", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
+		[JsonProperty, Column(Name = "reg_date", DbType = "datetime")]
 		public DateTime RegDate { get; set; }
 
 	}

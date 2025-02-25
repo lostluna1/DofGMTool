@@ -652,12 +652,12 @@
                 Margin="550,0,0,0"
                 Orientation="Vertical"
                 Style="{ThemeResource StackPanelStyle}">
-                <NumberBox
+                <!--<NumberBox
                     Width="200"
                     HorizontalAlignment="Left"
                     Header="账户"
                     Visibility="{x:Bind ViewModel.IsPayForAccount, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}"
-                    Value="{x:Bind ViewModel.AccountId, Mode=TwoWay}" />
+                    Value="{x:Bind ViewModel.AccountId, Mode=TwoWay}" />-->
                 <ComboBox
                     Width="200"
                     HorizontalAlignment="Left"

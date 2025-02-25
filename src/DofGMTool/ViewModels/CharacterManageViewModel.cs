@@ -21,10 +21,6 @@ public partial class CharacterManageViewModel : ObservableRecipient
 
 
 
-
-
-
-
     [ObservableProperty]
     public partial ObservableCollection<EquipSlotModel>? EquipSlotModels { get; set; }
 
@@ -113,11 +109,15 @@ public partial class CharacterManageViewModel : ObservableRecipient
     [ObservableProperty]
     public partial ulong PowerupLevel { get; set; }
 
-    [ObservableProperty]
-    public partial string? TestText { get; set; }
-    // 新增一个集合来存储所有的结果
+
     [ObservableProperty]
     public partial ObservableCollection<Equipments> AllEquipments { get; set; } = [];
+
+    [ObservableProperty]
+    public partial ObservableCollection<Equipments> Avatars { get; set; } = [];
+
+    [ObservableProperty]
+    public partial ObservableCollection<Equipments> Creatures { get; set; } = [];
 
     [ObservableProperty]
     public partial int AccountId { get; set; }
@@ -139,7 +139,7 @@ public partial class CharacterManageViewModel : ObservableRecipient
 
     partial void OnSelectedPayChanged(Pay value)
     {
-        if (value==Pay.DMoney || value == Pay.DDot)
+        if (value == Pay.DMoney || value == Pay.DDot)
         {
             IsPayForAccount = true;
             IsPayForRole = false;
@@ -154,7 +154,7 @@ public partial class CharacterManageViewModel : ObservableRecipient
     [RelayCommand]
     public void AccountRecharge()
     {
-        _characterManagerService.AccountRecharge(AccountId, PayValue, SelectedPay);
+        _characterManagerService.AccountRecharge(/*AccountId,*/ PayValue, SelectedPay);
     }
 
     [RelayCommand]
@@ -172,7 +172,7 @@ public partial class CharacterManageViewModel : ObservableRecipient
 
     }
 
-    public CharacterManageViewModel(IFreeSql<MySqlFlag> mysqlFree, IDatabaseService databaseService,IDatabaseService databaseService2,
+    public CharacterManageViewModel(IFreeSql<MySqlFlag> mysqlFree, IDatabaseService databaseService, IDatabaseService databaseService2,
         ICharacterManagerService characterManagerService,
         IInventoryManageService inventoryManageService,
         IEquipSlotProcessor equipSlotProcessor, IFreeSql<SqliteFlag> freeSql)
@@ -186,6 +186,7 @@ public partial class CharacterManageViewModel : ObservableRecipient
         _equipSlotProcessor = equipSlotProcessor;
         PayOptions = new ObservableCollection<Pay>(Enum.GetValues(typeof(Pay)).Cast<Pay>());
         LoadCurrentCharacinfo();
+
     }
     public void LoadCurrentCharacinfo()
     {
@@ -226,14 +227,15 @@ public partial class CharacterManageViewModel : ObservableRecipient
 
             //GetBitMaps(EquipSlotModels);
         }
-
+        Avatars = _characterManagerService.GetAvatar(GlobalVariables.Instance.GlobalCurrentCharacInfo.CharacNo);
+        Creatures = _characterManagerService.GetCreature(GlobalVariables.Instance.GlobalCurrentCharacInfo.CharacNo);
     }
 
     [RelayCommand]
     public void SetGM()
     {
 
-        if (GlobalVariables.Instance.GlobalCurrentCharacInfo!=null)
+        if (GlobalVariables.Instance.GlobalCurrentCharacInfo != null)
         {
             taiwan_login.Delete<GmManifest>().Where(w => w.MId == GlobalVariables.Instance.GlobalCurrentCharacInfo.MId);
             var data = new GmManifest
@@ -241,7 +243,7 @@ public partial class CharacterManageViewModel : ObservableRecipient
                 Level = 7,
                 MId = GlobalVariables.Instance.GlobalCurrentCharacInfo.MId
             };
-           var a= taiwan_login.Insert<GmManifest>(data).ExecuteAffrows(); 
+            taiwan_login.Insert<GmManifest>(data).ExecuteAffrows();
         }
     }
     /*    

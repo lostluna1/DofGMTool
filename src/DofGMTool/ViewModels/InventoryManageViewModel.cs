@@ -18,7 +18,7 @@ public partial class InventoryManageViewModel : ObservableObject
     {
         get;
     }
-    [ObservableProperty] // 比如这个可观察的集合,我只要修改它,前台UI就会自动更新
+    [ObservableProperty] 
     public partial ObservableCollection<RarityOption>? RarityOptions
     {
         get; set;
@@ -127,25 +127,24 @@ public partial class InventoryManageViewModel : ObservableObject
     //[RelayCommand]
     public async Task LoadPvfCommandAsync(PvfFile pvfFilename)
     {
+        var imagePacks2Path = NPKHelper.LoadImagePacks2Path();
+        if (string.IsNullOrEmpty(imagePacks2Path) || !imagePacks2Path.Contains("ImagePacks2"))
+        {
+            throw new Exception("导入前需要到设置中指定ImagePacks2路径");
+        }
         IsLoading = true;
-        ObservableCollection<SkillInfo> skills = await PvfExtensionsService.AnalysisSkill(pvfFilename);
-        await InventoryManageService.InsertSkillData(skills);
+        var equipmentsPartset = await PvfExtensionsService.GetPartsets(pvfFilename);
         ObservableCollection<Equipments> equipments = await PvfExtensionsService.GetEquipments(pvfFilename);
-
+        var stackable = await PvfExtensionsService.GetStackables(pvfFilename);
+        ObservableCollection<SkillInfo> skills = await PvfExtensionsService.AnalysisSkill(pvfFilename);
         PvfExtensionsService.PreLoadImagePacks();
+        await InventoryManageService.InsertEquipmentPartsets(equipmentsPartset);
+        await InventoryManageService.InsertSkillData(skills);
         NPKHelper.GetBitMap(equipments);
+        NPKHelper.GetBitMap(stackable);
         await InventoryManageService.InsertEquipmentData(equipments);
+        await InventoryManageService.InsertEquipmentData(stackable);
         await LoadDataAsync();
-        /*await Task.Run(async() => {
-            var skills = await PvfExtensionsService.AnalysisSkill(pvfFilename);
-            await InventoryManageService.InsertSkillData(skills);
-            ObservableCollection<Equipments> equipments = await PvfExtensionsService.GetEquipments(pvfFilename);
-
-            PvfExtensionsService.PreLoadImagePacks();
-            NPKHelper.GetBitMap(equipments);
-            await InventoryManageService.InsertEquipmentData(equipments);
-            await LoadDataAsync();
-        });*/
         IsLoading = false;
     }
 }

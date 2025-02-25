@@ -16,8 +16,23 @@ public partial class Equipments : ObservableObject
 
     [ObservableProperty]
     [Column(IsIgnore = true)]
-    public partial BitmapImage? BitMap { get; set; } 
+    public partial BitmapImage? BitMap { get; set; }
 
+    [ObservableProperty]
+    public partial int PartsetIndex { get; set; }
+
+    [ObservableProperty]
+    public partial string PartsetItemArr { get; set; }
+
+    /// <summary>
+    /// 套装名称，这里是例如传承装备一类的套装名称，在etc文件中不存在的
+    /// </summary>
+    [ObservableProperty]
+    public partial string SetName { get; set; }
+
+    //[ObservableProperty]
+    [Navigate(nameof(PartsetIndex))]
+    public /*partial*/ EquipmentPartset? EquipmentPartset { get; set; }
 
     /// <summary>
     /// 装备ID

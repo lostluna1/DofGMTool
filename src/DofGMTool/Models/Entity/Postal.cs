@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace DofGMTool.Models;
 
-[JsonObject(MemberSerialization.OptIn), Table(Name = "postal", DisableSyncStructure = true)]
+[JsonObject(MemberSerialization.OptIn), Table(Name = "postal", DisableSyncStructure = false)]
 public partial class _Postal
 {
 
@@ -49,8 +49,8 @@ public partial class _Postal
     [JsonProperty, Column(Name = "ipg_transaction_id")]
     public int IpgTransactionId { get; set; } = 0;
 
-    [JsonProperty, Column(Name = "item_guid", DbType = "varbinary(10)")]
-    public byte[] ItemGuid { get; set; }
+    [JsonProperty, Column(Name = "item_guid", DbType = "varbinary(10)",IsNullable =true)]
+    public byte[]? ItemGuid { get; set; }
 
     [JsonProperty, Column(Name = "item_id")]
     public uint ItemId { get; set; } = 0;
@@ -58,7 +58,7 @@ public partial class _Postal
     [JsonProperty, Column(Name = "letter_id")]
     public int LetterId { get; set; } = 0;
 
-    [JsonProperty, Column(Name = "occ_time", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
+    [JsonProperty, Column(Name = "occ_time", DbType = "datetime")]
     public DateTime OccTime { get; set; }
 
     [JsonProperty, Column(Name = "postal")]
@@ -70,7 +70,7 @@ public partial class _Postal
     [JsonProperty, Column(Name = "receive_charac_no")]
     public int ReceiveCharacNo { get; set; } = 0;
 
-    [JsonProperty, Column(Name = "receive_time", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
+    [JsonProperty, Column(Name = "receive_time", DbType = "datetime")]
     public DateTime ReceiveTime { get; set; }
 
     [JsonProperty, Column(Name = "seal_flag", DbType = "tinyint(4)")]
@@ -92,6 +92,6 @@ public partial class _Postal
     public sbyte UnlimitFlag { get; set; } = 0;
 
     [JsonProperty, Column(Name = "upgrade")]
-    public byte Upgrade { get; set; } = 0;
+    public int Upgrade { get; set; } = 0;
 
 }

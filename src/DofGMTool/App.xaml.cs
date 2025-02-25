@@ -10,6 +10,7 @@ using FreeSql;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using MySqlConnector;
 using System.Diagnostics;
 using Windows.Storage;
@@ -70,6 +71,7 @@ public partial class App : Application
             services.AddSingleton<IInventoryManageService, InventoryManageService>();
             services.AddSingleton<IEquipSlotProcessor, EquipSlotProcessor>();
             services.AddSingleton<ICharacterManagerService, CharacterManagerService>();
+            services.AddSingleton<ISendMailService, SendMailService>();
             services.AddSingleton<CharacInfo>();// 注册角色信息服务
 
             // Core Services
@@ -93,7 +95,7 @@ public partial class App : Application
                 return new FreeSqlBuilder()
                     .UseConnectionFactory(DataType.MySql, () =>
                     {
-                        var conn = new MySqlConnection("data source=192.168.200.131;port=3306;user id=game;password=uu5!^%jg;initial catalog=taiwan_cain;sslmode=none;max pool size=50;Charset=latin1;");
+                        var conn = new MySqlConnection("data source=192.168.200.131;port=3306;user id=game;password=uu5!^%jg;initial catalog=taiwan_cain;sslmode=none;max pool size=50;Charset=latin1;ConvertZeroDateTime=True;");
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
                         cmd.CommandText = "SET Charset latin1;";
@@ -148,10 +150,24 @@ public partial class App : Application
         UnhandledException += App_UnhandledException;
     }
 
-    private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+    /// <summary>
+    /// 全局异常处理
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
     {
-        // TODO: Log and handle exceptions as appropriate.
-        // https://docs.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.application.unhandledexception.
+        e.Handled = true;
+
+        var dialog = new ContentDialog
+        {
+            Title = "Unhandled Exception",
+            Content = $"An unhandled exception occurred: {e.Exception.Message}",
+            CloseButtonText = "我知道了",
+            XamlRoot = MainWindow.Content.XamlRoot
+        };
+
+        await dialog.ShowAsync();
     }
 
 

@@ -31,7 +31,7 @@ public interface IPvfExtensionsService
     /// 解析消耗品物品
     /// </summary>
     /// <param name="pvf"></param>
-    void AnalysisStackables(PvfFile pvf);
+    Task<ObservableCollection<Equipments>> GetStackables(PvfFile pvf);
 
     /// <summary>
     /// 解析职业
@@ -50,4 +50,5 @@ public interface IPvfExtensionsService
     /// </summary>
     /// <param name="pvf"></param>
     void AnalysisQuest(PvfFile pvf);
+    Task<ObservableCollection<EquipmentPartset>> GetPartsets(PvfFile pvf);
 }

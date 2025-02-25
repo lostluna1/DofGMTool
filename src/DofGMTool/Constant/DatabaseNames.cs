@@ -6,4 +6,5 @@ public static class DBNames
     public const string TaiwanCain2nd = "taiwan_cain_2nd";
     public const string TaiwanLogin = "taiwan_login";
     public const string TaiwanBilling = "taiwan_billing";
+    public const string D_Taiwan = "d_taiwan";
 }

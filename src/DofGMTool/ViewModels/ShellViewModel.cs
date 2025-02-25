@@ -1,11 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-
+using DofGMTool.Constant;
 using DofGMTool.Contracts.Services;
 using DofGMTool.Models;
 using DofGMTool.Views;
 using Microsoft.UI.Xaml.Navigation;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using Windows.Web.Syndication;
 
 namespace DofGMTool.ViewModels;
 
@@ -16,15 +17,26 @@ public partial class ShellViewModel : ObservableRecipient
         get;
     }
     public IFreeSql<MySqlFlag> _taiwan_cain;
+    public IFreeSql<MySqlFlag> d_taiwan;
+
+    [ObservableProperty]
+    public partial Accounts? SeletedAccount { get; set; }
+
+    [ObservableProperty]
+    public partial ObservableCollection<Accounts> AccountInfos { get; set; } = [];
+
     [ObservableProperty]
     public partial ObservableCollection<CharacInfo> CharacInfos { get; set; } = [];
 
     [ObservableProperty]
-    private bool isBackEnabled;
+    public partial CharacInfo? SelectedCharacInfo { get; set; }
+
 
     [ObservableProperty]
-    private object? selected;
+    public partial bool IsBackEnabled { get; set; }
 
+    [ObservableProperty]
+    public partial object? Selected { get; set; }
     public INavigationService NavigationService
     {
         get;
@@ -34,19 +46,35 @@ public partial class ShellViewModel : ObservableRecipient
     {
         get;
     }
-    [ObservableProperty]
-    public partial CharacInfo? SelectedCharacInfo { get; set; }
+
+    partial void OnSeletedAccountChanging(Accounts? value)
+    {
+        if (value==null)
+        {
+            return;
+        }
+
+        CharacInfos = new ObservableCollection<CharacInfo>(_taiwan_cain.Select<CharacInfo>().Where(w=>w.MId==value.UID && w.DeleteFlag!=1).ToList());
+    }
+
+
+
 
     [ObservableProperty]
     public partial GlobalVariables? _GlobalVariables { get; set; } = GlobalVariables.Instance;
-    public ShellViewModel(INavigationService navigationService, INavigationViewService navigationViewService, IFreeSql<MySqlFlag> taiwan_cain, CharacterManageViewModel characInfoViewModel)
+    public ShellViewModel(INavigationService navigationService,
+        IDatabaseService databaseService,
+        INavigationViewService navigationViewService, IFreeSql<MySqlFlag> taiwan_cain, CharacterManageViewModel characInfoViewModel)
     {
 
         NavigationService = navigationService;
         NavigationService.Navigated += OnNavigated;
         NavigationViewService = navigationViewService;
         _taiwan_cain = taiwan_cain;
-        CharacInfos = new ObservableCollection<CharacInfo>(_taiwan_cain.Select<CharacInfo>().ToList());
+        d_taiwan = databaseService.GetMySqlConnection(DBNames.D_Taiwan);
+        
+        AccountInfos = new ObservableCollection<Accounts>(d_taiwan.Select<Accounts>().ToList());
+
         CharacInfoViewModel = characInfoViewModel;
     }
 

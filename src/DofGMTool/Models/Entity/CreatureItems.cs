@@ -43,7 +43,7 @@ public partial class CreatureItems
     [JsonProperty, Column(Name = "no_charge", DbType = "tinyint(4)")]
     public sbyte NoCharge { get; set; } = 0;
 
-    [JsonProperty, Column(Name = "reg_date", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
+    [JsonProperty, Column(Name = "reg_date", DbType = "datetime")]
     public DateTime RegDate { get; set; }
 
     [JsonProperty, Column(Name = "slot")]

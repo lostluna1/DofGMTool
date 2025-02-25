@@ -1,4 +1,6 @@
 ﻿using DofGMTool.Constant;
+using DofGMTool.Models;
+using System.Collections.ObjectModel;
 
 namespace DofGMTool.Contracts.Services;
 public interface ICharacterManagerService
@@ -22,5 +24,27 @@ public interface ICharacterManagerService
     /// <param name="mid"></param>
     /// <param name="payValue"></param>
     /// <param name="pay"></param>
-    void AccountRecharge(int mid, int payValue, Pay pay);
+    void AccountRecharge( int payValue, Pay pay);
+
+    /// <summary>
+    /// 转职
+    /// </summary>
+    /// <param name="characNo"></param>
+    /// <param name="job"></param>
+    /// <param name="growType"></param>
+    void ChangeGrowType(int characNo, int job, int growType);
+
+    /// <summary>
+    /// 获取已穿戴装扮
+    /// </summary>
+    /// <param name="characNo"></param>
+    /// <returns></returns>
+    ObservableCollection<Equipments> GetAvatar(int characNo);
+
+    /// <summary>
+    /// 获取已佩戴的宠物
+    /// </summary>
+    /// <param name="characNo"></param>
+    /// <returns></returns>
+    ObservableCollection<Equipments> GetCreature(int characNo);
 }

@@ -1,4 +1,5 @@
-﻿using DofGMTool.Contracts.Services;
+﻿using DofGMTool.Constant;
+using DofGMTool.Contracts.Services;
 using DofGMTool.Models;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -13,13 +14,16 @@ public class InventoryManageService : IInventoryManageService
         _freeSql = freeSql;
         _freeSql.CodeFirst.SyncStructure<Equipments>();
         _freeSql.CodeFirst.SyncStructure<SkillInfo>();
+        _freeSql.CodeFirst.SyncStructure<EquipmentPartset>();
 
     }
     public async Task<int> DeleteEquipmentData(string guid)
     {
         return await _freeSql.Delete<Equipments>().Where(a => a.Id == guid).ExecuteAffrowsAsync();
     }
-    public async Task<(ObservableCollection<Equipments> Equipments, int TotalCount)> GetEquipmentDataPaged(int pageNumber, int pageSize, string? itemId = null, string? itemName = null, RarityOption? rarityOption = null)
+
+
+    public async Task<(ObservableCollection<Equipments> Equipments, int TotalCount)> GetEquipmentDataPaged(int pageNumber, int pageSize, string? itemId = null, string? itemName = null, RarityOption? rarityOption = null, EquipTypeFilter? equipTypeFilter = null)
     {
         FreeSql.ISelect<Equipments> query = _freeSql.Select<Equipments>();
 
@@ -34,10 +38,23 @@ public class InventoryManageService : IInventoryManageService
             query = query.Where(e => e.ItemId!.Contains(itemId));
         }
 
+        if (equipTypeFilter != null && equipTypeFilter.Types.Length > 0)
+        {
+            if (equipTypeFilter.IsInclude)
+            {
+                query = query.Where(e => equipTypeFilter.Types.Contains(e.EquipmentType!));
+            }
+            else
+            {
+                query = query.Where(e => !equipTypeFilter.Types.Contains(e.EquipmentType!));
+            }
+        }
+
         if (rarityOption != null)
         {
             query = query.Where(e => e.ItemRarityName == rarityOption.Name);
         }
+
         string sql = query.ToSql();
         Debug.WriteLine($"Generated SQL: {sql}");
         List<Equipments> result = await query.Count(out long total)
@@ -113,7 +130,10 @@ public class InventoryManageService : IInventoryManageService
     {
         await _freeSql.InsertOrUpdate<Equipments>().SetSource(equipments).ExecuteAffrowsAsync();
     }
-
+    public async Task InsertEquipmentPartsets(ObservableCollection<EquipmentPartset> partsets)
+    {
+        await _freeSql.InsertOrUpdate<EquipmentPartset>().SetSource(partsets).ExecuteAffrowsAsync();
+    }
     public async Task InsertSkillData(ObservableCollection<SkillInfo> skills)
     {
         await _freeSql.InsertOrUpdate<SkillInfo>().SetSource(skills).ExecuteAffrowsAsync();

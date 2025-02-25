@@ -1,4 +1,5 @@
-﻿using DofGMTool.Models;
+﻿using DofGMTool.Constant;
+using DofGMTool.Models;
 using System.Collections.ObjectModel;
 
 namespace DofGMTool.Contracts.Services;
@@ -14,5 +15,6 @@ public interface IInventoryManageService
     Task<int> DeleteEquipmentData(string guid);
 
     //Task<(ObservableCollection<Equipments> Equipments, int TotalCount)> GetEquipmentDataPaged(int pageNumber, int pageSize);
-    Task<(ObservableCollection<Equipments> Equipments, int TotalCount)> GetEquipmentDataPaged(int pageNumber, int pageSize, string? itemId = null, string? itemName = null, RarityOption? rarityOption = null);
+    Task<(ObservableCollection<Equipments> Equipments, int TotalCount)> GetEquipmentDataPaged(int pageNumber, int pageSize, string? itemId = null, string? itemName = null, RarityOption? rarityOption = null, EquipTypeFilter? equipTypeFilter = null);
+    Task InsertEquipmentPartsets(ObservableCollection<EquipmentPartset> partsets);
 }

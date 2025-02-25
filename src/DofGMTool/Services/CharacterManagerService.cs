@@ -1,6 +1,8 @@
 ﻿using DofGMTool.Constant;
 using DofGMTool.Contracts.Services;
+using DofGMTool.Helpers;
 using DofGMTool.Models;
+using System.Collections.ObjectModel;
 
 namespace DofGMTool.Services;
 public class CharacterManagerService : ICharacterManagerService
@@ -9,9 +11,10 @@ public class CharacterManagerService : ICharacterManagerService
     public IFreeSql<MySqlFlag> _taiwan_cain;
     private readonly IEquipSlotProcessor _equipSlotProcessor;
     public IFreeSql<MySqlFlag> _taiwan_billing;
+    public IFreeSql<SqliteFlag> _fsql;
     //public CharacInfo? currentCharacInfo { get;set;}
     public CharacterManagerService(IDatabaseService databaseService, IEquipSlotProcessor equipSlotProcessor,
-        IDatabaseService taiwan_billing
+        IDatabaseService taiwan_billing, IFreeSql<SqliteFlag> freeSql
         )
     {
         _taiwan_cain_2nd = databaseService.GetMySqlConnection(DBNames.TaiwanCain2nd);
@@ -19,6 +22,7 @@ public class CharacterManagerService : ICharacterManagerService
         _equipSlotProcessor = equipSlotProcessor;
         //currentCharacInfo = GlobalVariables.Instance.GlobalCurrentCharacInfo;
         _taiwan_billing = taiwan_billing.GetMySqlConnection(DBNames.TaiwanBilling);
+        _fsql = freeSql;
     }
     //CharacInfo currentCharacInfo = GlobalVariables.Instance.GlobalCurrentCharacInfo;
     public void ChangeCurrentEquip(ulong newEquipId, int slotIndex)
@@ -76,9 +80,9 @@ public class CharacterManagerService : ICharacterManagerService
         #endregion
     }
 
-    public void AccountRecharge(int mid, int payValue, Pay pay)
+    public void AccountRecharge(int payValue, Pay pay)
     {
-        if (GlobalVariables.Instance.GlobalCurrentCharacInfo==null)
+        if (GlobalVariables.Instance.GlobalCurrentCharacInfo == null)
         {
             return;
         }
@@ -87,13 +91,13 @@ public class CharacterManagerService : ICharacterManagerService
             case Pay.DDot:
                 _taiwan_billing.Update<CashCeraPoint>()
                     .Set(a => a.CeraPoint + payValue)
-                    .Where(a => a.Account == mid.ToString())
+                    .Where(a => a.Account == GlobalVariables.Instance.GlobalCurrentCharacInfo.MId.ToString())
                     .ExecuteAffrows();
                 break;
             case Pay.DMoney:
                 _taiwan_billing.Update<CashCera>()
                     .Set(a => a.Cera + payValue)
-                    .Where(a => a.Account == mid.ToString())
+                    .Where(a => a.Account == GlobalVariables.Instance.GlobalCurrentCharacInfo.MId.ToString())
                     .ExecuteAffrows();
                 break;
             case Pay.Money:
@@ -138,4 +142,45 @@ public class CharacterManagerService : ICharacterManagerService
         }
     }
 
+
+    public void ChangeGrowType(int characNo, int job, int growType)
+    {
+        _taiwan_cain.Update<CharacInfo>()
+            .Set(a => a.Job, job)
+            .Set(a => a.GrowType, growType)
+            .Where(a => a.CharacNo == characNo)
+            .ExecuteAffrows();
+    }
+
+    public ObservableCollection<Equipments> GetAvatar(int characNo)
+    {
+        var userItems = _taiwan_cain_2nd.Select<UserItems>().Where(a => a.CharacNo == characNo && a.Slot <= 9).OrderBy(a => a.Slot).ToList();
+        var itemIds = userItems.Select(item => item.ItId.ToString()).ToList();
+        if (itemIds?.Count == 0)
+        {
+            return [];
+        }
+        var equipmentList = _fsql.Select<Equipments>()
+        .Where(e => itemIds!.Contains(e.ItemId!))
+        .ToList();
+        var equipments = new ObservableCollection<Equipments>(equipmentList);
+        NPKHelper.GetBitMaps(equipments);
+        return equipments;
+    }
+
+    public ObservableCollection<Equipments> GetCreature(int characNo)
+    {
+        var creatureItems = _taiwan_cain_2nd.Select<CreatureItems>().Where(a => a.CharacNo == characNo).ToList();
+        var itemIds = creatureItems.Select(item => item.ItId.ToString()).ToList();
+        if (itemIds?.Count == 0)
+        {
+            return [];
+        }
+        var equipmentList = _fsql.Select<Equipments>()
+        .Where(e => itemIds!.Contains(e.ItemId!))
+        .ToList();
+        var equipments = new ObservableCollection<Equipments>(equipmentList);
+        NPKHelper.GetBitMaps(equipments);
+        return equipments;
+    }
 }

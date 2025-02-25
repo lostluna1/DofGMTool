@@ -16,7 +16,7 @@ public partial class Letter
     [JsonProperty, Column(Name = "letter_text", IsNullable = false)]
     public string LetterText { get; set; }
 
-    [JsonProperty, Column(Name = "reg_date", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
+    [JsonProperty, Column(Name = "reg_date", DbType = "datetime")]
     public DateTime RegDate { get; set; }
 
     [JsonProperty, Column(Name = "send_charac_name", StringLength = 20, IsNullable = false)]

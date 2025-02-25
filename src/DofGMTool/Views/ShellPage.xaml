@@ -35,6 +35,24 @@
             <winuiex:TitleBar.Footer>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock
+                        Margin="20,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="UID:" />
+                    <ComboBox
+                        Width="150"
+                        VerticalAlignment="Center"
+                        ItemsSource="{x:Bind ViewModel.AccountInfos, Mode=TwoWay}"
+                        SelectedItem="{x:Bind ViewModel.SeletedAccount, Mode=TwoWay}"
+                        SelectedValuePath="UID">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock VerticalAlignment="Center" Text="{Binding UID}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <TextBlock
                         Margin="10,0,0,0"
                         VerticalAlignment="Center"
                         Text="当前角色:" />

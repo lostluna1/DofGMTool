@@ -28,14 +28,14 @@ public partial class UserItems
     [JsonProperty, Column(Name = "emblem_endurance")]
     public ushort EmblemEndurance { get; set; } = 0;
 
-    [JsonProperty, Column(Name = "expire_date", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
-    public DateTime ExpireDate { get; set; }
+    [JsonProperty, Column(Name = "expire_date"/*, DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00"*/)]
+    public DateTime? ExpireDate { get; set; }
 
     [JsonProperty, Column(Name = "hidden_option")]
     public ushort HiddenOption { get; set; } = 0;
 
     [JsonProperty, Column(Name = "ipg_agency_no", StringLength = 32, IsNullable = false)]
-    public string IpgAgencyNo { get; set; }
+    public string? IpgAgencyNo { get; set; }
 
     [JsonProperty, Column(Name = "it_id")]
     public int ItId { get; set; } = 0;
@@ -44,16 +44,16 @@ public partial class UserItems
     public byte ItemLockKey { get; set; } = 0;
 
     [JsonProperty, Column(Name = "jewel_socket", DbType = "blob")]
-    public byte[] JewelSocket { get; set; }
+    public byte[]? JewelSocket { get; set; }
 
-    [JsonProperty, Column(Name = "m_time", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
-    public DateTime MTime { get; set; }
+    [JsonProperty, Column(Name = "m_time"/*, DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00"*/)]
+    public DateTime? MTime { get; set; }
 
     [JsonProperty, Column(Name = "obtain_from", DbType = "tinyint(4)")]
     public sbyte? ObtainFrom { get; set; }
 
-    [JsonProperty, Column(Name = "reg_date", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
-    public DateTime RegDate { get; set; }
+    [JsonProperty, Column(Name = "reg_date"/*, DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00"*/)]
+    public DateTime? RegDate { get; set; }
 
     [JsonProperty, Column(Name = "slot")]
     public int Slot { get; set; } = 0;
@@ -62,7 +62,7 @@ public partial class UserItems
     public byte Stat { get; set; } = 0;
 
     [JsonProperty, Column(Name = "to_ipg_agency_no", StringLength = 32, IsNullable = false)]
-    public string ToIpgAgencyNo { get; set; }
+    public string? ToIpgAgencyNo { get; set; }
 
     [JsonProperty, Column(Name = "trade_restrict")]
     public int? TradeRestrict { get; set; } = 0;
