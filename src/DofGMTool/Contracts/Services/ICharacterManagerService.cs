@@ -24,7 +24,7 @@ public interface ICharacterManagerService
     /// <param name="mid"></param>
     /// <param name="payValue"></param>
     /// <param name="pay"></param>
-    void AccountRecharge( int payValue, Pay pay);
+    void AccountRecharge(int payValue, Pay pay);
 
     /// <summary>
     /// 转职

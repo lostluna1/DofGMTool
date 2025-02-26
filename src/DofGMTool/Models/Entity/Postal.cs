@@ -49,7 +49,7 @@ public partial class _Postal
     [JsonProperty, Column(Name = "ipg_transaction_id")]
     public int IpgTransactionId { get; set; } = 0;
 
-    [JsonProperty, Column(Name = "item_guid", DbType = "varbinary(10)",IsNullable =true)]
+    [JsonProperty, Column(Name = "item_guid", DbType = "varbinary(10)", IsNullable = true)]
     public byte[]? ItemGuid { get; set; }
 
     [JsonProperty, Column(Name = "item_id")]

@@ -7,22 +7,25 @@ using System.Collections.ObjectModel;
 namespace DofGMTool.Services;
 public class CharacterManagerService : ICharacterManagerService
 {
-    public IFreeSql<MySqlFlag> _taiwan_cain_2nd;
-    public IFreeSql<MySqlFlag> _taiwan_cain;
-    private readonly IEquipSlotProcessor _equipSlotProcessor;
-    public IFreeSql<MySqlFlag> _taiwan_billing;
-    public IFreeSql<SqliteFlag> _fsql;
-    //public CharacInfo? currentCharacInfo { get;set;}
-    public CharacterManagerService(IDatabaseService databaseService, IEquipSlotProcessor equipSlotProcessor,
-        IDatabaseService taiwan_billing, IFreeSql<SqliteFlag> freeSql
-        )
+    //private IDatabaseService _databaseService;
+    private IEquipSlotProcessor _equipSlotProcessor;
+    private IFreeSql<SqliteFlag> _fsql;
+    private IFreeSql<MySqlFlag> _taiwan_cain_2nd;
+    private IFreeSql<MySqlFlag> _taiwan_cain;
+    private IFreeSql<MySqlFlag> _taiwan_billing;
+
+    public CharacterManagerService(
+        IEquipSlotProcessor equipSlotProcessor,
+        //IDatabaseService billingDatabaseService,
+        IFreeSql<SqliteFlag> freeSql)
     {
-        _taiwan_cain_2nd = databaseService.GetMySqlConnection(DBNames.TaiwanCain2nd);
-        _taiwan_cain = databaseService.GetMySqlConnection(DBNames.TaiwanCain);
+        DatabaseHelper databseService = DatabaseHelper.Instance;
         _equipSlotProcessor = equipSlotProcessor;
-        //currentCharacInfo = GlobalVariables.Instance.GlobalCurrentCharacInfo;
-        _taiwan_billing = taiwan_billing.GetMySqlConnection(DBNames.TaiwanBilling);
         _fsql = freeSql;
+
+        _taiwan_cain_2nd = databseService.GetMySqlConnection(DBNames.TaiwanCain2nd);
+        _taiwan_cain = databseService.GetMySqlConnection(DBNames.TaiwanCain);
+        _taiwan_billing = databseService.GetMySqlConnection(DBNames.TaiwanBilling);
     }
     //CharacInfo currentCharacInfo = GlobalVariables.Instance.GlobalCurrentCharacInfo;
     public void ChangeCurrentEquip(ulong newEquipId, int slotIndex)

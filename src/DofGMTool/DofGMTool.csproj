@@ -34,6 +34,7 @@
     <None Remove="Assets\inventory.png" />
     <None Remove="Views\CharacterInfoDialog\ChangeEquipDialog.xaml" />
     <None Remove="Views\CharacterInfoDialog\PowerupEquip.xaml" />
+    <None Remove="Views\LoginWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\ImagePacks\**\*.*">
@@ -108,11 +109,17 @@
     <Content Update="Assets\icons8\icons8-3ds-36.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Update="Assets\windowbg.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\LoginWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\CharacterInfoDialog\ChangeEquipDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

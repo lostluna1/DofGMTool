@@ -3,7 +3,6 @@
 namespace DofGMTool.Models;
 public class GlobalVariables
 {
-    private static GlobalVariables? _instance;
     private static readonly object _lock = new();
 
     private GlobalVariables() { }
@@ -12,14 +11,14 @@ public class GlobalVariables
     {
         get
         {
-            if (_instance == null)
+            if (field == null)
             {
                 lock (_lock)
                 {
-                    _instance ??= new GlobalVariables();
+                    field ??= new GlobalVariables();
                 }
             }
-            return _instance;
+            return field;
         }
     }
 

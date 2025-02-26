@@ -2,6 +2,7 @@
 using DofGMTool.Contracts.Services;
 using DofGMTool.Core.Contracts.Services;
 using DofGMTool.Core.Services;
+using DofGMTool.Helpers;
 using DofGMTool.Models;
 using DofGMTool.Services;
 using DofGMTool.ViewModels;
@@ -11,7 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using MySqlConnector;
 using System.Diagnostics;
 using Windows.Storage;
 
@@ -90,42 +90,7 @@ public partial class App : Application
             services.AddTransient<MainPage>();
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
-            services.AddSingleton<IFreeSql<MySqlFlag>>(provider =>
-            {
-                return new FreeSqlBuilder()
-                    .UseConnectionFactory(DataType.MySql, () =>
-                    {
-                        var conn = new MySqlConnection("data source=192.168.200.131;port=3306;user id=game;password=uu5!^%jg;initial catalog=taiwan_cain;sslmode=none;max pool size=50;Charset=latin1;ConvertZeroDateTime=True;");
-                        conn.Open();
-                        MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "SET Charset latin1;";
-                        cmd.ExecuteNonQuery();
-                        return conn;
-                    })
-                    .UseMonitorCommand(cmd => Debug.WriteLine($"Sql：{cmd.CommandText}"))
-                    .Build<MySqlFlag>();
-            });
-            //Func<IServiceProvider, IFreeSql<MySqlFlag>> fsqlMysql = r =>
-            //{
-            //    IFreeSql<MySqlFlag> fsql1 = new FreeSqlBuilder().UseConnectionFactory(DataType.MySql, () =>
-            //    {
-
-
-
-            //        var conn = new MySqlConnection("data source=192.168.200.131;port=3306;user id=game;password=uu5!^%jg;initial catalog=taiwan_cain;sslmode=none;max pool size=12;Charset=latin1;");
-            //        conn.Open();
-            //        MySqlCommand cmd = conn.CreateCommand();
-            //        cmd.CommandText = "SET Charset latin1;";
-            //        cmd.ExecuteNonQuery();
-            //        //conn.Close();
-            //        return conn;
-            //    })
-            //    .UseMonitorCommand(cmd => Debug.WriteLine($"Sql：{cmd.CommandText}"))
-            //    .Build<MySqlFlag>();
-
-            //    return fsql1;
-            //};
-
+            services.AddTransient<LoginWindowViewModel>();
 
             Func<IServiceProvider, IFreeSql<SqliteFlag>> fsqlSqlite = r =>
             {
@@ -139,9 +104,7 @@ public partial class App : Application
                 return fsql2;
             };
 
-            //services.AddSingleton<IFreeSql<MySqlFlag>>(fsqlMysql);
             services.AddSingleton<IFreeSql<SqliteFlag>>(fsqlSqlite);
-            services.AddSingleton<IDatabaseService, DatabaseService>();// 注册动态数据库服务
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
         }).
@@ -161,20 +124,29 @@ public partial class App : Application
 
         var dialog = new ContentDialog
         {
-            Title = "Unhandled Exception",
-            Content = $"An unhandled exception occurred: {e.Exception.Message}",
+            Title = "错误！",
+            Content = $" {e.Exception.Message}",
             CloseButtonText = "我知道了",
-            XamlRoot = MainWindow.Content.XamlRoot
+            XamlRoot = App.CurrentWindow.Content.XamlRoot//MainWindow.Content.XamlRoot
         };
 
         await dialog.ShowAsync();
     }
 
+    public static Window CurrentWindow = Window.Current;
 
-    protected override async void OnLaunched(LaunchActivatedEventArgs args)
+    protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
+        CurrentWindow = new LoginWindow();
+
+        App.MainWindow.Closed += CurrentWindow_Closed;
+        CurrentWindow.Activate();
         base.OnLaunched(args);
 
-        await App.GetService<IActivationService>().ActivateAsync(args);
+        //await App.GetService<IActivationService>().ActivateAsync(args);
+    }
+    private void CurrentWindow_Closed(object sender, WindowEventArgs e)
+    {
+        DatabaseHelper.Instance.Dispose();
     }
 }

@@ -132,10 +132,10 @@ public class PvfExtensionsService : IPvfExtensionsService
                     string lightAttack = parsedContent.ContainsKey("[light attack]") ? string.Join("\n", parsedContent["[light attack]"].First()) : string.Empty;
                     string waterAttack = parsedContent.ContainsKey("[water attack]") ? string.Join("\n", parsedContent["[water attack]"].First()) : string.Empty;
                     string fireAttack = parsedContent.ContainsKey("[fire attack]") ? string.Join("\n", parsedContent["[fire attack]"].First()) : string.Empty;
-                    var setName = parsedContent.ContainsKey("[set name]") ? string.Join("\n", parsedContent["[set name]"]) : string.Empty;
+                    string setName = parsedContent.ContainsKey("[set name]") ? string.Join("\n", parsedContent["[set name]"]) : string.Empty;
                     list.Add(new Equipments
                     {
-                        
+
                         SetName = ChineseConverter.Convert(setName, ChineseConversionDirection.TraditionalToSimplified),
                         PartsetItemArr = parsedContent.ContainsKey("[set item]") ? string.Join("\n", parsedContent["[set item]"]) : string.Empty,
                         PartsetIndex = parsedContent.ContainsKey("[part set index]") ? int.Parse(parsedContent["[part set index]"].First()) : 0,
@@ -354,7 +354,7 @@ public class PvfExtensionsService : IPvfExtensionsService
                 if (currentTag == "[set item]")
                 {
                     // 处理 [set item] 标签
-                    var items = line.Split(new[] { '\t', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] items = line.Split(new[] { '\t', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (items.Length > 0)
                     {
                         result[currentTag].Add($"[{string.Join(",", items)}]");

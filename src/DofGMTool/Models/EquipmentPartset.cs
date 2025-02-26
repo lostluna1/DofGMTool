@@ -1,7 +1,6 @@
 ﻿namespace DofGMTool.Models;
 
 using FreeSql.DataAnnotations;
-using Windows.System;
 
 public class EquipmentPartset
 {

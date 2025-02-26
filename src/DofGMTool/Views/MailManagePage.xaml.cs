@@ -91,7 +91,7 @@ public sealed partial class MailManagePage : Page
     {
         if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
         {
-           await ViewModel.LoadPartsetNames(sender.Text);
+            await ViewModel.LoadPartsetNames(sender.Text);
         }
     }
 
@@ -99,7 +99,7 @@ public sealed partial class MailManagePage : Page
     {
         if (args.SelectedItem is EquipmentPartset selected)
         {
-             await ViewModel.LoadPartsetData(selected.Id,selected.PartsetName);
+            await ViewModel.LoadPartsetData(selected.Id, selected.PartsetName);
             EquipmentsListView.SelectedIndex = 1;
             //ViewModel.SendMailCommand.NotifyCanExecuteChanged();
 
@@ -110,8 +110,7 @@ public sealed partial class MailManagePage : Page
     {
         if (sender is ListView listView)
         {
-            var clickedItem = (e.OriginalSource as FrameworkElement)?.DataContext as Message;
-            if (clickedItem != null)
+            if ((e.OriginalSource as FrameworkElement)?.DataContext is Message clickedItem)
             {
                 listView.SelectedItem = clickedItem;
             }

@@ -1,5 +1,6 @@
 ﻿using DofGMTool.Constant;
 using DofGMTool.Contracts.Services;
+using DofGMTool.Helpers;
 using DofGMTool.Models;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -7,16 +8,24 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 namespace DofGMTool.Services;
-public class SendMailService(IDatabaseService databaseService, IFreeSql<MySqlFlag> freeSql, IFreeSql<SqliteFlag> freeSqlite,
-    IInventoryManageService inventoryManageService
-    ) : ISendMailService
+public class SendMailService : ISendMailService
 {
+    //private IDatabaseService databaseService;
+    public IInventoryManageService _inventoryManageService;
+    public IFreeSql<MySqlFlag> taiwan_cain_2nd;
+    public IFreeSql<MySqlFlag> fsql;
+    public IFreeSql<SqliteFlag> _freeSqlite;
 
-    public IInventoryManageService _inventoryManageService = inventoryManageService;
-    public IFreeSql<MySqlFlag> taiwan_cain_2nd = databaseService.GetMySqlConnection(DBNames.TaiwanCain2nd);
-    public IFreeSql<MySqlFlag> fsql = freeSql;
-    public IFreeSql<SqliteFlag> _freeSqlite = freeSqlite;
+    // 构造函数
+    public SendMailService(IFreeSql<SqliteFlag> freeSqlite, IInventoryManageService inventoryManageService)
+    {
+        _inventoryManageService = inventoryManageService;
+        _freeSqlite = freeSqlite;
+        DatabaseHelper databaseService = DatabaseHelper.Instance;
 
+        taiwan_cain_2nd = databaseService.GetMySqlConnection(DBNames.TaiwanCain2nd);
+        fsql = databaseService.GetMySqlConnection(DBNames.TaiwanCain);
+    }
     public async Task<ObservableCollection<Equipments>> GetEquipmentExAsync(int partsetIndex, string? partsetName = null)
     {
         if (partsetIndex == 0 && string.IsNullOrEmpty(partsetName))
@@ -35,7 +44,7 @@ public class SendMailService(IDatabaseService databaseService, IFreeSql<MySqlFla
         foreach (Equipments item in data)
         {
             string partSetItemId = item.PartsetItemArr;
-            var numbers = new HashSet<string>(StringParser.ParsePartsetItemArr(partSetItemId)) ;
+            var numbers = new HashSet<string>(StringParser.ParsePartsetItemArr(partSetItemId));
             foreach (string itemIds in numbers)
             {
                 Equipments specialPartsetObj = _freeSqlite.Select<Equipments>().Where(a => a.ItemId == itemIds).First();
@@ -48,7 +57,7 @@ public class SendMailService(IDatabaseService databaseService, IFreeSql<MySqlFla
         {
             return new ObservableCollection<Equipments>(data);
         }
-        else if (partsetIndex == 0 &&!string.IsNullOrEmpty(partsetName))
+        else if (partsetIndex == 0 && !string.IsNullOrEmpty(partsetName))
         {
             return new ObservableCollection<Equipments>(additionalItems.GroupBy(a => a.ItemId).Select(g => g.First()));
 

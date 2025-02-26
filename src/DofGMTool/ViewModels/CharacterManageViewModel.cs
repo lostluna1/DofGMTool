@@ -18,8 +18,7 @@ public partial class CharacterManageViewModel : ObservableRecipient
     public IInventoryManageService _inventoryManageService;
     public ICharacterManagerService _characterManagerService;
     private readonly IEquipSlotProcessor _equipSlotProcessor;
-
-
+    //public IDatabaseService? _databaseService;
 
     [ObservableProperty]
     public partial ObservableCollection<EquipSlotModel>? EquipSlotModels { get; set; }
@@ -172,17 +171,18 @@ public partial class CharacterManageViewModel : ObservableRecipient
 
     }
 
-    public CharacterManageViewModel(IFreeSql<MySqlFlag> mysqlFree, IDatabaseService databaseService, IDatabaseService databaseService2,
+    public CharacterManageViewModel(
         ICharacterManagerService characterManagerService,
         IInventoryManageService inventoryManageService,
         IEquipSlotProcessor equipSlotProcessor, IFreeSql<SqliteFlag> freeSql)
     {
+        DatabaseHelper databaseService = DatabaseHelper.Instance;
         _inventoryManageService = inventoryManageService;
         _characterManagerService = characterManagerService;
         _fsql = freeSql;
-        taiwan_cain = mysqlFree;
+        taiwan_cain = databaseService.GetMySqlConnection(DBNames.TaiwanCain);
         taiwan_cain_2nd = databaseService.GetMySqlConnection(DBNames.TaiwanCain2nd);
-        taiwan_login = databaseService2.GetMySqlConnection(DBNames.TaiwanLogin);
+        taiwan_login = databaseService.GetMySqlConnection(DBNames.TaiwanLogin);
         _equipSlotProcessor = equipSlotProcessor;
         PayOptions = new ObservableCollection<Pay>(Enum.GetValues(typeof(Pay)).Cast<Pay>());
         LoadCurrentCharacinfo();

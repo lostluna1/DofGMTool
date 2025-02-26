@@ -67,7 +67,7 @@ public class PvfFile : IDisposable
             if (unpackedFileByteArr.Length - i >= 10)//如果是最后十个字节或者最后不满十个字节就不执行
             {
                 string k = stringBinMap[BitConverter.ToInt32(unpackedFileByteArr, i + 6)];//前6位干嘛的不知道，6-10位的int值是stringtable的键，取出来
-                var node = headerTreeCache[k.ToLower().Trim()];//取出来的stringtable的值是文件列表的一个文件的文件名，不过使用了驼峰命名需要将其置为小写并清除空格。
+                HeaderTreeNode node = headerTreeCache[k.ToLower().Trim()];//取出来的stringtable的值是文件列表的一个文件的文件名，不过使用了驼峰命名需要将其置为小写并清除空格。
                 if (node != null)//如果找到了这个文件
                 {
                     string full = Encoding.GetEncoding("BIG5").GetString(node.unpackedFileByteArr).TrimEnd(new char[1]);//直接用编码取这个文件的内容
@@ -182,10 +182,10 @@ public class PvfFile : IDisposable
         };
     }
 
-    private string GetNString( string str)
+    private string GetNString(string str)
     {
         string strPrefix = fileName.Split('/')[0];
-        foreach (var item in nStringMap)
+        foreach (KeyValuePair<string, string> item in nStringMap)
         {
             if (item.Key.Contains(str) && item.Key.Split('/')[0] == strPrefix)
             {

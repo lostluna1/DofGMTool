@@ -1,12 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DofGMTool.Constant;
 using DofGMTool.Contracts.Services;
+using DofGMTool.Helpers;
 using DofGMTool.Models;
 using DofGMTool.Views;
 using Microsoft.UI.Xaml.Navigation;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using Windows.Web.Syndication;
 
 namespace DofGMTool.ViewModels;
 
@@ -18,7 +18,7 @@ public partial class ShellViewModel : ObservableRecipient
     }
     public IFreeSql<MySqlFlag> _taiwan_cain;
     public IFreeSql<MySqlFlag> d_taiwan;
-
+    //public IDatabaseService _databaseService;
     [ObservableProperty]
     public partial Accounts? SeletedAccount { get; set; }
 
@@ -49,12 +49,12 @@ public partial class ShellViewModel : ObservableRecipient
 
     partial void OnSeletedAccountChanging(Accounts? value)
     {
-        if (value==null)
+        if (value == null)
         {
             return;
         }
 
-        CharacInfos = new ObservableCollection<CharacInfo>(_taiwan_cain.Select<CharacInfo>().Where(w=>w.MId==value.UID && w.DeleteFlag!=1).ToList());
+        CharacInfos = new ObservableCollection<CharacInfo>(_taiwan_cain.Select<CharacInfo>().Where(w => w.MId == value.UID && w.DeleteFlag != 1).ToList());
     }
 
 
@@ -63,16 +63,15 @@ public partial class ShellViewModel : ObservableRecipient
     [ObservableProperty]
     public partial GlobalVariables? _GlobalVariables { get; set; } = GlobalVariables.Instance;
     public ShellViewModel(INavigationService navigationService,
-        IDatabaseService databaseService,
-        INavigationViewService navigationViewService, IFreeSql<MySqlFlag> taiwan_cain, CharacterManageViewModel characInfoViewModel)
+        INavigationViewService navigationViewService, CharacterManageViewModel characInfoViewModel)
     {
-
+        DatabaseHelper databaseService = DatabaseHelper.Instance;
         NavigationService = navigationService;
         NavigationService.Navigated += OnNavigated;
         NavigationViewService = navigationViewService;
-        _taiwan_cain = taiwan_cain;
+        _taiwan_cain = databaseService.GetMySqlConnection(DBNames.TaiwanCain);
         d_taiwan = databaseService.GetMySqlConnection(DBNames.D_Taiwan);
-        
+
         AccountInfos = new ObservableCollection<Accounts>(d_taiwan.Select<Accounts>().ToList());
 
         CharacInfoViewModel = characInfoViewModel;

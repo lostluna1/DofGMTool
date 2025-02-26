@@ -9,8 +9,8 @@ public class Message
 
     public string ItemInfo { get; set; }
     public HorizontalAlignment MsgAlignment { get; set; }
-    public Brush Background { get; set; } 
-    public Message(string text, DateTime dateTime, HorizontalAlignment align,int id,string itemInfo, Brush brush)
+    public Brush Background { get; set; }
+    public Message(string text, DateTime dateTime, HorizontalAlignment align, int id, string itemInfo, Brush brush)
     {
         MsgText = text;
         MsgDateTime = dateTime;

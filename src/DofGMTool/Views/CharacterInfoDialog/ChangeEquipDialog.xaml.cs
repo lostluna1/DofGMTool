@@ -61,11 +61,11 @@ public sealed partial class ChangeEquipmentDialog : ContentDialog
         if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
         {
             string query = sender.Text.ToLower();
-            (ObservableCollection<Equipments> Equipments, int TotalCount) result = await ViewModel._inventoryManageService.GetEquipmentDataPaged(1, 200, null, query,null);
+            (ObservableCollection<Equipments> Equipments, int TotalCount) result = await ViewModel._inventoryManageService.GetEquipmentDataPaged(1, 200, null, query, null);
             NPKHelper.GetBitMaps(result.Equipments);
             //var equip = ViewModel._inventoryManageService.GetEquipmentDataPaged();
             //List<NavigationMenuItem> allMenuItems = await GetAllMenuItems();
-            var allEquipment = result.Equipments;//ViewModel.AllEquipments;
+            ObservableCollection<Equipments> allEquipment = result.Equipments;//ViewModel.AllEquipments;
             //foreach (NavigationMenuItem item in allMenuItems)
             //{
             //    if (!string.IsNullOrEmpty(item.NavigateTo))

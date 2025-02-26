@@ -79,12 +79,12 @@ public partial class MailManageViewModel : ObservableRecipient
 
     public async Task LoadData()
     {
-        
+
         Equipments = await SendMailService.GetItemsList(MailType.Equipment);
         NPKHelper.GetBitMaps(Equipments);
         TempDatas = Equipments;
     }
-    public async Task LoadPartsetData(int id,string?partsetName=null)
+    public async Task LoadPartsetData(int id, string? partsetName = null)
     {
         TempDatas = await SendMailService.GetEquipmentExAsync(id, partsetName);
         NPKHelper.GetBitMaps(TempDatas);
