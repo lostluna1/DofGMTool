@@ -10,6 +10,6 @@ public interface ISendMailService
     Task<ObservableCollection<EquipmentPartset>> GetEquipmentPartsetAsync(string query);
     Task<ObservableCollection<Equipments>> GetItemsList(MailType type, string? query = null);
     ObservableCollection<_Postal> GetPostals();
-    string? GetRoleNameById(int characNo);
+    Task<string> GetRoleNameById(int characNo);
     int SendMail(MailType type, MailModel mailModel, ObservableCollection<Equipments>? equipments = null);
 }

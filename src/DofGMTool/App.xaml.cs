@@ -127,7 +127,7 @@ public partial class App : Application
             Title = "错误！",
             Content = $" {e.Exception.Message}",
             CloseButtonText = "我知道了",
-            XamlRoot = App.CurrentWindow.Content.XamlRoot//MainWindow.Content.XamlRoot
+            XamlRoot = /*App.CurrentWindow.Content.XamlRoot//*/MainWindow.Content.XamlRoot
         };
 
         await dialog.ShowAsync();

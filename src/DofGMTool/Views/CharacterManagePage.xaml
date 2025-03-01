@@ -275,27 +275,193 @@
     </Page.Resources>
     <Grid x:Name="ContentArea">
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.15*" />
+            <RowDefinition Height="0.20*" />
             <RowDefinition Height="0.2*" />
             <RowDefinition Height="0.5*" />
             <RowDefinition Height="0.2*" />
         </Grid.RowDefinitions>
-        <InfoBar
-            Title="Tips"
-            Grid.Row="0"
-            IsOpen="True"
-            Message="右键某个装备可以进行操作"
-            Severity="Success" />
-        <InfoBar
-            Title="注意！"
+        <!--  菜单栏  -->
+        <CommandBar
             Grid.Row="1"
-            IsOpen="True"
-            Message="对装备的操作至少需要拥有AB两个角色，对A角色操作时，需要切换至B角色"
-            Severity="Informational" />
-        <Button
+            Background="Transparent"
+            DefaultLabelPosition="Right"
+            IsOpen="False">
+            <!--  清理任务  -->
+            <AppBarButton Icon="ClearSelection" Label="完成角色任务">
+                <AppBarButton.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem
+                            Command="{x:Bind ViewModel.ClearMissionsCommand}"
+                            CommandParameter="2"
+                            Text="当前角色">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE77B;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem
+                            Command="{x:Bind ViewModel.ClearMissionsCommand}"
+                            CommandParameter="1"
+                            IsEnabled="False"
+                            Text="账号内角色">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE716;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+            <!--  开启辅助装备、魔法石槽位  -->
+            <AppBarButton Icon="OpenPane" Label="开启左右槽">
+                <AppBarButton.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem
+                            Command="{x:Bind ViewModel.ReleaseExtendsSlodsCommand}"
+                            CommandParameter="1"
+                            Text="当前角色">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE77B;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem
+                            Command="{x:Bind ViewModel.ReleaseExtendsSlodsCommand}"
+                            CommandParameter="2"
+                            Text="账号内角色(功能未经测试)">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE716;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+            <AppBarButton
+                Command="{x:Bind ViewModel.CommonOperationCommand}"
+                CommandParameter="SetInvenWeightMax"
+                Icon="AllApps"
+                Label="背包无限负重" />
+            <CommandBar.SecondaryCommands>
+                <AppBarButton
+                    Command="{x:Bind ViewModel.SetGMCommand}"
+                    Icon="Admin"
+                    Label="设为GM">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="A" Modifiers="Control" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+                <AppBarButton
+                    Command="{x:Bind ViewModel.SetWarehouseCommand}"
+                    CommandParameter="1"
+                    Icon="Home"
+                    Label="账号金库满级">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="S" Modifiers="Control" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+                <AppBarButton
+                    Command="{x:Bind ViewModel.CommonOperationCommand}"
+                    CommandParameter="AccountBan"
+                    Icon="BlockContact"
+                    Label="封号">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="Q" Modifiers="Control" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+                <AppBarButton
+                    Command="{x:Bind ViewModel.CommonOperationCommand}"
+                    CommandParameter="LiftAccountBan"
+                    Icon="BlockContact"
+                    Label="解封">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="R" Modifiers="Control" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+
+                <AppBarSeparator />
+                <AppBarButton
+                    Command="{x:Bind ViewModel.SetWarehouseCommand}"
+                    CommandParameter="2"
+                    Icon="People"
+                    Label="角色金库满级">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="D" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+                <AppBarButton
+                    Command="{x:Bind ViewModel.CommonOperationCommand}"
+                    CommandParameter="ClearRoleWarehouse"
+                    Icon="People"
+                    Label="清除角色金库">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="F" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+                <AppBarButton
+                    Command="{x:Bind ViewModel.UnlimitedCharacSlodsCommand}"
+                    Icon="BlockContact"
+                    Label="解除角色数量限制">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="G" Modifiers="Control" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+                <!--<AppBarButton
+                    Command="{x:Bind ViewModel.CommonOperationCommand}"
+                    CommandParameter="SetInvenWeightMax"
+                    Icon="AllApps"
+                    Label="角色背包无限负重">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="W" Modifiers="Control" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>-->
+                <AppBarButton
+                    Command="{x:Bind ViewModel.CommonOperationCommand}"
+                    CommandParameter="ClearInven"
+                    Icon="AllApps"
+                    Label="清理角色背包">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="X" Modifiers="Control" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+                <AppBarButton
+                    Command="{x:Bind ViewModel.CommonOperationCommand}"
+                    CommandParameter="MaxInven"
+                    Icon="AllApps"
+                    Label="背包满级扩容">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="E" Modifiers="Control" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+                <AppBarSeparator />
+                <AppBarButton
+                    Command="{x:Bind ViewModel.CommonOperationCommand}"
+                    CommandParameter="ClearEquipSlots"
+                    Icon="AllApps"
+                    Label="清除角色已穿戴装备">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="G" Modifiers="Control" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+
+        <StackPanel Grid.Row="0">
+            <InfoBar
+                Title="Tips"
+                IsClosable="False"
+                IsOpen="True"
+                Message="右键某个装备可以进行操作"
+                Severity="Success" />
+            <InfoBar
+                Title="注意！"
+                Margin="0,16,0,0"
+                IsClosable="False"
+                IsOpen="True"
+                Message="对装备的操作至少需要拥有AB两个角色，对A角色操作时，需要切换至B角色"
+                Severity="Informational" />
+        </StackPanel>
+
+        <!--<Button
             Grid.Row="3"
             Command="{x:Bind ViewModel.SetGMCommand}"
-            Content="设为GM" />
+            Content="设为GM" />-->
 
         <StackPanel Grid.Row="2" Orientation="Horizontal">
             <!--  装备栏  -->

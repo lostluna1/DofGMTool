@@ -78,6 +78,29 @@ public class NavigationService : INavigationService
 
         return false;
     }
+    public async Task<bool> NavigateToAsync(string pageKey, object? parameter = null, bool clearNavigation = false)
+    {
+        Type pageType = _pageService.GetPageType(pageKey);
+
+        if (_frame != null && (_frame.Content?.GetType() != pageType || (parameter != null && !parameter.Equals(_lastParameterUsed))))
+        {
+            _frame.Tag = clearNavigation;
+            object? vmBeforeNavigation = _frame.GetPageViewModel();
+            bool navigated = await Task.Run(() => _frame.Navigate(pageType, parameter));
+            if (navigated)
+            {
+                _lastParameterUsed = parameter;
+                if (vmBeforeNavigation is INavigationAware navigationAware)
+                {
+                    navigationAware.OnNavigatedFrom();
+                }
+            }
+
+            return navigated;
+        }
+
+        return false;
+    }
 
     public bool NavigateTo(string pageKey, object? parameter = null, bool clearNavigation = false)
     {

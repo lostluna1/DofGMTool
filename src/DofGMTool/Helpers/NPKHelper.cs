@@ -114,6 +114,34 @@ public static class NPKHelper
             }
         }
     }
+    public static async Task GetBitMapsAsync(ObservableCollection<Equipments> equipments)
+    {
+        // 获取或创建存放图片的文件夹
+        var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+        var imageFolder = await localFolder.CreateFolderAsync("ImagePacks", Windows.Storage.CreationCollisionOption.OpenIfExists);
+
+        foreach (var item in equipments)
+        {
+            try
+            {
+                // 异步获取图片文件而无需使用同步的 File.Exists
+                var fileOrNull = await imageFolder.TryGetItemAsync($"{item.ItemId}.png") as Windows.Storage.StorageFile;
+                if (fileOrNull != null)
+                {
+                    var bitmap = new BitmapImage();
+                    using (var stream = await fileOrNull.OpenAsync(Windows.Storage.FileAccessMode.Read))
+                    {
+                        await bitmap.SetSourceAsync(stream);
+                    }
+                    item.BitMap = bitmap;
+                }
+            }
+            catch (Exception ex)
+            {
+                // 可记录异常，或根据需要忽略错误
+            }
+        }
+    }
     public static void SaveImagePacks2Path(string path)
     {
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;

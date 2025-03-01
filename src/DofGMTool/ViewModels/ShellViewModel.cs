@@ -55,6 +55,7 @@ public partial class ShellViewModel : ObservableRecipient
         }
 
         CharacInfos = new ObservableCollection<CharacInfo>(_taiwan_cain.Select<CharacInfo>().Where(w => w.MId == value.UID && w.DeleteFlag != 1).ToList());
+        GlobalVariables.Instance.Accounts = value;
     }
 
 

@@ -1,7 +1,9 @@
-﻿using DofGMTool.Models;
+﻿using CommunityToolkit.WinUI;
+using DofGMTool.Models;
 using DofGMTool.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace DofGMTool.Views;
 
@@ -15,8 +17,13 @@ public sealed partial class MailManagePage : Page
     {
         ViewModel = App.GetService<MailManageViewModel>();
         InitializeComponent();
-    }
 
+    }
+    protected override async void OnNavigatedTo(NavigationEventArgs e)
+    {
+        base.OnNavigatedTo(e);
+        await ViewModel.LoadMailHistory();
+    }
     private async void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
     {
         if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
@@ -27,15 +34,14 @@ public sealed partial class MailManagePage : Page
 
     private async void SelectorBarSegmentedSelectionChanged(SelectorBar sender, SelectorBarSelectionChangedEventArgs args)
     {
-
-
-        //ViewModel.SendMailCommand.NotifyCanExecuteChanged();
+        //var currentMailType = MailType.Equipment;
         SelectorBarItem selectedItem = sender.SelectedItem;
         bool a = false;
         if (selectedItem != null)
         {
             //ViewModel.SelectedEquip = null;
             //ViewModel.MailModel = null;
+
             switch (selectedItem.Text)
             {
                 case "装备":
@@ -84,7 +90,9 @@ public sealed partial class MailManagePage : Page
             }
         }
         if (!a)
+        {
             await ViewModel.FilterData(currentMailType, string.Empty);
+        }
     }
 
     private async void PartsetAutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

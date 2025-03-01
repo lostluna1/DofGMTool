@@ -98,10 +98,6 @@ public class SendMailService : ISendMailService
     }
 
 
-
-
-
-
     public int SendMail(MailType type, MailModel mailModel, ObservableCollection<Equipments>? equipments = null)
     {
         taiwan_cain_2nd.CodeFirst.SyncStructure<_Postal>();
@@ -576,10 +572,15 @@ public class SendMailService : ISendMailService
         }
     }
 
-    public string? GetRoleNameById(int characNo)
+    public async Task <string> GetRoleNameById(int characNo)
     {
-        string? result = fsql.Select<CharacInfo>().Where(a => a.CharacNo == characNo).First(a => a.CharacName);
-        return result;
+        string result = await fsql.Select<CharacInfo>().Where(a => a.CharacNo == characNo).FirstAsync(a => a.CharacName);
+        if (result != null)
+        {
+            return result;
+
+        }
+        return string.Empty;
     }
 }
 public partial class StringParser

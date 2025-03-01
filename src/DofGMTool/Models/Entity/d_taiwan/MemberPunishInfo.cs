@@ -19,10 +19,10 @@ public partial class MemberPunishInfo
     [JsonProperty, Column(Name = "apply_flag", DbType = "tinyint(4)")]
     public sbyte ApplyFlag { get; set; } = 0;
 
-    [JsonProperty, Column(Name = "end_time", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
+    [JsonProperty, Column(Name = "end_time", DbType = "datetime")]
     public DateTime EndTime { get; set; }
 
-    [JsonProperty, Column(Name = "occ_time", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
+    [JsonProperty, Column(Name = "occ_time", DbType = "datetime")]
     public DateTime OccTime { get; set; }
 
     [JsonProperty, Column(Name = "punish_value")]
@@ -31,7 +31,7 @@ public partial class MemberPunishInfo
     [JsonProperty, Column(Name = "reason", StringLength = 100, IsNullable = false)]
     public string Reason { get; set; }
 
-    [JsonProperty, Column(Name = "start_time", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
+    [JsonProperty, Column(Name = "start_time", DbType = "datetime")]
     public DateTime StartTime { get; set; }
 
 }

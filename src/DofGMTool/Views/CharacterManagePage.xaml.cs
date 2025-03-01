@@ -123,7 +123,7 @@ public sealed partial class CharacterManagePage : Page
             "戒指" => 6,
             "项链" => 7,
             "手镯" => 8,
-            "称号" => 9,
+            "称号" => 2,
             "武器" => 0,
             "鞋子" => 5,
             "腰带" => 3,
@@ -157,4 +157,6 @@ public sealed partial class CharacterManagePage : Page
         ViewModel.newEquipId = 0;
         ViewModel.ChangeCurrentEquip();
     }
+
+
 }

@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:DofGMTool.Models"
     xmlns:wuc="using:WinUICommunity"
+    NavigationCacheMode="Enabled"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -75,6 +76,10 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
+            <ProgressBar
+                VerticalAlignment="Top"
+                IsIndeterminate="{x:Bind ViewModel.IsShowProgressBar, Mode=TwoWay}"
+                Visibility="{x:Bind ViewModel.IsShowProgressBar, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
             <StackPanel Grid.Row="0" Orientation="Vertical">
                 <wuc:SelectorBarSegmented HorizontalAlignment="Center" SelectionChanged="SelectorBarSegmentedSelectionChanged">
                     <SelectorBarItem IsSelected="True" Text="装备" />
@@ -121,7 +126,7 @@
                             <Image
                                 Width="30"
                                 Height="30"
-                                Source="{Binding BitMap.UriSource.AbsoluteUri}" />
+                                Source="{Binding BitMap}" />
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="auto" />
@@ -153,7 +158,7 @@
         <Grid
             Grid.Row="0"
             Grid.Column="1"
-            Style="{StaticResource StackPanelStyle}">
+            Style="{StaticResource GridPanel}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />

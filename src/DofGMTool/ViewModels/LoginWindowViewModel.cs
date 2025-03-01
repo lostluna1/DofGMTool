@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using DofGMTool.Constant;
 using DofGMTool.Helpers;
 using DofGMTool.Models;
+using Microsoft.UI.Xaml.Controls;
 using System.Collections.ObjectModel;
 
 namespace DofGMTool.ViewModels;
@@ -60,7 +61,16 @@ public partial class LoginWindowViewModel : ObservableValidator
             {
                 IsLogging = true;
                 ProgressBarShowError = true;
-                throw new Exception("连接失败，检查用户名及密码");
+                //throw new Exception("连接失败，检查用户名及密码");
+                var dialog = new ContentDialog
+                {
+                    Title = "错误！",
+                    Content = $" 连接失败，检查用户名及密码",
+                    CloseButtonText = "我知道了",
+                    XamlRoot = App.CurrentWindow.Content.XamlRoot//MainWindow.Content.XamlRoot
+                };
+
+                await dialog.ShowAsync();
             }
         }
         catch

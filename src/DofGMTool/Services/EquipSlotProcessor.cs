@@ -1,5 +1,9 @@
+using DofGMTool.Constant;
 using DofGMTool.Contracts.Services;
+using DofGMTool.Helpers;
 using DofGMTool.Models;
+using MySqlConnector;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text;
 using zlib;
@@ -7,6 +11,206 @@ using zlib;
 namespace DofGMTool.Services;
 public class EquipSlotProcessor : IEquipSlotProcessor
 {
+    public readonly IFreeSql<MySqlFlag> _taiwan_cain_2nd;
+    public EquipSlotProcessor()
+    {
+        DatabaseHelper database = DatabaseHelper.Instance;
+        _taiwan_cain_2nd = database.GetMySqlConnection(DBNames.TaiwanCain2nd);
+    }
+
+    public async Task<bool> SetEquipSlots(int characno, ObservableCollection<EquipSlotModel> eData, bool isCover = true)
+    {
+        //先读取
+        List<EquipSlotModel> readData = isCover ? GetWearsData12() : await GetEquipSlots(characno);
+        foreach (var item in readData)
+        {
+            var obj = eData.Where(e => e.Type == item.Type).FirstOrDefault();
+            if (obj != null)
+            {
+                item.EquipId = obj.EquipId;
+                item.EnhancementLevel = obj.EnhancementLevel;
+                item.EquipGrade = obj.EquipGrade;
+                item.Durability = obj.Durability;
+                item.AmplificationType = obj.AmplificationType;
+                item.AmplificationValue = obj.AmplificationValue;
+                item.Type = obj.Type;
+                item.ForgingLevel = obj.ForgingLevel;
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        foreach (var item in readData)
+        {
+            sb.Append(EquipslotDataHex(item));
+        }
+
+        string latin1str = HexToLatin1(sb.ToString());
+        Debug.WriteLine($"Latin1 String: {latin1str}");
+        Debug.WriteLine($"Latin1 String (Hex): {ByteToHexString(Encoding.GetEncoding("latin1").GetBytes(latin1str))}");
+        return await _taiwan_cain_2nd.Ado.ExecuteNonQueryAsync($"update inventory set equipslot=COMPRESS('{sb.ToString()}') WHERE charac_no={characno}") > 0;
+        //return await MySqlHelp.ExecuteNonQueryAsync($"update taiwan_cain_2nd.inventory set  equipslot=COMPRESS('{latin1str}') WHERE charac_no={characno}") > 0;
+        return true;
+
+    }
+
+    public async Task<List<EquipSlotModel>> GetEquipSlots(int characno)
+    {
+        /*Type:
+            *1:武器
+         *2:称号
+         *3:上衣
+         *4:头肩
+         *5:下装
+         *6:鞋子
+         *7:腰带
+         *8:项链
+         *9:手镯
+         *10:戒指
+         *11:左槽
+         *12:右槽
+         *
+         *总字节长度732
+         *每个位置61个字节
+         * */
+
+        //var sql = $"select UNCOMPRESS(equipslot) FROM taiwan_cain_2nd.inventory WHERE charac_no={characno}";
+        _Inventory inventory = await _taiwan_cain_2nd.Ado.QuerySingleAsync<_Inventory>($"SELECT UNCOMPRESS(equipslot) as EquipSlot  FROM inventory WHERE charac_no = {characno}");
+        byte[]? inventoryBytes = inventory.Equipslot;
+        if (inventoryBytes is null || inventoryBytes.Length == 0)
+        {
+            return GetWearsData12();
+        }
+        var equipments = new List<EquipSlotModel>();
+        string s = ByteToHexString(inventoryBytes);
+        int n = 0;
+        for (int i = 0; i < s.Length; i++)
+        {
+            if (i % 122 == 0)
+            {
+                n++;
+                string temp = s.Substring(i, 122);
+                equipments.Add(new EquipSlotModel()
+                {
+                    Type = (ulong)n,
+                    EquipId = (ulong)Convert.ToInt32(HlReverse(temp.Substring(4, 8)), 16),
+                    EnhancementLevel = (ulong)Convert.ToInt32(HlReverse(temp.Substring(12, 2)), 16),
+                    EquipGrade = (ulong)Convert.ToInt32(HlReverse(temp.Substring(14, 8)), 16),
+                    Durability = (ulong)Convert.ToInt32(HlReverse(temp.Substring(22, 2)), 16),
+                    AmplificationType = (ulong)Convert.ToInt32(HlReverse(temp.Substring(34, 2)), 16),
+                    AmplificationValue = (ulong)Convert.ToInt32(HlReverse(temp.Substring(36, 4)), 16),
+                    ForgingLevel = (ulong)Convert.ToInt32(HlReverse(temp.Substring(102, 2)), 16),
+                });
+
+                if (n == 12)
+                {
+                    break;
+                }
+            }
+        }
+
+        return equipments;
+
+    }
+    private List<EquipSlotModel> GetWearsData12()
+    {
+        var eData = new List<EquipSlotModel>();
+        for (ulong i = 0; i < 12; i++) //空数据
+        {
+            eData.Add(new EquipSlotModel() { Type = i + 1 });
+        }
+
+        return eData;
+    }
+    public static string ByteToHexString(byte[] buff)
+    {
+        var sb = new StringBuilder();
+        for (int i = 0; i < buff.Length; i++)
+        {
+            sb.Append(buff[i].ToString("x2").ToUpper());
+
+        }
+
+        return sb.ToString();
+
+    }
+    public static string HlReverse(string str)
+    {
+
+        if (str.Length % 2 != 0)
+        {
+            return str;
+        }
+
+        var temp = new List<string>();
+
+        for (int i = 0; i < str.Length; i++)
+        {
+            if (i % 2 == 0)
+            {
+                temp.Add(str.Substring(i, 2));
+            }
+        }
+
+        temp.Reverse();
+        return string.Join(string.Empty, temp);
+    }
+
+    private string EquipslotDataHex(EquipSlotModel edata)
+    {
+        //0001(类型 装备是1) DA690000(代码) 00(强化)  00000000(品级 越小越接近最最上级)  00(耐久度)  0000000000 00(红字类型) 0000(红字属性值) 00000000000000000000000000000000000000000000000000000000000000 00(锻造) 000000000000000000
+        var data = new StringBuilder();
+        if (edata.EquipId == 0)//无代码
+        {
+            for (int i = 0; i < 122; i++)
+            {
+                data.Append("0");
+            }
+
+            return data.ToString();//空数据
+        }
+
+
+
+
+        data.Append("0001");
+        data.Append(HlReverse(edata.EquipId.ToString("X8")));
+        data.Append(edata.EnhancementLevel.ToString("X2"));
+        data.Append(HlReverse(edata.Durability.ToString("X8")));
+        data.Append(edata.EquipGrade.ToString("X2"));
+        data.Append("0000000000");
+        data.Append(edata.AmplificationType.ToString("X2"));
+        data.Append(HlReverse(edata.AmplificationValue.ToString("X4")));
+        data.Append("00000000000000000000000000000000000000000000000000000000000000");
+        data.Append(edata.ForgingLevel.ToString("X2"));
+        data.Append("000000000000000000");
+        return data.ToString();
+
+    }
+    public static string HexToLatin1(string hex)
+    {
+        //string latin1str = HexStringToBytes(hex);
+        string latin1str = Encoding.GetEncoding("latin1").GetString(HexStringToBytes(hex));
+
+        latin1str = latin1str.Replace("\\", "\\\\"); //必须转义
+        latin1str = latin1str.Replace("'", "''"); //必须转义
+        return latin1str;
+    }
+    public static byte[] HexStringToBytes(string str)
+    {
+        string strTemp = "";
+        byte[] b = new byte[str.Length / 2];
+        for (int i = 0; i < str.Length / 2; i++)
+        {
+            strTemp = str.Substring(i * 2, 2);
+            b[i] = Convert.ToByte(strTemp, 16);
+        }
+        //按照指定编码将字节数组变为字符串
+        return b;
+    }
+
+
+
     // 第一步:先解出所有装备槽位的字节数据
     public List<byte[]> ExtractEquipSlots(byte[] decompressedData)
     {
@@ -85,6 +289,50 @@ public class EquipSlotProcessor : IEquipSlotProcessor
     // 第二步:将解析的字节数据转换为二进制字符串后再转为十进制数字就得到真实数据
     public List<EquipSlotModel> ConvertSlotsToEquipSlotModels(List<byte[]> equipSlots)
     {
+        var equipSlotModels = new List<EquipSlotModel>();
+
+        for (int i = 0; i < equipSlots.Count; i++)
+        {
+            byte[] slot = equipSlots[i];
+            var binaryString = new StringBuilder();
+            foreach (byte b in slot)
+            {
+                string binary = Convert.ToString(b, 2).PadLeft(8, '0');
+                binaryString.Append(binary);
+            }
+
+            string binaryData = binaryString.ToString();
+            var model = new EquipSlotModel
+            {
+                Enchantment = ConvertToDecimal(ReverseGroups(binaryData.Substring(0, 8))),
+                Type = ConvertToDecimal(ReverseGroups(binaryData.Substring(8, 8))),
+                EquipId = ConvertToDecimal(ReverseGroups(binaryData.Substring(16, 32))),
+                EnhancementLevel = ConvertToDecimal(ReverseGroups(binaryData.Substring(48, 8))),
+                EquipGrade = ConvertToDecimal(ReverseGroups(binaryData.Substring(56, 32))),
+                Durability = ConvertToDecimal(ReverseGroups(binaryData.Substring(88, 16))),
+                Orb = ConvertToDecimal(ReverseGroups(binaryData.Substring(104, 32))),
+                AmplificationType = ConvertToDecimal(ReverseGroups(binaryData.Substring(136, 8))),
+                AmplificationValue = ConvertToDecimal(ReverseGroups(binaryData.Substring(144, 16))),
+                AbyssalBreath = ConvertToDecimal(ReverseGroups(binaryData.Substring(160, 16))),
+                MagicSeal = ConvertToDecimal(ReverseGroups(binaryData.Substring(176, 112))),
+                ForgingLevel = ConvertToDecimal(ReverseGroups(binaryData.Substring(288, 8)))
+            };
+
+            equipSlotModels.Add(model);
+        }
+
+        // 补全缺失的槽位
+        while (equipSlotModels.Count < 12)
+        {
+            equipSlotModels.Add(new EquipSlotModel());
+        }
+
+        return equipSlotModels;
+    }
+
+
+    /*public List<EquipSlotModel> ConvertSlotsToEquipSlotModels(List<byte[]> equipSlots)
+    {
         List<EquipSlotModel> equipSlotModels = [];
 
         foreach (byte[] slot in equipSlots)
@@ -118,7 +366,7 @@ public class EquipSlotProcessor : IEquipSlotProcessor
         }
 
         return equipSlotModels;
-    }
+    }*/
 
 
 
@@ -162,18 +410,35 @@ public class EquipSlotProcessor : IEquipSlotProcessor
     /// </summary>
     /// <param name="sourceByte">需要被压缩的字节数组</param>
     /// <returns>压缩后的字节数组</returns>
+    /// 
     public byte[] CompressBytes(byte[] sourceByte)
     {
-        var inputStream = new MemoryStream(sourceByte);
+        if (sourceByte.Length != 732)
+        {
+            throw new ArgumentException("The length of the source byte array must be 732 bytes.");
+        }
 
+        var inputStream = new MemoryStream(sourceByte);
         Stream outStream = compressStream(inputStream);
-        byte[] outPutByteArray = new byte[outStream.Length];
-        outStream.Position = 0;
-        outStream.Read(outPutByteArray, 0, outPutByteArray.Length);
+        byte[] outPutByteArray = new byte[732];
+
+        // 确保压缩后的数据长度为 732 字节
+        if (outStream.Length < 732)
+        {
+            outStream.Position = 0;
+            outStream.Read(outPutByteArray, 0, (int)outStream.Length);
+        }
+        else
+        {
+            outStream.Position = 0;
+            outStream.Read(outPutByteArray, 0, 732);
+        }
+
         outStream.Close();
         inputStream.Close();
         return outPutByteArray;
     }
+
     /// <summary>
     /// 压缩流
     /// </summary>

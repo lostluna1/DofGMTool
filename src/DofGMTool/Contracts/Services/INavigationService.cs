@@ -20,4 +20,5 @@ public interface INavigationService
     bool NavigateTo(string pageKey, object? parameter = null, bool clearNavigation = false);
 
     bool GoBack();
+    Task<bool> NavigateToAsync(string pageKey, object? parameter = null, bool clearNavigation = false);
 }
