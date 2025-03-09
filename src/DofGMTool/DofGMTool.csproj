@@ -5,7 +5,7 @@
     <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <RootNamespace>DofGMTool</RootNamespace>
-    <ApplicationIcon>Assets/WindowIcon.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\logo.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x86;x64;arm64</Platforms>
     <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\inventory.png" />
+    <None Remove="Views\AddConnectionDialog\ConnectionInfoDialog.xaml" />
     <None Remove="Views\CharacterInfoDialog\ChangeEquipDialog.xaml" />
     <None Remove="Views\CharacterInfoDialog\PowerupEquip.xaml" />
     <None Remove="Views\LoginWindow.xaml" />
@@ -40,6 +41,11 @@
     <Content Include="Assets\ImagePacks\**\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\logo.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -117,6 +123,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\AddConnectionDialog\ConnectionInfoDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\LoginWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

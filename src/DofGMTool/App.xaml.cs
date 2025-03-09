@@ -72,7 +72,7 @@ public partial class App : Application
             services.AddSingleton<IEquipSlotProcessor, EquipSlotProcessor>();
             services.AddSingleton<ICharacterManagerService, CharacterManagerService>();
             services.AddSingleton<ISendMailService, SendMailService>();
-            services.AddSingleton<CharacInfo>();// 注册角色信息服务
+            //services.AddSingleton<CharacInfo>();// 注册角色信息服务
 
             // Core Services
             services.AddSingleton<IFileService, FileService>();
@@ -90,7 +90,6 @@ public partial class App : Application
             services.AddTransient<MainPage>();
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
-            services.AddTransient<LoginWindowViewModel>();
 
             Func<IServiceProvider, IFreeSql<SqliteFlag>> fsqlSqlite = r =>
             {
@@ -135,18 +134,18 @@ public partial class App : Application
 
     public static Window CurrentWindow = Window.Current;
 
-    protected override void OnLaunched(LaunchActivatedEventArgs args)
+    protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
-        CurrentWindow = new LoginWindow();
+        //CurrentWindow = new LoginWindow();
 
         App.MainWindow.Closed += CurrentWindow_Closed;
-        CurrentWindow.Activate();
+        //CurrentWindow.Activate();
         base.OnLaunched(args);
 
-        //await App.GetService<IActivationService>().ActivateAsync(args);
+        await App.GetService<IActivationService>().ActivateAsync(args);
     }
     private void CurrentWindow_Closed(object sender, WindowEventArgs e)
     {
-        DatabaseHelper.Instance.Dispose();
+        //DatabaseHelper.Instance.Dispose();
     }
 }

@@ -12,6 +12,7 @@
     Loaded="OnLoaded">
     <Page.Resources>
         <helpers:JobTypeToImageConverter x:Key="JobTypeToImageConverter" />
+        <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <DataTemplate x:Key="CharacInfoTemplate">
             <StackPanel Orientation="Horizontal">
                 <Image
@@ -37,21 +38,23 @@
                     <TextBlock
                         Margin="20,0,0,0"
                         VerticalAlignment="Center"
+                        Text="当前连接:" />
+                    <ComboBox
+                        Width="100"
+                        VerticalAlignment="Center"
+                        DisplayMemberPath="Name"
+                        ItemsSource="{x:Bind ViewModel.Connections, Mode=TwoWay}"
+                        SelectedItem="{x:Bind ViewModel.SelectedConnection, Mode=TwoWay}" />
+                    <TextBlock
+                        Margin="20,0,0,0"
+                        VerticalAlignment="Center"
                         Text="UID:" />
                     <ComboBox
                         Width="150"
                         VerticalAlignment="Center"
+                        DisplayMemberPath="UID"
                         ItemsSource="{x:Bind ViewModel.AccountInfos, Mode=TwoWay}"
-                        SelectedItem="{x:Bind ViewModel.SeletedAccount, Mode=TwoWay}"
-                        SelectedValuePath="UID">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding UID}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
+                        SelectedItem="{x:Bind ViewModel.SeletedAccount, Mode=TwoWay}" />
                     <TextBlock
                         Margin="10,0,0,0"
                         VerticalAlignment="Center"
@@ -83,6 +86,7 @@
 
             </winuiex:TitleBar.Footer>
         </winuiex:TitleBar>
+        <!--<ProgressBar x:Name="ProgressBar" IsIndeterminate="{x:Bind ViewModel.IsConnecting, Mode=TwoWay}" />-->
         <NavigationView
             x:Name="NavigationViewControl"
             CacheMode="BitmapCache"
@@ -149,5 +153,10 @@
                 <Frame x:Name="NavigationFrame" />
             </Grid>
         </NavigationView>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <wuc:ProgressRing Width="100" IsActive="{x:Bind ViewModel.IsConnecting, Mode=TwoWay}" />
+            <TextBlock Text="初始化数据库连接中..." Visibility="{x:Bind ViewModel.IsConnecting, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        </StackPanel>
+
     </Grid>
 </Page>

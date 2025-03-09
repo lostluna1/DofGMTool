@@ -13,7 +13,7 @@
   <Identity
     Name="cccc3012-8d3e-44a9-8b04-479960018156"
     Publisher="CN=lostluna"
-    Version="1.0.0.0" />
+    Version="1.0.7.0" />
     
   <mp:PhoneIdentity PhoneProductId="cccc3012-8d3e-44a9-8b04-479960018156" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
     

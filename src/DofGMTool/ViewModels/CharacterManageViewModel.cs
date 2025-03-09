@@ -320,14 +320,14 @@ public partial class CharacterManageViewModel : ObservableRecipient
         IInventoryManageService inventoryManageService,
         IEquipSlotProcessor equipSlotProcessor, IFreeSql<SqliteFlag> freeSql)
     {
-        DatabaseHelper databaseService = DatabaseHelper.Instance;
-        d_taiwan = databaseService.GetMySqlConnection(DBNames.D_Taiwan);
+        //DatabaseHelper databaseService = DatabaseHelper.Instance;
+        d_taiwan = DatabaseHelper.GetMySqlConnection(DBNames.D_Taiwan);
         _inventoryManageService = inventoryManageService;
         _characterManagerService = characterManagerService;
         _fsql = freeSql;
-        taiwan_cain = databaseService.GetMySqlConnection(DBNames.TaiwanCain);
-        taiwan_cain_2nd = databaseService.GetMySqlConnection(DBNames.TaiwanCain2nd);
-        taiwan_login = databaseService.GetMySqlConnection(DBNames.TaiwanLogin);
+        taiwan_cain = DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain);
+        taiwan_cain_2nd = DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain2nd);
+        taiwan_login = DatabaseHelper.GetMySqlConnection(DBNames.TaiwanLogin);
         _equipSlotProcessor = equipSlotProcessor;
         PayOptions = new ObservableCollection<Pay>(Enum.GetValues(typeof(Pay)).Cast<Pay>());
         LoadCurrentCharacinfo();
@@ -372,7 +372,7 @@ public partial class CharacterManageViewModel : ObservableRecipient
             Magicstone = AllEquipments.FirstOrDefault(a => a.EquipmentType == "魔法石");
             Support = AllEquipments.FirstOrDefault(a => a.EquipmentType == "辅助装备");
             NPKHelper.GetBitMaps(AllEquipments);
-            await _equipSlotProcessor.SetEquipSlots(GlobalVariables.Instance.GlobalCurrentCharacInfo.CharacNo, EquipSlotModels,false);
+            await _equipSlotProcessor.SetEquipSlots(GlobalVariables.Instance.GlobalCurrentCharacInfo.CharacNo, EquipSlotModels,true);
             //GetBitMaps(EquipSlotModels);
         }
         Avatars = _characterManagerService.GetAvatar(GlobalVariables.Instance.GlobalCurrentCharacInfo.CharacNo);

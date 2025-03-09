@@ -12,8 +12,8 @@ public class SendMailService : ISendMailService
 {
     //private IDatabaseService databaseService;
     public IInventoryManageService _inventoryManageService;
-    public IFreeSql<MySqlFlag> taiwan_cain_2nd;
-    public IFreeSql<MySqlFlag> fsql;
+    public IFreeSql<MySqlFlag> taiwan_cain_2nd => DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain2nd);
+    public IFreeSql<MySqlFlag> taiwan_cain=> DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain);
     public IFreeSql<SqliteFlag> _freeSqlite;
 
     // 构造函数
@@ -21,10 +21,10 @@ public class SendMailService : ISendMailService
     {
         _inventoryManageService = inventoryManageService;
         _freeSqlite = freeSqlite;
-        DatabaseHelper databaseService = DatabaseHelper.Instance;
+        //DatabaseHelper databaseService = DatabaseHelper.Instance;
 
-        taiwan_cain_2nd = databaseService.GetMySqlConnection(DBNames.TaiwanCain2nd);
-        fsql = databaseService.GetMySqlConnection(DBNames.TaiwanCain);
+        //taiwan_cain_2nd = DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain2nd);
+        //taiwan_cain = DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain);
     }
     public async Task<ObservableCollection<Equipments>> GetEquipmentExAsync(int partsetIndex, string? partsetName = null)
     {
@@ -486,7 +486,7 @@ public class SendMailService : ISendMailService
                 };
                 Debug.WriteLine(postal.AddInfo);
                 taiwan_cain_2nd.Insert(letter).WithTransaction(unitOfWork.GetOrBeginTransaction()).ExecuteAffrows();
-                postalId = (int)fsql.Insert(postal).WithTransaction(unitOfWork.GetOrBeginTransaction()).ExecuteIdentity();
+                postalId = (int)taiwan_cain.Insert(postal).WithTransaction(unitOfWork.GetOrBeginTransaction()).ExecuteIdentity();
 
             }
 
@@ -502,7 +502,7 @@ public class SendMailService : ISendMailService
 
     private int GetClothesID()
     {
-        int result = fsql.Ado.QuerySingle<int>(
+        int result = taiwan_cain.Ado.QuerySingle<int>(
             "SELECT Auto_increment FROM information_schema.`TABLES` WHERE Table_Schema=@schema AND table_name=@table LIMIT 1",
             new { schema = "taiwan_cain_2nd", table = "user_items" }
         );
@@ -511,7 +511,7 @@ public class SendMailService : ISendMailService
 
     private int GetLetterID()
     {
-        int result = fsql.Ado.QuerySingle<int>(
+        int result = taiwan_cain.Ado.QuerySingle<int>(
             "SELECT Auto_increment FROM information_schema.`TABLES` WHERE Table_Schema=@schema AND table_name=@table LIMIT 1",
             new { schema = "taiwan_cain_2nd", table = "letter" }
         );
@@ -520,7 +520,7 @@ public class SendMailService : ISendMailService
 
     private int GetCreatureID()
     {
-        int result = fsql.Ado.QuerySingle<int>(
+        int result = taiwan_cain.Ado.QuerySingle<int>(
             "SELECT Auto_increment FROM information_schema.`TABLES` WHERE Table_Schema=@schema AND table_name=@table LIMIT 1",
             new { schema = "taiwan_cain_2nd", table = "creature_items" }
         );
@@ -574,7 +574,7 @@ public class SendMailService : ISendMailService
 
     public async Task <string> GetRoleNameById(int characNo)
     {
-        string result = await fsql.Select<CharacInfo>().Where(a => a.CharacNo == characNo).FirstAsync(a => a.CharacName);
+        string result = await taiwan_cain.Select<CharacInfo>().Where(a => a.CharacNo == characNo).FirstAsync(a => a.CharacName);
         if (result != null)
         {
             return result;

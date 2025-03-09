@@ -25,4 +25,6 @@ public class GlobalVariables
     public CharacInfo? GlobalCurrentCharacInfo { get; set; }
 
     public Accounts? Accounts { get; set; }
+
+    public ConnectionInfo? ConnectionInfo { get; set; }
 }

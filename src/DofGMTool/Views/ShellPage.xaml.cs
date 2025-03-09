@@ -1,11 +1,13 @@
 ﻿using DofGMTool.Contracts.Services;
 using DofGMTool.Helpers;
+using DofGMTool.Models;
 using DofGMTool.ViewModels;
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using Windows.System;
 
 namespace DofGMTool.Views;
@@ -18,15 +20,15 @@ public sealed partial class ShellPage : Page
         get;
     }
 
-    public CharacterManageViewModel CharacInfoViewModel
-    {
-        get;
-    }
+    //public CharacterManageViewModel CharacInfoViewModel
+    //{
+    //    get;
+    //}
 
-    public ShellPage(ShellViewModel viewModel, CharacterManageViewModel characterManageViewModel)
+    public ShellPage(ShellViewModel viewModel/*, CharacterManageViewModel characterManageViewModel*/)
     {
         ViewModel = viewModel;
-        CharacInfoViewModel = characterManageViewModel;
+        //CharacInfoViewModel = characterManageViewModel;
         InitializeComponent();
 
         ViewModel.NavigationService.Frame = NavigationFrame;
@@ -40,19 +42,67 @@ public sealed partial class ShellPage : Page
         App.MainWindow.Activated += MainWindow_Activated;
         //AppTitleBarText.Text = "AppDisplayName".GetLocalized();
     }
-
-    private void OnLoaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    private int _activationCount = 0;
+    private async void OnLoaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         TitleBarHelper.UpdateTitleBar(RequestedTheme);
 
         KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu));
         KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoBack));
+
+        _activationCount++;
+
+        Debug.WriteLine($"OnLoaded 方法已被调用 {_activationCount} 次。");
+
+        try
+        {
+            ObservableCollection<ConnectionInfo> connections = await ConnectionHelper.LoadConnectionsAsync();
+            // 直接更新 ViewModel
+            ViewModel.Connections = connections ?? new ObservableCollection<ConnectionInfo>();
+            ViewModel.SelectedConnection = ViewModel.Connections.FirstOrDefault(c => c.IsSelected) ?? ViewModel.Connections.FirstOrDefault();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error loading connections in OnLoaded: {ex.Message}");
+
+            // 弹出对话框，提示用户重试
+            var dialog = new ContentDialog
+            {
+                Title = "加载连接信息失败",
+                Content = "无法加载连接信息，请检查网络连接或联系管理员。",
+                PrimaryButtonText = "重试",
+                CloseButtonText = "取消",
+                XamlRoot = App.MainWindow.Content.XamlRoot
+            };
+
+            var result = await dialog.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                // 用户点击重试按钮，重新启动应用程序
+                var processStartInfo = new ProcessStartInfo
+                {
+                    FileName = Environment.ProcessPath,
+                    UseShellExecute = true
+                };
+                Process.Start(processStartInfo);
+
+                // 退出当前进程
+                Process.GetCurrentProcess().Kill();
+            }
+        }
     }
 
-    private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
+
+
+    private async void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
     {
-        //App.AppTitlebar = AppTitleBarText;
+        
     }
+
+
+
+
 
     private void NavigationViewControl_DisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)
     {

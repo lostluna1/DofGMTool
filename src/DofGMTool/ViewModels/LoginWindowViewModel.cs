@@ -38,17 +38,13 @@ public partial class LoginWindowViewModel : ObservableValidator
     {
         ProgressBarShowError = false;
         IsLogging = true;
-        DatabaseHelper databaseHelper = DatabaseHelper.Instance;
-        databaseHelper.Ip = Ip;
-        databaseHelper.Port = Port;
-        databaseHelper.User = User;
-        databaseHelper.Password = SelectedPassword;
+
 
         try
         {
             bool connected = await Task.Run(() =>
             {
-                Fsql = databaseHelper.GetMySqlConnection(DBNames.TaiwanCain);
+
                 
                 return Fsql.Ado.ExecuteConnectTest();
             });

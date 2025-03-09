@@ -5,13 +5,19 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:DofGMTool.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:DofGMTool.Models"
     xmlns:xaml="using:Microsoft.UI.Xaml"
     mc:Ignorable="d">
     <Page.Resources>
         <helpers:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
     </Page.Resources>
     <Grid>
-        <StackPanel x:Name="ContentArea">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel x:Name="ContentArea" Grid.Column="0">
             <TextBlock x:Uid="Settings_Personalization" Style="{ThemeResource SubtitleTextBlockStyle}" />
             <StackPanel Margin="{StaticResource SmallTopBottomMargin}">
                 <TextBlock x:Uid="Settings_Theme" />
@@ -63,7 +69,10 @@
             </StackPanel>
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
 
-                <TextBox Width="300" Header="ImagePacks2路径" Text="{x:Bind ViewModel.ImagePacks2Path, Mode=TwoWay}" />
+                <TextBox
+                    Width="300"
+                    Header="ImagePacks2路径"
+                    Text="{x:Bind ViewModel.ImagePacks2Path, Mode=TwoWay}" />
 
                 <Button
                     Width="100"
@@ -72,6 +81,55 @@
                     Content="浏览"
                     Style="{StaticResource AccentButtonStyle}" />
             </StackPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Style="{ThemeResource StackPanelStyle}">
+            <Button Click="AddNewConnection" Content="新增连接" />
+            <ListView
+                ItemsSource="{x:Bind ViewModel.Connections, Mode=TwoWay}"
+                RightTapped="InvertedListView_RightTapped"
+                SelectedItem="{x:Bind ViewModel.SelectedConnection, Mode=TwoWay}">
+                <ListView.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Command="{x:Bind ViewModel.DeleteSelectedConnectionCommand}" Text="删除" />
+                        <MenuFlyoutItem Command="{x:Bind ViewModel.SetDefaultConnectionCommand}" Text="设为默认连接" />
+                    </MenuFlyout>
+                </ListView.ContextFlyout>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="models:ConnectionInfo">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+                            <!--<ToggleButton
+                                Grid.RowSpan="2"
+                                Grid.Column="0"
+                                Margin="0,0,20,0"
+                                Checked="ToggleButton_Checked"
+                                IsChecked="{x:Bind IsSelected, Mode=TwoWay}"
+                                ToolTipService.ToolTip="选定此连接"
+                                Unchecked="ToggleButton_Unchecked">
+                                <FontIcon Glyph="&#xE73E;" />
+                            </ToggleButton>-->
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                FontWeight="ExtraBold"
+                                Text="{x:Bind Name}" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Text="{x:Bind Ip}" />
+
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackPanel>
     </Grid>
 </Page>

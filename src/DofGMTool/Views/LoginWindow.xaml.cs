@@ -55,8 +55,11 @@ public partial class LoginWindow : Window
     }
     private void OnLoginSucceeded(object? sender, EventArgs e)
     {
-        App.GetService<IActivationService>().ActivateAsync(e);
-        Close();
+        App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+        {
+            App.GetService<IActivationService>().ActivateAsync(e);
+            Close();
+        });
     }
 
 

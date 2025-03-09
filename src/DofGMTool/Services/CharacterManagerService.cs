@@ -10,20 +10,20 @@ public class CharacterManagerService : ICharacterManagerService
     //private IDatabaseService _databaseService;
     private readonly IEquipSlotProcessor _equipSlotProcessor;
     private readonly IFreeSql<SqliteFlag> _fsql;
-    private readonly IFreeSql<MySqlFlag> _taiwan_cain_2nd;
-    private readonly IFreeSql<MySqlFlag> _d_taiwan;
-    private readonly IFreeSql<MySqlFlag> _taiwan_cain;
-    private readonly IFreeSql<MySqlFlag> _taiwan_billing;
+    private IFreeSql<MySqlFlag> _d_taiwan => DatabaseHelper.GetMySqlConnection(DBNames.D_Taiwan);
+    private IFreeSql<MySqlFlag> _taiwan_cain_2nd => DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain2nd);
+    private IFreeSql<MySqlFlag> _taiwan_cain => DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain);
+    private IFreeSql<MySqlFlag> _taiwan_billing => DatabaseHelper.GetMySqlConnection(DBNames.TaiwanBilling);
 
     public CharacterManagerService(IEquipSlotProcessor equipSlotProcessor, IFreeSql<SqliteFlag> freeSql)
     {
-        DatabaseHelper databseService = DatabaseHelper.Instance;
+        //DatabaseHelper databseService = DatabaseHelper.Instance;
         _equipSlotProcessor = equipSlotProcessor;
         _fsql = freeSql;
-        _d_taiwan = databseService.GetMySqlConnection(DBNames.D_Taiwan);
-        _taiwan_cain_2nd = databseService.GetMySqlConnection(DBNames.TaiwanCain2nd);
-        _taiwan_cain = databseService.GetMySqlConnection(DBNames.TaiwanCain);
-        _taiwan_billing = databseService.GetMySqlConnection(DBNames.TaiwanBilling);
+        //_d_taiwan = DatabaseHelper.GetMySqlConnection(DBNames.D_Taiwan);
+        //_taiwan_cain_2nd = DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain2nd);
+        //_taiwan_cain = DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain);
+        //_taiwan_billing = DatabaseHelper.GetMySqlConnection(DBNames.TaiwanBilling);
     }
 
     public async Task<int> ClearEquipSlots(int characNo)
@@ -386,6 +386,7 @@ public class CharacterManagerService : ICharacterManagerService
 
     public ObservableCollection<Equipments> GetAvatar(int characNo)
     {
+        //_taiwan_cain_2nd = DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain2nd);
         var userItems = _taiwan_cain_2nd.Select<UserItems>().Where(a => a.CharacNo == characNo && a.Slot <= 9).OrderBy(a => a.Slot).ToList();
         var itemIds = userItems.Select(item => item.ItId.ToString()).ToList();
         if (itemIds?.Count == 0)

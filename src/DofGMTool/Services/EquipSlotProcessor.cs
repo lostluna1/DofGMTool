@@ -11,11 +11,11 @@ using zlib;
 namespace DofGMTool.Services;
 public class EquipSlotProcessor : IEquipSlotProcessor
 {
-    public readonly IFreeSql<MySqlFlag> _taiwan_cain_2nd;
+    public  IFreeSql<MySqlFlag>? _taiwan_cain_2nd;
     public EquipSlotProcessor()
     {
-        DatabaseHelper database = DatabaseHelper.Instance;
-        _taiwan_cain_2nd = database.GetMySqlConnection(DBNames.TaiwanCain2nd);
+        //DatabaseHelper database = DatabaseHelper.Instance;
+        //_taiwan_cain_2nd = DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain2nd);
     }
 
     public async Task<bool> SetEquipSlots(int characno, ObservableCollection<EquipSlotModel> eData, bool isCover = true)
@@ -48,14 +48,17 @@ public class EquipSlotProcessor : IEquipSlotProcessor
         string latin1str = HexToLatin1(sb.ToString());
         Debug.WriteLine($"Latin1 String: {latin1str}");
         Debug.WriteLine($"Latin1 String (Hex): {ByteToHexString(Encoding.GetEncoding("latin1").GetBytes(latin1str))}");
-        return await _taiwan_cain_2nd.Ado.ExecuteNonQueryAsync($"update inventory set equipslot=COMPRESS('{sb.ToString()}') WHERE charac_no={characno}") > 0;
-        //return await MySqlHelp.ExecuteNonQueryAsync($"update taiwan_cain_2nd.inventory set  equipslot=COMPRESS('{latin1str}') WHERE charac_no={characno}") > 0;
         return true;
 
     }
 
     public async Task<List<EquipSlotModel>> GetEquipSlots(int characno)
     {
+        _taiwan_cain_2nd = DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain2nd);
+        if (_taiwan_cain_2nd == null)
+        {
+            throw new  Exception("数据库连接未初始化。");
+        }
         /*Type:
             *1:武器
          *2:称号
@@ -108,7 +111,8 @@ public class EquipSlotProcessor : IEquipSlotProcessor
                 }
             }
         }
-
+        var a = ExtractEquipSlots(inventoryBytes);
+        var b = ConvertSlotsToEquipSlotModels(a);
         return equipments;
 
     }
@@ -170,14 +174,11 @@ public class EquipSlotProcessor : IEquipSlotProcessor
             return data.ToString();//空数据
         }
 
-
-
-
         data.Append("0001");
         data.Append(HlReverse(edata.EquipId.ToString("X8")));
         data.Append(edata.EnhancementLevel.ToString("X2"));
-        data.Append(HlReverse(edata.Durability.ToString("X8")));
-        data.Append(edata.EquipGrade.ToString("X2"));
+        data.Append(HlReverse(edata.EquipGrade.ToString("X8")));
+        data.Append(edata.Durability.ToString("X2"));
         data.Append("0000000000");
         data.Append(edata.AmplificationType.ToString("X2"));
         data.Append(HlReverse(edata.AmplificationValue.ToString("X4")));
