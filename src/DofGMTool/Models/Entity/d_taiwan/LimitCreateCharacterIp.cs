@@ -14,7 +14,7 @@ public partial class LimitCreateCharacterIp
     public uint Count { get; set; } = 0;
 
     [JsonProperty, Column(Name = "ip_str", DbType = "char(16)", IsNullable = false)]
-    public string IpStr { get; set; }
+    public required string IpStr { get; set; }
 
     [JsonProperty, Column(Name = "last_access_mid", DbType = "int(11) unsigned")]
     public uint LastAccessMid { get; set; } = 0;

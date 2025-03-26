@@ -11,16 +11,16 @@ public partial class CharacTowerRecord
     public int CharacNo { get; set; } = 0;
 
     [JsonProperty, Column(Name = "member_info_1", DbType = "char(32)", IsNullable = false)]
-    public string MemberInfo1 { get; set; }
+    public required string MemberInfo1 { get; set; }
 
     [JsonProperty, Column(Name = "member_info_2", DbType = "char(64)", IsNullable = false)]
-    public string MemberInfo2 { get; set; }
+    public required string MemberInfo2 { get; set; }
 
     [JsonProperty, Column(Name = "member_info_3", DbType = "char(96)", IsNullable = false)]
-    public string MemberInfo3 { get; set; }
+    public required string MemberInfo3 { get; set; }
 
     [JsonProperty, Column(Name = "member_info_4", DbType = "char(128)", IsNullable = false)]
-    public string MemberInfo4 { get; set; }
+    public required string MemberInfo4 { get; set; }
 
     [JsonProperty, Column(Name = "occ_time_1", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
     public DateTime OccTime1 { get; set; }

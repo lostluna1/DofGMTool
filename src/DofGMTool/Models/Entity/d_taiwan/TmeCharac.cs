@@ -14,7 +14,7 @@ public partial class TmeCharac
     public ushort CastSpeed { get; set; } = 0;
 
     [JsonProperty, Column(Name = "charac_name", StringLength = 10, IsNullable = false)]
-    public string CharacName { get; set; }
+    public required string CharacName { get; set; }
 
     [JsonProperty, Column(Name = "charac_no")]
     public int CharacNo { get; set; } = 0;
@@ -35,7 +35,7 @@ public partial class TmeCharac
     public int DungeonClearPoint { get; set; } = 0;
 
     [JsonProperty, Column(Name = "element_resist", DbType = "tinyblob")]
-    public byte[] ElementResist { get; set; }
+    public required byte[] ElementResist { get; set; }
 
     [JsonProperty, Column(Name = "exp")]
     public int Exp { get; set; } = 0;
@@ -116,7 +116,7 @@ public partial class TmeCharac
     public short PremiumFatigue { get; set; } = 0;
 
     [JsonProperty, Column(Name = "spec_property", DbType = "tinyblob")]
-    public byte[] SpecProperty { get; set; }
+    public required byte[] SpecProperty { get; set; }
 
     [JsonProperty, Column(Name = "village", DbType = "tinyint(4)")]
     public sbyte Village { get; set; } = 1;

@@ -17,7 +17,7 @@ public partial class BakPostal20130221
     public int ReceiveCharacNo { get; set; } = 0;
 
     [JsonProperty, Column(Name = "send_charac_name", StringLength = 20, IsNullable = false)]
-    public string SendCharacName { get; set; }
+    public required string SendCharacName { get; set; }
 
     [JsonProperty, Column(Name = "send_charac_no")]
     public int SendCharacNo { get; set; } = 0;

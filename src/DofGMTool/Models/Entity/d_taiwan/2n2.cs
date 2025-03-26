@@ -10,8 +10,8 @@ public partial class N2n2
     public int Id { get; set; }
 
     [JsonProperty, Column(StringLength = 100, IsNullable = false)]
-    public string N2n1 { get; set; }
+    public string? N2n1 { get; set; }
 
     [JsonProperty, Column(StringLength = 100, IsNullable = false)]
-    public string N_2n2 { get; set; }
+    public string? N_2n2 { get; set; }
 }

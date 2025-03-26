@@ -11,6 +11,6 @@ public partial class MemberDungeon
     public uint MId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "dungeon", StringLength = -1, IsNullable = false)]
-    public string Dungeon { get; set; }
+    public required string Dungeon { get; set; }
 
 }

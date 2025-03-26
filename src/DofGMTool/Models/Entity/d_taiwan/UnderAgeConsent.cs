@@ -29,7 +29,7 @@ public partial class UnderAgeConsent
     public uint MId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "notice_addr", StringLength = 50, IsNullable = false)]
-    public string NoticeAddr { get; set; }
+    public required string NoticeAddr { get; set; }
 
     [JsonProperty, Column(Name = "notice_type")]
     public byte NoticeType { get; set; } = 0;
@@ -38,13 +38,13 @@ public partial class UnderAgeConsent
     public byte ParentConsentType { get; set; } = 0;
 
     [JsonProperty, Column(Name = "parent_email", StringLength = 25, IsNullable = false)]
-    public string ParentEmail { get; set; }
+    public required string ParentEmail { get; set; }
 
     [JsonProperty, Column(Name = "parent_jumin")]
     public ulong ParentJumin { get; set; } = 0;
 
     [JsonProperty, Column(Name = "parent_name", StringLength = 4, IsNullable = false)]
-    public string ParentName { get; set; }
+    public required string ParentName { get; set; }
 
     [JsonProperty, Column(Name = "parent_phone1")]
     public byte ParentPhone1 { get; set; } = 0;

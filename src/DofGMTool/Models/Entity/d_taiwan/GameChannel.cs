@@ -14,16 +14,16 @@ public partial class d_taiwan_GameChannel
     public short GcChGroup { get; set; } = 0;
 
     [JsonProperty, Column(Name = "gc_channel", DbType = "char(16)", IsNullable = false)]
-    public string GcChannel { get; set; }
+    public required string GcChannel { get; set; }
 
     [JsonProperty, Column(Name = "gc_channeltype", DbType = "char(0)", IsNullable = false)]
-    public string GcChanneltype { get; set; }
+    public required string GcChanneltype { get; set; }
 
     [JsonProperty, Column(Name = "gc_game")]
     public byte GcGame { get; set; } = 0;
 
     [JsonProperty, Column(Name = "gc_ip", DbType = "char(32)", IsNullable = false)]
-    public string GcIp { get; set; }
+    public required string GcIp { get; set; }
 
     [JsonProperty, Column(Name = "gc_max")]
     public ushort GcMax { get; set; } = 0;

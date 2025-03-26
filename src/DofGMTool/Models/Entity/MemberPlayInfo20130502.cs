@@ -14,19 +14,19 @@ public partial class MemberPlayInfo20130502
     public DateTime OccDate { get; set; }
 
     [JsonProperty, Column(Name = "end_ip", StringLength = 3, IsNullable = false)]
-    public string EndIp { get; set; }
+    public required string EndIp { get; set; }
 
     [JsonProperty, Column(Name = "exp")]
     public uint Exp { get; set; } = 0;
 
     [JsonProperty, Column(Name = "ip", StringLength = 15, IsNullable = false)]
-    public string Ip { get; set; }
+    public required string Ip { get; set; }
 
     [JsonProperty, Column(Name = "last_play_time")]
     public uint LastPlayTime { get; set; } = 0;
 
     [JsonProperty, Column(Name = "mac_addr", StringLength = 64, IsNullable = false)]
-    public string MacAddr { get; set; }
+    public required string MacAddr { get; set; }
 
     [JsonProperty, Column(Name = "pcbang_flag", DbType = "tinyint(4)")]
     public sbyte PcbangFlag { get; set; } = 0;

@@ -14,7 +14,7 @@ public partial class BakLogPurchaseHistory20130221
     public ulong TranId { get; set; }
 
     [JsonProperty, Column(Name = "account_id", DbType = "char(30)", IsNullable = false)]
-    public string AccountId { get; set; }
+    public required string AccountId { get; set; }
 
     [JsonProperty, Column(Name = "after_cera")]
     public uint AfterCera { get; set; }
@@ -26,7 +26,7 @@ public partial class BakLogPurchaseHistory20130221
     public uint Cera { get; set; }
 
     [JsonProperty, Column(Name = "charac_id", DbType = "char(30)", IsNullable = false)]
-    public string CharacId { get; set; }
+    public required string CharacId { get; set; }
 
     [JsonProperty, Column(Name = "item_id")]
     public uint ItemId { get; set; }

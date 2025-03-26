@@ -8,10 +8,10 @@ public partial class GeoReject
 {
 
     [JsonProperty, Column(Name = "rej_ip", StringLength = 20, IsPrimary = true, IsNullable = false)]
-    public string RejIp { get; set; }
+    public required string RejIp { get; set; }
 
     [JsonProperty, Column(Name = "rej_c_code", StringLength = 4, IsNullable = false)]
-    public string RejCCode { get; set; }
+    public required string RejCCode { get; set; }
 
     [JsonProperty, Column(Name = "rej_chk", DbType = "char(1)", IsNullable = false)]
     public string RejChk { get; set; } = "N";

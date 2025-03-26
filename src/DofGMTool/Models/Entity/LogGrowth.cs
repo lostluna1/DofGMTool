@@ -17,7 +17,7 @@ public partial class LogGrowth
     public byte ServerInfo { get; set; } = 0;
 
     [JsonProperty, Column(Name = "charac_name", StringLength = 25, IsNullable = false)]
-    public string CharacName { get; set; }
+    public required string CharacName { get; set; }
 
     [JsonProperty, Column(Name = "grow_type")]
     public byte GrowType { get; set; } = 0;

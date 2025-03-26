@@ -20,7 +20,7 @@ public partial class IpInfo
     public DateTime EndTime { get; set; }
 
     [JsonProperty, Column(Name = "ip", StringLength = 11, IsNullable = false)]
-    public string Ip { get; set; }
+    public required string Ip { get; set; }
 
     [JsonProperty, Column(Name = "ip_check")]
     public byte IpCheck { get; set; } = 0;

@@ -8,7 +8,7 @@ public partial class BakCashCera201302214
 {
 
     [JsonProperty, Column(Name = "account", StringLength = 30, IsPrimary = true, IsNullable = false)]
-    public string Account { get; set; }
+    public required string Account { get; set; }
 
     [JsonProperty, Column(Name = "cera")]
     public uint Cera { get; set; }

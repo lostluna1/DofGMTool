@@ -11,24 +11,24 @@ public partial class CharacInvenExpand
     public int CharacNo { get; set; } = 0;
 
     [JsonProperty, Column(Name = "cargo", DbType = "blob")]
-    public byte[] Cargo { get; set; }
+    public required byte[] Cargo { get; set; }
 
     [JsonProperty, Column(Name = "cargo_capacity")]
     public uint CargoCapacity { get; set; } = 0;
 
     [JsonProperty, Column(Name = "current_equipslot", DbType = "char(1)", IsNullable = false)]
-    public string CurrentEquipslot { get; set; }
+    public required string CurrentEquipslot { get; set; }
 
     [JsonProperty, Column(Name = "expand_equipslot", DbType = "blob")]
-    public byte[] ExpandEquipslot { get; set; }
+    public required byte[] ExpandEquipslot { get; set; }
 
     [JsonProperty, Column(Name = "jewel", DbType = "blob")]
-    public byte[] Jewel { get; set; }
+    public required byte[] Jewel { get; set; }
 
     [JsonProperty, Column(Name = "redeem_info", DbType = "blob")]
-    public byte[] RedeemInfo { get; set; }
+    public required byte[] RedeemInfo { get; set; }
 
     [JsonProperty, Column(Name = "switch_equipslot", DbType = "blob")]
-    public byte[] SwitchEquipslot { get; set; }
+    public required byte[] SwitchEquipslot { get; set; }
 
 }

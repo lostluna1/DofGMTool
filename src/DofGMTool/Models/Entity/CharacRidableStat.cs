@@ -11,6 +11,6 @@ public partial class CharacRidableStat
     public uint CharacNo { get; set; } = 0;
 
     [JsonProperty, Column(Name = "cooltime", DbType = "blob")]
-    public byte[] Cooltime { get; set; }
+    public required byte[] Cooltime { get; set; }
 
 }

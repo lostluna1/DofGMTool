@@ -47,13 +47,13 @@ public partial class PostalDel
     public sbyte IpgDbId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "ipg_nexon_id", StringLength = 32, IsNullable = false)]
-    public string IpgNexonId { get; set; }
+    public required string IpgNexonId { get; set; }
 
     [JsonProperty, Column(Name = "ipg_transaction_id")]
     public int IpgTransactionId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "item_guid", DbType = "varbinary(10)")]
-    public byte[] ItemGuid { get; set; }
+    public required byte[] ItemGuid { get; set; }
 
     [JsonProperty, Column(Name = "item_id")]
     public uint ItemId { get; set; } = 0;
@@ -68,7 +68,7 @@ public partial class PostalDel
     public int Postal { get; set; } = 0;
 
     [JsonProperty, Column(Name = "random_option", DbType = "varbinary(14)")]
-    public byte[] RandomOption { get; set; }
+    public required byte[] RandomOption { get; set; }
 
     [JsonProperty, Column(Name = "receive_charac_no")]
     public int ReceiveCharacNo { get; set; } = 0;
@@ -80,7 +80,7 @@ public partial class PostalDel
     public sbyte SealFlag { get; set; } = 0;
 
     [JsonProperty, Column(Name = "send_charac_name", StringLength = 20, IsNullable = false)]
-    public string SendCharacName { get; set; }
+    public required string SendCharacName { get; set; }
 
     [JsonProperty, Column(Name = "send_charac_no")]
     public int SendCharacNo { get; set; } = 0;

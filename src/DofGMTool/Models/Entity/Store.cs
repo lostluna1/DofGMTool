@@ -11,7 +11,7 @@ public partial class _Store
     public int CharacNo { get; set; } = 0;
 
     [JsonProperty, Column(Name = "store", DbType = "blob")]
-    public byte[] Store { get; set; }
+    public required byte[] Store { get; set; }
 
     [JsonProperty, Column(Name = "use_doll", DbType = "tinyint(1)")]
     public sbyte? UseDoll { get; set; } = 0;

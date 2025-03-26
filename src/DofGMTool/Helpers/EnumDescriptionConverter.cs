@@ -4,13 +4,13 @@ namespace DofGMTool.Helpers;
 
 public class EnumDescriptionConverter : IValueConverter
 {
-    public object Convert(object value, Type targetType, object parameter, string language)
+    public object? Convert(object value, Type targetType, object parameter, string language)
     {
         if (value is Enum enumValue)
         {
             return EnumHelper.GetEnumDescription(enumValue);
         }
-        return value.ToString();
+        return value?.ToString();
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, string language)

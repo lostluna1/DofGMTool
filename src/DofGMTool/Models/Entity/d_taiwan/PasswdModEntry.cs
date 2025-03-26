@@ -14,9 +14,9 @@ public partial class PasswdModEntry
     public DateTime OccTime { get; set; }
 
     [JsonProperty, Column(Name = "ip", StringLength = 15, IsNullable = false)]
-    public string Ip { get; set; }
+    public required string Ip { get; set; }
 
     [JsonProperty, Column(Name = "pre_passwd", StringLength = 32, IsNullable = false)]
-    public string PrePasswd { get; set; }
+    public required string PrePasswd { get; set; }
 
 }

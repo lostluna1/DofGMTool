@@ -14,7 +14,7 @@ public partial class MemberPunishInfo
     public int PunishType { get; set; } = 0;
 
     [JsonProperty, Column(Name = "admin_id", StringLength = 25, IsNullable = false)]
-    public string AdminId { get; set; }
+    public string? AdminId { get; set; }
 
     [JsonProperty, Column(Name = "apply_flag", DbType = "tinyint(4)")]
     public sbyte ApplyFlag { get; set; } = 0;
@@ -29,7 +29,7 @@ public partial class MemberPunishInfo
     public int PunishValue { get; set; } = 0;
 
     [JsonProperty, Column(Name = "reason", StringLength = 100, IsNullable = false)]
-    public string Reason { get; set; }
+    public string? Reason { get; set; }
 
     [JsonProperty, Column(Name = "start_time", DbType = "datetime")]
     public DateTime StartTime { get; set; }

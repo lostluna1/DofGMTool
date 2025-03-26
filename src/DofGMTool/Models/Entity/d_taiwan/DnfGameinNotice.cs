@@ -11,7 +11,7 @@ public partial class DnfGameinNotice
     public int No { get; set; }
 
     [JsonProperty, Column(Name = "img_name", StringLength = 250, IsNullable = false)]
-    public string ImgName { get; set; }
+    public required string ImgName { get; set; }
 
     [JsonProperty, Column(Name = "open_flag", InsertValueSql = "'n'")]
     public DnfGameinNoticeOPENFLAG? OpenFlag { get; set; }

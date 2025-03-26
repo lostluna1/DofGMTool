@@ -28,9 +28,9 @@ public class CharacterManagerService : ICharacterManagerService
 
     public async Task<int> ClearEquipSlots(int characNo)
     {
-        var result = await _taiwan_cain_2nd.Update<_Inventory>()
+        int result = await _taiwan_cain_2nd.Update<_Inventory>()
             .Set(a => a.Equipslot == null)
-            .Where(a=>a.CharacNo==characNo)
+            .Where(a => a.CharacNo == characNo)
             .ExecuteAffrowsAsync();
         return result;
     }

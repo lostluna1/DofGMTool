@@ -122,10 +122,10 @@ public class PvfExtensionsService : IPvfExtensionsService
                     string? elementalProperty = parsedContent.ContainsKey("[elemental property]") ? TagDictionary.ElementTranslations.GetValueOrDefault(parsedContent["[elemental property]"].First().Replace("`", "")) : string.Empty;
 
                     string convertedEquipmentType = string.IsNullOrEmpty(equipmentType) ? equipmentType : ChineseConverter.Convert(equipmentType, ChineseConversionDirection.TraditionalToSimplified);
-                    usableJob = string.IsNullOrEmpty(usableJob) ? usableJob : ChineseConverter.Convert(usableJob, ChineseConversionDirection.TraditionalToSimplified);
-                    attachType = string.IsNullOrEmpty(attachType) ? attachType : ChineseConverter.Convert(attachType, ChineseConversionDirection.TraditionalToSimplified);
-                    itemGroupName = string.IsNullOrEmpty(itemGroupName) ? itemGroupName : ChineseConverter.Convert(itemGroupName, ChineseConversionDirection.TraditionalToSimplified);
-                    elementalProperty = string.IsNullOrEmpty(elementalProperty) ? elementalProperty : ChineseConverter.Convert(elementalProperty, ChineseConversionDirection.TraditionalToSimplified);
+                    usableJob = string.IsNullOrEmpty(usableJob) ? "未命名" : ChineseConverter.Convert(usableJob, ChineseConversionDirection.TraditionalToSimplified);
+                    attachType = string.IsNullOrEmpty(attachType) ? "未命名" : ChineseConverter.Convert(attachType, ChineseConversionDirection.TraditionalToSimplified);
+                    itemGroupName = string.IsNullOrEmpty(itemGroupName) ? "未命名" : ChineseConverter.Convert(itemGroupName, ChineseConversionDirection.TraditionalToSimplified);
+                    elementalProperty = string.IsNullOrEmpty(elementalProperty) ? "未命名" : ChineseConverter.Convert(elementalProperty, ChineseConversionDirection.TraditionalToSimplified);
 
                     string skillLevelUp = parsedContent.ContainsKey("[skill levelup]") ? string.Join("\n", parsedContent["[skill levelup]"]) : string.Empty;
                     string darkAttack = parsedContent.ContainsKey("[dark attack]") ? string.Join("\n", parsedContent["[dark attack]"].First()) : string.Empty;
@@ -214,7 +214,12 @@ public class PvfExtensionsService : IPvfExtensionsService
         return new ObservableCollection<EquipmentPartset>(partsets);
     }
 
-
+    /// <summary>
+    /// 解析装备套装
+    /// </summary>
+    /// <param name="pvf"></param>
+    /// <param name="itemDic"></param>
+    /// <returns></returns>
     public List<EquipmentPartset> ParseEquipmentPartsets(PvfFile pvf, string itemDic)
     {
         var partsets = new List<EquipmentPartset>();
@@ -241,7 +246,7 @@ public class PvfExtensionsService : IPvfExtensionsService
                     {
                         Id = currentId.Value,
                         Path = fullPath,
-                        PartsetName = ChineseConverter.Convert(partsetName, ChineseConversionDirection.TraditionalToSimplified)
+                        PartsetName = partsetName//ChineseConverter.Convert(partsetName, ChineseConversionDirection.TraditionalToSimplified)
                     });
                 }
             }
@@ -499,9 +504,9 @@ public class PvfExtensionsService : IPvfExtensionsService
                     //string? elementalProperty = parsedContent.ContainsKey("[elemental property]") ? TagDictionary.ElementTranslations.GetValueOrDefault(parsedContent["[elemental property]"].First().Replace("`", "")) : string.Empty;
 
                     string convertedEquipmentType = string.IsNullOrEmpty(equipmentType) ? equipmentType : ChineseConverter.Convert(equipmentType, ChineseConversionDirection.TraditionalToSimplified);
-                    usableJob = string.IsNullOrEmpty(usableJob) ? usableJob : ChineseConverter.Convert(usableJob, ChineseConversionDirection.TraditionalToSimplified);
-                    attachType = string.IsNullOrEmpty(attachType) ? attachType : ChineseConverter.Convert(attachType, ChineseConversionDirection.TraditionalToSimplified);
-                    itemGroupName = string.IsNullOrEmpty(itemGroupName) ? itemGroupName : ChineseConverter.Convert(itemGroupName, ChineseConversionDirection.TraditionalToSimplified);
+                    usableJob = string.IsNullOrEmpty(usableJob) ? "未命名" : ChineseConverter.Convert(usableJob, ChineseConversionDirection.TraditionalToSimplified);
+                    attachType = string.IsNullOrEmpty(attachType) ? "未命名" : ChineseConverter.Convert(attachType, ChineseConversionDirection.TraditionalToSimplified);
+                    itemGroupName = string.IsNullOrEmpty(itemGroupName) ? "未命名" : ChineseConverter.Convert(itemGroupName, ChineseConversionDirection.TraditionalToSimplified);
                     //elementalProperty = string.IsNullOrEmpty(elementalProperty) ? elementalProperty : ChineseConverter.Convert(elementalProperty, ChineseConversionDirection.TraditionalToSimplified);
 
                     string skillLevelUp = parsedContent.ContainsKey("[skill levelup]") ? string.Join("\n", parsedContent["[skill levelup]"]) : string.Empty;

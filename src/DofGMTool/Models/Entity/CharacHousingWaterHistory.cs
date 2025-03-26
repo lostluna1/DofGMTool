@@ -14,6 +14,6 @@ public partial class CharacHousingWaterHistory
     public DateTime GiveTime { get; set; }
 
     [JsonProperty, Column(Name = "give_charac_name", StringLength = 20, IsNullable = false)]
-    public string GiveCharacName { get; set; }
+    public required string GiveCharacName { get; set; }
 
 }

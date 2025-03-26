@@ -3,7 +3,6 @@ using DofGMTool.Models;
 using DofGMTool.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
 
@@ -21,7 +20,7 @@ public sealed partial class SettingsPage : Page
         ViewModel = App.GetService<SettingsViewModel>();
         InitializeComponent();
         LoadImagePacks2Path();
-        Loaded+= SettingsPage_Loaded;
+        Loaded += SettingsPage_Loaded;
     }
 
     private async void SettingsPage_Loaded(object sender, RoutedEventArgs e)
@@ -61,7 +60,7 @@ public sealed partial class SettingsPage : Page
 
     private async void AddNewConnection(object sender, RoutedEventArgs e)
     {
-        var dialog = new ConnectionInfoDialog(ViewModel) 
+        var dialog = new ConnectionInfoDialog(ViewModel)
         {
             XamlRoot = App.MainWindow.Content.XamlRoot
 

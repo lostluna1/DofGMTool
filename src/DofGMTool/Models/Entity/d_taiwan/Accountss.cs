@@ -11,9 +11,9 @@ public partial class Accountss
     public int Uid { get; set; }
 
     [JsonProperty, Column(Name = "accountname", IsNullable = false)]
-    public string Accountname { get; set; }
+    public string? Accountname { get; set; }
 
     [JsonProperty, Column(Name = "password", IsNullable = false)]
-    public string Password { get; set; }
+    public string? Password { get; set; }
 
 }

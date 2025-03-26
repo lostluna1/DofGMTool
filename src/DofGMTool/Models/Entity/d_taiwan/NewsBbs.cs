@@ -17,10 +17,10 @@ public partial class NewsBbs
     public int No { get; set; }
 
     [JsonProperty, Column(Name = "body", StringLength = -1, IsNullable = false)]
-    public string Body { get; set; }
+    public required string Body { get; set; }
 
     [JsonProperty, Column(Name = "file_name", StringLength = 50)]
-    public string FileName { get; set; }
+    public required string FileName { get; set; }
 
     [JsonProperty, Column(Name = "hits")]
     public short Hits { get; set; } = 0;
@@ -38,7 +38,7 @@ public partial class NewsBbs
     public int RegDate { get; set; } = 0;
 
     [JsonProperty, Column(Name = "subject", StringLength = 50, IsNullable = false)]
-    public string Subject { get; set; }
+    public required string Subject { get; set; }
 
     [JsonProperty, Column(Name = "updt_date")]
     public int? UpdtDate { get; set; }
@@ -47,6 +47,6 @@ public partial class NewsBbs
     public sbyte UseYn { get; set; } = 1;
 
     [JsonProperty, Column(Name = "user_id", StringLength = 12, IsNullable = false)]
-    public string UserId { get; set; }
+    public required string UserId { get; set; }
 
 }

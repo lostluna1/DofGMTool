@@ -17,7 +17,7 @@ public partial class Notice
     public byte AdornColor2 { get; set; } = 0;
 
     [JsonProperty, Column(Name = "bbs_name", StringLength = 10, IsNullable = false)]
-    public string BbsName { get; set; }
+    public required string BbsName { get; set; }
 
     [JsonProperty, Column(Name = "category")]
     public byte Category { get; set; } = 0;
@@ -26,7 +26,7 @@ public partial class Notice
     public ushort Comment { get; set; } = 0;
 
     [JsonProperty, Column(Name = "content", StringLength = -1, IsNullable = false)]
-    public string Content { get; set; }
+    public required string Content { get; set; }
 
     [JsonProperty, Column(Name = "content_type", InsertValueSql = "'br'")]
     public NoticeCONTENTTYPE ContentType { get; set; }
@@ -38,19 +38,19 @@ public partial class Notice
     public byte Depth { get; set; } = 0;
 
     [JsonProperty, Column(Name = "ip", StringLength = 15, IsNullable = false)]
-    public string Ip { get; set; }
+    public required string Ip { get; set; }
 
     [JsonProperty, Column(Name = "m_id")]
     public uint MId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "m_nickname", StringLength = 12, IsNullable = false)]
-    public string MNickname { get; set; }
+    public required string MNickname { get; set; }
 
     [JsonProperty, Column(Name = "m_sex", InsertValueSql = "'m'")]
     public NoticeMSEX MSex { get; set; }
 
     [JsonProperty, Column(Name = "m_user_id", StringLength = 16, IsNullable = false)]
-    public string MUserId { get; set; }
+    public required string MUserId { get; set; }
 
     [JsonProperty, Column(Name = "no", DbType = "mediumint(8) unsigned", IsIdentity = true)]
     public uint No { get; set; }
@@ -68,7 +68,7 @@ public partial class Notice
     public NoticeSMS Sms { get; set; }
 
     [JsonProperty, Column(Name = "title", StringLength = 120, IsNullable = false)]
-    public string Title { get; set; }
+    public required string Title { get; set; }
 
     [JsonProperty, Column(Name = "view", DbType = "mediumint(8) unsigned")]
     public uint View { get; set; } = 0;

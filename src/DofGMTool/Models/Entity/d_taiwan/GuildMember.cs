@@ -23,10 +23,10 @@ public partial class GuildMember
     public ushort BbsCnt { get; set; } = 0;
 
     [JsonProperty, Column(Name = "born_year", StringLength = 2, IsNullable = false)]
-    public string BornYear { get; set; }
+    public required string BornYear { get; set; }
 
     [JsonProperty, Column(Name = "charac_name", StringLength = 20, IsNullable = false)]
-    public string CharacName { get; set; }
+    public required string CharacName { get; set; }
 
     [JsonProperty, Column(Name = "grade", DbType = "tinyint(4)")]
     public sbyte Grade { get; set; } = 0;
@@ -62,7 +62,7 @@ public partial class GuildMember
     public DateTime MemberTime { get; set; }
 
     [JsonProperty, Column(Name = "nick_name", StringLength = 12, IsNullable = false)]
-    public string NickName { get; set; }
+    public required string NickName { get; set; }
 
     [JsonProperty, Column(Name = "secede_time", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
     public DateTime SecedeTime { get; set; }
@@ -74,6 +74,6 @@ public partial class GuildMember
     public sbyte ServerId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "sex", DbType = "char(1)", IsNullable = false)]
-    public string Sex { get; set; }
+    public required string Sex { get; set; }
 
 }

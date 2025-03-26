@@ -17,6 +17,6 @@ public partial class MemberMousepassHistory
     public DateTime OccTime { get; set; }
 
     [JsonProperty, Column(Name = "pre_mousepass", StringLength = 32, IsNullable = false)]
-    public string PreMousepass { get; set; }
+    public required string PreMousepass { get; set; }
 
 }

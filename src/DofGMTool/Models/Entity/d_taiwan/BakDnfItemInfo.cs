@@ -83,19 +83,19 @@ public partial class BakDnfItemInfo
     public short InvenMax { get; set; } = 0;
 
     [JsonProperty, Column(Name = "it_eng_name", StringLength = 50, IsNullable = false)]
-    public string ItEngName { get; set; }
+    public string? ItEngName { get; set; }
 
     [JsonProperty, Column(Name = "it_explain", StringLength = 60, IsNullable = false)]
-    public string ItExplain { get; set; }
+    public string? ItExplain { get; set; }
 
     [JsonProperty, Column(Name = "it_name", StringLength = 25, IsNullable = false)]
-    public string ItName { get; set; }
+    public string? ItName { get; set; }
 
     [JsonProperty, Column(Name = "jewel_type", StringLength = 5, IsNullable = false)]
-    public string JewelType { get; set; }
+    public string? JewelType { get; set; }
 
     [JsonProperty, Column(Name = "job", StringLength = 12, IsNullable = false)]
-    public string Job { get; set; }
+    public string? Job { get; set; }
 
     [JsonProperty, Column(Name = "jump")]
     public short Jump { get; set; } = 0;
@@ -206,7 +206,7 @@ public partial class BakDnfItemInfo
     public sbyte RefWater { get; set; } = 0;
 
     [JsonProperty, Column(Name = "revert", StringLength = 5, IsNullable = false)]
-    public string Revert { get; set; }
+    public string? Revert { get; set; }
 
     [JsonProperty, Column(Name = "set_type", InsertValueSql = "'n'")]
     public BakDnfItemInfoSETTYPE SetType { get; set; }
@@ -215,7 +215,7 @@ public partial class BakDnfItemInfo
     public ushort Skill { get; set; } = 0;
 
     [JsonProperty, Column(Name = "skill_levelup", StringLength = 25, IsNullable = false)]
-    public string SkillLevelup { get; set; }
+    public string? SkillLevelup { get; set; }
 
     [JsonProperty, Column(Name = "stuck_rate")]
     public float StuckRate { get; set; } = 0f;
@@ -224,7 +224,7 @@ public partial class BakDnfItemInfo
     public ushort SubType { get; set; } = 0;
 
     [JsonProperty, Column(Name = "url", StringLength = 64, IsNullable = false)]
-    public string Url { get; set; }
+    public string? Url { get; set; }
 
     [JsonProperty, Column(Name = "weight")]
     public short Weight { get; set; } = 0;

@@ -23,6 +23,6 @@ public partial class MemberPunishHackHistory
     public uint Period { get; set; } = 0;
 
     [JsonProperty, Column(Name = "reason", StringLength = 250, IsNullable = false)]
-    public string Reason { get; set; }
+    public required string Reason { get; set; }
 
 }

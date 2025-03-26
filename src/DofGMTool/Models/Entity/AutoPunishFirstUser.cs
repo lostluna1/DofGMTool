@@ -23,7 +23,7 @@ public partial class AutoPunishFirstUser
     public uint HackSubCnt { get; set; } = 0;
 
     [JsonProperty, Column(Name = "ip", StringLength = 15, IsNullable = false)]
-    public string Ip { get; set; }
+    public required string Ip { get; set; }
 
     [JsonProperty, Column(Name = "occ_time", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
     public DateTime OccTime { get; set; }

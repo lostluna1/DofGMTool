@@ -9,7 +9,6 @@ using DofGMTool.Views;
 using Microsoft.UI.Xaml.Navigation;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using Windows.System;
 
 namespace DofGMTool.ViewModels;
 
@@ -99,13 +98,14 @@ public partial class ShellViewModel : ObservableRecipient
 
         //DatabaseHelper databaseHelper = DatabaseHelper.Instance;
         //databaseHelper.SetConnectionInfo(value);
-        var a =  _taiwan_cain = DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain);
-        var isConnected =  a.Ado.ExecuteConnectTest();
-        if (isConnected)
+        var a = _taiwan_cain = DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain);
+        var b = d_taiwan = DatabaseHelper.GetMySqlConnection(DBNames.D_Taiwan);
+        var isConnected = a.Ado.ExecuteConnectTest();
+        var isConnected2 = b.Ado.ExecuteConnectTest();
+        if (isConnected && isConnected2)
         {
             IsConnecting = false;
         }
-        d_taiwan = DatabaseHelper.GetMySqlConnection(DBNames.D_Taiwan);
 
         if (_taiwan_cain == null || d_taiwan == null)
         {

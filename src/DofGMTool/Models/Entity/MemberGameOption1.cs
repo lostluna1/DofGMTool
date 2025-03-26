@@ -11,12 +11,12 @@ public partial class MemberGameOption1
     public int MId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "option_1", DbType = "blob")]
-    public byte[] Option1 { get; set; }
+    public required byte[] Option1 { get; set; }
 
     [JsonProperty, Column(Name = "option_2", DbType = "blob")]
-    public byte[] Option2 { get; set; }
+    public required byte[] Option2 { get; set; }
 
     [JsonProperty, Column(Name = "option_3", DbType = "blob")]
-    public byte[] Option3 { get; set; }
+    public required byte[] Option3 { get; set; }
 
 }

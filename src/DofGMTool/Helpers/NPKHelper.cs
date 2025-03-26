@@ -2,6 +2,7 @@
 using DofGMTool.Models;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using Windows.Storage;
 
 namespace DofGMTool.Helpers;
@@ -63,6 +64,12 @@ public static class NPKHelper
             {
                 continue;
             }
+            // **添加了对 selectedItem.FrameNo 是否超出范围的检查**
+            if (imgFile.Images == null || imgFile.Images.Count <= selectedItem.FrameNo)
+            {
+                Debug.WriteLine($"imgFile.Images 列表中没有索引为 {selectedItem.FrameNo} 的项。");
+                continue;
+            }
             if (imgFile.Images.Count() < selectedItem.FrameNo)
             {
                 continue;
@@ -70,6 +77,12 @@ public static class NPKHelper
             ImageIndex img = imgFile.Images[(int)selectedItem.FrameNo];
             if (img.VectorIndex != null)
             {
+                // **添加了对 img.VectorIndex 是否超出范围的检查**
+                if (imgFile.Images.Count <= img.VectorIndex)
+                {
+                    Debug.WriteLine($"imgFile.Images 列表中没有索引为 {img.VectorIndex} 的项。");
+                    continue;
+                }
                 img = imgFile.Images[(int)img.VectorIndex];
             }
 
@@ -117,10 +130,10 @@ public static class NPKHelper
     public static async Task GetBitMapsAsync(ObservableCollection<Equipments> equipments)
     {
         // 获取或创建存放图片的文件夹
-        var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-        var imageFolder = await localFolder.CreateFolderAsync("ImagePacks", Windows.Storage.CreationCollisionOption.OpenIfExists);
+        StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+        StorageFolder imageFolder = await localFolder.CreateFolderAsync("ImagePacks", Windows.Storage.CreationCollisionOption.OpenIfExists);
 
-        foreach (var item in equipments)
+        foreach (Equipments item in equipments)
         {
             try
             {
@@ -129,7 +142,7 @@ public static class NPKHelper
                 if (fileOrNull != null)
                 {
                     var bitmap = new BitmapImage();
-                    using (var stream = await fileOrNull.OpenAsync(Windows.Storage.FileAccessMode.Read))
+                    using (Windows.Storage.Streams.IRandomAccessStream stream = await fileOrNull.OpenAsync(Windows.Storage.FileAccessMode.Read))
                     {
                         await bitmap.SetSourceAsync(stream);
                     }
@@ -138,7 +151,7 @@ public static class NPKHelper
             }
             catch (Exception ex)
             {
-                // 可记录异常，或根据需要忽略错误
+                Debug.WriteLine(ex.Message);
             }
         }
     }

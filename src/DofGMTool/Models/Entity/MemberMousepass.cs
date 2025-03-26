@@ -11,7 +11,7 @@ public partial class MemberMousepass
     public ushort CancelCnt { get; set; } = 0;
 
     [JsonProperty, Column(Name = "enable_flag", DbType = "char(1)", IsNullable = false)]
-    public string EnableFlag { get; set; }
+    public required string EnableFlag { get; set; }
 
     [JsonProperty, Column(Name = "fail_cnt", DbType = "tinyint(4)")]
     public sbyte FailCnt { get; set; } = 0;
@@ -20,7 +20,7 @@ public partial class MemberMousepass
     public int MId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "mousepass", StringLength = 32, IsNullable = false)]
-    public string Mousepass { get; set; }
+    public required string Mousepass { get; set; }
 
     [JsonProperty, Column(Name = "occ_time", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
     public DateTime OccTime { get; set; }

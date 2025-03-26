@@ -13,7 +13,7 @@ public partial class AccountCargo
     [JsonProperty, Column(Name = "capacity")]
     public byte Capacity { get; set; } = 0;
 
-    [JsonProperty, Column(Name = "cargo", DbType = "blob",IsNullable =true)]
+    [JsonProperty, Column(Name = "cargo", DbType = "blob", IsNullable = true)]
     public byte[]? Cargo { get; set; }
 
     [JsonProperty, Column(Name = "money", DbType = "int(11) unsigned")]

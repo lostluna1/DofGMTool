@@ -20,6 +20,6 @@ public partial class CharacExpertJob
     public int ExpertJobInfoEx { get; set; } = 0;
 
     [JsonProperty, Column(Name = "recipe", DbType = "blob")]
-    public byte[] Recipe { get; set; }
+    public required byte[] Recipe { get; set; }
 
 }

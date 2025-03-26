@@ -11,6 +11,6 @@ public partial class GuildBody
     public int Gno { get; set; } = 0;
 
     [JsonProperty, Column(Name = "body", StringLength = -1, IsNullable = false)]
-    public string Body { get; set; }
+    public required string Body { get; set; }
 
 }

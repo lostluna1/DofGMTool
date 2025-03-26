@@ -19,12 +19,12 @@ public struct PvfHeader
 
 public class HeaderTreeNode
 {
-    public byte[] unpackedFileByteArr;
+    public byte[]? unpackedFileByteArr;
     public int filePathLength;
     public int relativeOffset;
     public int fileLength;
     public int computedFileLength;
-    public string filePathName;
+    public string? filePathName;
     public uint fileNumber;
     public uint fileCrc32;
 

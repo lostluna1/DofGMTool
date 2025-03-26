@@ -11,12 +11,12 @@ public partial class GeoCountryCode
     public int CodeNo { get; set; }
 
     [JsonProperty, Column(Name = "country", IsNullable = false)]
-    public string Country { get; set; }
+    public required string Country { get; set; }
 
     [JsonProperty, Column(Name = "country_code_a2", StringLength = 10, IsNullable = false)]
-    public string CountryCodeA2 { get; set; }
+    public required string CountryCodeA2 { get; set; }
 
     [JsonProperty, Column(Name = "country_code_a3", StringLength = 10, IsNullable = false)]
-    public string CountryCodeA3 { get; set; }
+    public required string CountryCodeA3 { get; set; }
 
 }

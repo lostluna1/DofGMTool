@@ -8,16 +8,16 @@ public partial class DblabDbConnect130516
 {
 
     [JsonProperty, Column(Name = "comments")]
-    public string Comments { get; set; }
+    public required string Comments { get; set; }
 
     [JsonProperty, Column(Name = "db_ip", StringLength = 16, IsNullable = false)]
-    public string DbIp { get; set; }
+    public required string DbIp { get; set; }
 
     [JsonProperty, Column(Name = "db_name", StringLength = 50, IsNullable = false)]
-    public string DbName { get; set; }
+    public required string DbName { get; set; }
 
     [JsonProperty, Column(Name = "db_passwd", StringLength = 50, IsNullable = false)]
-    public string DbPasswd { get; set; }
+    public required string DbPasswd { get; set; }
 
     [JsonProperty, Column(Name = "db_port")]
     public uint DbPort { get; set; }
@@ -29,10 +29,10 @@ public partial class DblabDbConnect130516
     public uint DbType { get; set; }
 
     [JsonProperty, Column(Name = "db_userid", StringLength = 20, IsNullable = false)]
-    public string DbUserid { get; set; }
+    public required string DbUserid { get; set; }
 
     [JsonProperty, Column(Name = "host_name", StringLength = 50)]
-    public string HostName { get; set; }
+    public required string HostName { get; set; }
 
     [JsonProperty, Column(Name = "no")]
     public uint No { get; set; } = 0;

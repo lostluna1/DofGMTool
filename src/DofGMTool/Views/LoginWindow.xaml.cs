@@ -29,7 +29,7 @@ public partial class LoginWindow : Window
         {
             frameworkElement.DataContext = ViewModel; // …Ë÷√ DataContext
         }
-        var appWindow = GetAppWindowForCurrentWindow();
+        AppWindow? appWindow = GetAppWindowForCurrentWindow();
         if (appWindow != null)
         {
             appWindow.Resize(new SizeInt32(570, 380));
@@ -49,8 +49,8 @@ public partial class LoginWindow : Window
 
     private AppWindow? GetAppWindowForCurrentWindow()
     {
-        var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-        var myWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
+        nint hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        WindowId myWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
         return AppWindow.GetFromWindowId(myWndId);
     }
     private void OnLoginSucceeded(object? sender, EventArgs e)

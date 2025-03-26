@@ -11,10 +11,10 @@ public partial class AutoMarketConditionCtrlChange
     public DateTime OccTime { get; set; }
 
     [JsonProperty, Column(Name = "memo", IsNullable = false)]
-    public string Memo { get; set; }
+    public required string Memo { get; set; }
 
     [JsonProperty, Column(Name = "MNG_user_id", StringLength = 30, IsNullable = false)]
-    public string MNGUserId { get; set; }
+    public required string MNGUserId { get; set; }
 
     [JsonProperty, Column(Name = "over_gold_new")]
     public ulong OverGoldNew { get; set; } = 0;

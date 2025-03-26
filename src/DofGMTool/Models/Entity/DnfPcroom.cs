@@ -11,27 +11,27 @@ public partial class DnfPcroom
     public int IpNo { get; set; }
 
     [JsonProperty, Column(Name = "address", StringLength = 150, IsNullable = false)]
-    public string Address { get; set; }
+    public required string Address { get; set; }
 
     [JsonProperty, Column(Name = "district", StringLength = 20, IsNullable = false)]
-    public string District { get; set; }
+    public required string District { get; set; }
 
     [JsonProperty, Column(Name = "end_ip")]
     public byte EndIp { get; set; } = 0;
 
     [JsonProperty, Column(Name = "firm_name", StringLength = 50, IsNullable = false)]
-    public string FirmName { get; set; }
+    public required string FirmName { get; set; }
 
     [JsonProperty, Column(Name = "ip", StringLength = 11, IsNullable = false)]
-    public string Ip { get; set; }
+    public required string Ip { get; set; }
 
     [JsonProperty, Column(Name = "leader", StringLength = 30, IsNullable = false)]
-    public string Leader { get; set; }
+    public required string Leader { get; set; }
 
     [JsonProperty, Column(Name = "start_ip")]
     public byte StartIp { get; set; } = 0;
 
     [JsonProperty, Column(Name = "telephone", StringLength = 20, IsNullable = false)]
-    public string Telephone { get; set; }
+    public required string Telephone { get; set; }
 
 }

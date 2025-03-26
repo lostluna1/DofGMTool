@@ -35,7 +35,7 @@ public partial class ChurnMemberInfo
     public uint LuckPoint { get; set; } = 0;
 
     [JsonProperty, Column(Name = "play_info", DbType = "char(30)", IsNullable = false)]
-    public string PlayInfo { get; set; }
+    public required string PlayInfo { get; set; }
 
     [JsonProperty, Column(Name = "quest_time")]
     public uint QuestTime { get; set; } = 0;

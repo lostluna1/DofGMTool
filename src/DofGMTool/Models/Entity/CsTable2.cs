@@ -8,9 +8,9 @@ public partial class CsTable2
 {
 
     [JsonProperty, Column(Name = "account_id", DbType = "char(30)", IsNullable = false)]
-    public string AccountId { get; set; }
+    public required string AccountId { get; set; }
 
     [JsonProperty, Column(Name = "charac_id", DbType = "char(30)", IsNullable = false)]
-    public string CharacId { get; set; }
+    public required string CharacId { get; set; }
 
 }

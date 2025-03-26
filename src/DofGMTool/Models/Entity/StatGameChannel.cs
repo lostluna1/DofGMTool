@@ -8,7 +8,7 @@ public partial class StatGameChannel
 {
 
     [JsonProperty, Column(Name = "gc_channel", StringLength = 10, IsNullable = false)]
-    public string GcChannel { get; set; }
+    public required string GcChannel { get; set; }
 
     [JsonProperty, Column(Name = "gc_now")]
     public short GcNow { get; set; } = 0;

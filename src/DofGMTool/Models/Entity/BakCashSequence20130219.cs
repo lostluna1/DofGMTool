@@ -11,6 +11,6 @@ public partial class BakCashSequence20130219
     public long SequenceId { get; set; }
 
     [JsonProperty, Column(Name = "dummy", DbType = "char(1)", IsNullable = false)]
-    public string Dummy { get; set; }
+    public required string Dummy { get; set; }
 
 }

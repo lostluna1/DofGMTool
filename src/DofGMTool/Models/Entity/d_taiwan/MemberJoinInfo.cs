@@ -20,10 +20,10 @@ public partial class MemberJoinInfo
     public byte GameUseHistory { get; set; } = 0;
 
     [JsonProperty, Column(Name = "ip", StringLength = 15, IsNullable = false)]
-    public string Ip { get; set; }
+    public required string Ip { get; set; }
 
     [JsonProperty, Column(Name = "login_ip", StringLength = 15, IsNullable = false)]
-    public string LoginIp { get; set; }
+    public required string LoginIp { get; set; }
 
     [JsonProperty, Column(Name = "login_time")]
     public int LoginTime { get; set; } = 0;

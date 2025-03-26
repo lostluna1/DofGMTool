@@ -60,10 +60,24 @@ public sealed partial class ShellPage : Page
             // 直接更新 ViewModel
             ViewModel.Connections = connections ?? new ObservableCollection<ConnectionInfo>();
             ViewModel.SelectedConnection = ViewModel.Connections.FirstOrDefault(c => c.IsSelected) ?? ViewModel.Connections.FirstOrDefault();
+            ViewModel.IsConnecting = false;
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"Error loading connections in OnLoaded: {ex.Message}");
+
+            // 写入异常信息到 D:\log.txt 文件
+            try
+            {
+                string logFilePath = @"D:\log.txt";
+                string logMessage = $"[{DateTime.Now}] Error loading connections in OnLoaded: {ex.Message}\n{ex.StackTrace}\n\n";
+                File.AppendAllText(logFilePath, logMessage);
+            }
+            catch (Exception logEx)
+            {
+                // 如果日志写入失败，输出调试信息
+                Debug.WriteLine($"Failed to write log: {logEx.Message}");
+            }
 
             // 弹出对话框，提示用户重试
             var dialog = new ContentDialog
@@ -75,7 +89,7 @@ public sealed partial class ShellPage : Page
                 XamlRoot = App.MainWindow.Content.XamlRoot
             };
 
-            var result = await dialog.ShowAsync();
+            ContentDialogResult result = await dialog.ShowAsync();
 
             if (result == ContentDialogResult.Primary)
             {
@@ -91,13 +105,14 @@ public sealed partial class ShellPage : Page
                 Process.GetCurrentProcess().Kill();
             }
         }
+
     }
 
 
 
-    private async void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
+    private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
     {
-        
+
     }
 
 

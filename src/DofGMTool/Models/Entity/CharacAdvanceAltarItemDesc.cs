@@ -29,6 +29,6 @@ public partial class CharacAdvanceAltarItemDesc
     /// ｾﾆﾀﾌﾅﾛｼｳｸ
     /// </summary>
     [JsonProperty, Column(Name = "item_desc", DbType = "blob")]
-    public byte[] ItemDesc { get; set; }
+    public required byte[] ItemDesc { get; set; }
 
 }

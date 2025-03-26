@@ -16,6 +16,7 @@ public partial class MailManageViewModel : ObservableRecipient
 {
     public ISendMailService SendMailService { get; }
     public IFreeSql<SqliteFlag> _sqlite;
+    public IApiService ApiService { get; }
 
     [ObservableProperty]
     public partial ObservableCollection<Message> Message { get; set; } = new();
@@ -64,7 +65,7 @@ public partial class MailManageViewModel : ObservableRecipient
     [ObservableProperty]
     public partial bool IsShowProgressBar { get; set; } = false;
 
-    public MailManageViewModel(ISendMailService sendMailService, IFreeSql<SqliteFlag> freeSql)
+    public MailManageViewModel(ISendMailService sendMailService, IFreeSql<SqliteFlag> freeSql, IApiService apiService)
     {
         SendMailService = sendMailService;
         _sqlite = freeSql;
@@ -77,6 +78,8 @@ public partial class MailManageViewModel : ObservableRecipient
         {
             throw new Exception("请先选择角色");
         }
+
+        ApiService = apiService;
         //EquipmentPartsets = new ObservableCollection<EquipmentPartset>(_sqlite.Select<EquipmentPartset>().Where(a=>a.Id!=2).ToList());
     }
 
@@ -132,7 +135,7 @@ public partial class MailManageViewModel : ObservableRecipient
     {
         IsShowProgressBar = true;
         TempDatas = await SendMailService.GetItemsList(type, query);
-        if (TempDatas.Count>0)
+        if (TempDatas.Count > 0)
         {
             await NPKHelper.GetBitMapsAsync(TempDatas);
 
@@ -166,35 +169,54 @@ public partial class MailManageViewModel : ObservableRecipient
     [RelayCommand/*(CanExecute = nameof(CanSendMail))*/]
     public async Task SendMail()
     {
-        if (MailModel is null)
+        var request = new Request
         {
-            return;
-        }
-        MailModel.CharacNo.Clear();
-        MailModel.CharacNo.Add(GlobalVariables.Instance.GlobalCurrentCharacInfo!.CharacNo);
+            UserId = GlobalVariables.Instance.Accounts.UID,
+            Items =
+    [
+                new() { ItemId = int.Parse(SelectedEquip.ItemId), Count = MailModel.ItemCount },
+                //new() { ItemId = 100, Count = 500 }
+            ]
+        };
 
-        if (SelectedEquip is not null && SelectedEquip.ItemId != null)
-        {
-            MailModel.ItemId = int.Parse(SelectedEquip.ItemId);
-        }
         try
         {
-            int id = SendMailService.SendMail(SelectedMailType, MailModel, TempDatas);
-            var selectedEquipItemId = SelectedEquip?.ItemId?.ToString();
-            if (selectedEquipItemId != null)
-            {
-                string? itemName = _sqlite.Select<Equipments>().Where(a => a.ItemId == selectedEquipItemId).First().ItemName;
-                string? roleName = await SendMailService.GetRoleNameById(GlobalVariables.Instance.GlobalCurrentCharacInfo.CharacNo);
-                if (roleName != null && itemName != null)
-                {
-                    Message.Add(new Message($"To: {roleName}", DateTime.Now, HorizontalAlignment.Right, id, $"{itemName}({SelectedEquip.ItemId})", new SolidColorBrush(Colors.Blue)));
-                }
-            }
+            ApiResponse<CharacInvenResponse> result = await ApiService.PostAsync<CharacInvenResponse>("/SendMailByUserId", request, true);
+
         }
-        catch
+        catch (Exception)
         {
-            throw new Exception("请先选择一件物品");
+
         }
+        //if (MailModel is null)
+        //{
+        //    return;
+        //}
+        //MailModel.CharacNo.Clear();
+        //MailModel.CharacNo.Add(GlobalVariables.Instance.GlobalCurrentCharacInfo!.CharacNo);
+
+        //if (SelectedEquip is not null && SelectedEquip.ItemId != null)
+        //{
+        //    MailModel.ItemId = int.Parse(SelectedEquip.ItemId);
+        //}
+        //try
+        //{
+        //    int id = SendMailService.SendMail(SelectedMailType, MailModel, TempDatas);
+        //    var selectedEquipItemId = SelectedEquip?.ItemId?.ToString();
+        //    if (selectedEquipItemId != null)
+        //    {
+        //        string? itemName = _sqlite.Select<Equipments>().Where(a => a.ItemId == selectedEquipItemId).First().ItemName;
+        //        string? roleName = await SendMailService.GetRoleNameById(GlobalVariables.Instance.GlobalCurrentCharacInfo.CharacNo);
+        //        if (roleName != null && itemName != null)
+        //        {
+        //            Message.Add(new Message($"To: {roleName}", DateTime.Now, HorizontalAlignment.Right, id, $"{itemName}({SelectedEquip.ItemId})", new SolidColorBrush(Colors.Blue)));
+        //        }
+        //    }
+        //}
+        //catch
+        //{
+        //    throw new Exception("请先选择一件物品");
+        //}
     }
 
 

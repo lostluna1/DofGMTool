@@ -17,7 +17,7 @@ public partial class DnfGameMessage
     public byte EndH { get; set; } = 0;
 
     [JsonProperty, Column(Name = "message")]
-    public string Message { get; set; }
+    public required string Message { get; set; }
 
     [JsonProperty, Column(Name = "occ_date", DbType = "date", InsertValueSql = "0000-00-00")]
     public DateTime OccDate { get; set; }

@@ -8,7 +8,7 @@ public partial class IpMonitorPunish
 {
 
     [JsonProperty, Column(Name = "ip", StringLength = 15, IsPrimary = true, IsNullable = false)]
-    public string Ip { get; set; }
+    public required string Ip { get; set; }
 
     [JsonProperty, Column(Name = "type", DbType = "tinyint(4)", IsPrimary = true)]
     public sbyte Type { get; set; } = 0;

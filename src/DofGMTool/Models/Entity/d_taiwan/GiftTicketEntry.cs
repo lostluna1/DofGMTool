@@ -14,7 +14,7 @@ public partial class GiftTicketEntry
     public uint BuyerCheck { get; set; } = 0;
 
     [JsonProperty, Column(Name = "buyer_code", StringLength = 21, IsNullable = false)]
-    public string BuyerCode { get; set; }
+    public required string BuyerCode { get; set; }
 
     [JsonProperty, Column(Name = "buyer_date")]
     public uint BuyerDate { get; set; } = 0;
@@ -26,13 +26,13 @@ public partial class GiftTicketEntry
     public ushort GiftNo { get; set; } = 0;
 
     [JsonProperty, Column(Name = "message", StringLength = 200, IsNullable = false)]
-    public string Message { get; set; }
+    public required string Message { get; set; }
 
     [JsonProperty, Column(Name = "other_check")]
     public uint OtherCheck { get; set; } = 0;
 
     [JsonProperty, Column(Name = "other_code", StringLength = 21, IsNullable = false)]
-    public string OtherCode { get; set; }
+    public required string OtherCode { get; set; }
 
     [JsonProperty, Column(Name = "other_date")]
     public uint OtherDate { get; set; } = 0;

@@ -11,6 +11,6 @@ public partial class DblabAvatarSocket
     public int ItId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "jewel_socket", StringLength = 600)]
-    public string JewelSocket { get; set; }
+    public required string JewelSocket { get; set; }
 
 }

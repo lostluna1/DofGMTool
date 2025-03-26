@@ -32,23 +32,23 @@ public static class ConnectionHelper
 
     public static async Task AddConnectionAsync(ConnectionInfo connection)
     {
-        var connections = await LoadConnectionsAsync();
+        ObservableCollection<ConnectionInfo> connections = await LoadConnectionsAsync();
         connections.Add(connection);
         await SaveConnectionsAsync(connections);
     }
     public static async Task SetDefaultConnectionAsync(ConnectionInfo connection)
     {
         // 加载所有连接
-        var connections = await LoadConnectionsAsync();
+        ObservableCollection<ConnectionInfo> connections = await LoadConnectionsAsync();
 
         // 遍历连接列表，将所有连接的 IsSelected 设置为 false
-        foreach (var conn in connections)
+        foreach (ConnectionInfo conn in connections)
         {
             conn.IsSelected = false;
         }
 
         // 查找并设置新的默认连接
-        var selectedConnection = connections.FirstOrDefault(c => c.Name == connection.Name);
+        ConnectionInfo? selectedConnection = connections.FirstOrDefault(c => c.Name == connection.Name);
 
         if (selectedConnection != null)
         {
@@ -67,7 +67,7 @@ public static class ConnectionHelper
 
     public static async Task DeleteConnectionAsync(ConnectionInfo connection)
     {
-        var connections = await LoadConnectionsAsync();
+        ObservableCollection<ConnectionInfo> connections = await LoadConnectionsAsync();
         connections.Remove(connection);
         await SaveConnectionsAsync(connections);
     }

@@ -14,7 +14,7 @@ public partial class NewCharacQuest
     public byte AutoClear { get; set; } = 0;
 
     [JsonProperty, Column(Name = "clear_quest", DbType = "blob")]
-    public byte[] ClearQuest { get; set; }
+    public required byte[] ClearQuest { get; set; }
 
     [JsonProperty, Column(Name = "play_1")]
     public ushort Play1 { get; set; } = 0;
@@ -137,7 +137,7 @@ public partial class NewCharacQuest
     public uint Play9Trigger { get; set; } = 0;
 
     [JsonProperty, Column(Name = "quest_notify", DbType = "blob")]
-    public byte[] QuestNotify { get; set; }
+    public required byte[] QuestNotify { get; set; }
 
     [JsonProperty, Column(Name = "urgentQuestIndex")]
     public short UrgentQuestIndex { get; set; } = -1;

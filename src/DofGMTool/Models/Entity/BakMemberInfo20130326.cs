@@ -11,6 +11,6 @@ public partial class BakMemberInfo20130326
     public int MId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "user_id", StringLength = 30)]
-    public string UserId { get; set; }
+    public required string UserId { get; set; }
 
 }

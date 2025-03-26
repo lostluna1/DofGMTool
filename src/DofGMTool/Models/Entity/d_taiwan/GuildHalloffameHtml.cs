@@ -11,9 +11,9 @@ public partial class GuildHalloffameHtml
     public int FameId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "html", StringLength = -1, IsNullable = false)]
-    public string Html { get; set; }
+    public required string Html { get; set; }
 
     [JsonProperty, Column(Name = "title", StringLength = 100, IsNullable = false)]
-    public string Title { get; set; }
+    public required string Title { get; set; }
 
 }

@@ -20,6 +20,6 @@ public partial class DnfRestrictInfo
     public DateTime RegDate { get; set; }
 
     [JsonProperty, Column(Name = "restrict_str", StringLength = 45, IsNullable = false)]
-    public string RestrictStr { get; set; }
+    public required string RestrictStr { get; set; }
 
 }

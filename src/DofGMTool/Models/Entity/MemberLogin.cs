@@ -38,7 +38,7 @@ public partial class MemberLogin
     public uint LastPlayTime { get; set; } = 0;
 
     [JsonProperty, Column(Name = "login_ip", StringLength = 15, IsNullable = false)]
-    public string LoginIp { get; set; }
+    public required string LoginIp { get; set; }
 
     [JsonProperty, Column(Name = "login_time")]
     public uint LoginTime { get; set; } = 0;

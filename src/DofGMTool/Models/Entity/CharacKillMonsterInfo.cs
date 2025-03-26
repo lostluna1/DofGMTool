@@ -11,12 +11,12 @@ public partial class CharacKillMonsterInfo
     public uint CharacNo { get; set; } = 0;
 
     [JsonProperty, Column(Name = "apc_boss_info", DbType = "blob")]
-    public byte[] ApcBossInfo { get; set; }
+    public required byte[] ApcBossInfo { get; set; }
 
     [JsonProperty, Column(Name = "boss_info", DbType = "blob")]
-    public byte[] BossInfo { get; set; }
+    public required byte[] BossInfo { get; set; }
 
     [JsonProperty, Column(Name = "named_info", DbType = "blob")]
-    public byte[] NamedInfo { get; set; }
+    public required byte[] NamedInfo { get; set; }
 
 }

@@ -8,7 +8,7 @@ public partial class MemberAbnomal
 {
 
     [JsonProperty, Column(Name = "user_id", StringLength = 12, IsPrimary = true, IsNullable = false)]
-    public string UserId { get; set; }
+    public required string UserId { get; set; }
 
     [JsonProperty, Column(Name = "overlab_count")]
     public short OverlabCount { get; set; } = 0;

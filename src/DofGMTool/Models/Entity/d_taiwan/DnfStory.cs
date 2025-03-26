@@ -11,13 +11,13 @@ public partial class DnfStory
     public int No { get; set; }
 
     [JsonProperty, Column(Name = "content", StringLength = -1)]
-    public string Content { get; set; }
+    public required string Content { get; set; }
 
     [JsonProperty, Column(Name = "hits")]
     public uint Hits { get; set; } = 0;
 
     [JsonProperty, Column(Name = "img_name", StringLength = 30, IsNullable = false)]
-    public string ImgName { get; set; }
+    public required string ImgName { get; set; }
 
     [JsonProperty, Column(Name = "m_id")]
     public int MId { get; set; } = 0;
@@ -35,7 +35,7 @@ public partial class DnfStory
     public DateTime RegDate { get; set; }
 
     [JsonProperty, Column(Name = "reg_id", StringLength = 12, IsNullable = false)]
-    public string RegId { get; set; }
+    public required string RegId { get; set; }
 
     [JsonProperty, Column(Name = "reserve_time")]
     public uint ReserveTime { get; set; } = 0;
@@ -44,10 +44,10 @@ public partial class DnfStory
     public sbyte StoryType { get; set; } = 0;
 
     [JsonProperty, Column(Name = "title", StringLength = 50, IsNullable = false)]
-    public string Title { get; set; }
+    public required string Title { get; set; }
 
     [JsonProperty, Column(Name = "url", StringLength = 250, IsNullable = false)]
-    public string Url { get; set; }
+    public required string Url { get; set; }
 
 }
 

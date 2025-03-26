@@ -38,7 +38,7 @@ public partial class GuildInfo
     public sbyte GuildIconAuth { get; set; } = 0;
 
     [JsonProperty, Column(Name = "guild_name", StringLength = 40, IsNullable = false)]
-    public string GuildName { get; set; }
+    public required string GuildName { get; set; }
 
     [JsonProperty, Column(Name = "guild_point")]
     public uint GuildPoint { get; set; } = 0;
@@ -53,7 +53,7 @@ public partial class GuildInfo
     public uint GuildRank { get; set; } = 0;
 
     [JsonProperty, Column(Name = "guild_url", StringLength = 40, IsNullable = false)]
-    public string GuildUrl { get; set; }
+    public required string GuildUrl { get; set; }
 
     [JsonProperty, Column(Name = "guild_war_point")]
     public uint GuildWarPoint { get; set; } = 0;
@@ -65,7 +65,7 @@ public partial class GuildInfo
     public int MasterId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "master_name", StringLength = 20, IsNullable = false)]
-    public string MasterName { get; set; }
+    public required string MasterName { get; set; }
 
     [JsonProperty, Column(Name = "master_no")]
     public int MasterNo { get; set; } = 0;

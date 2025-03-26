@@ -13,7 +13,7 @@ public class SendMailService : ISendMailService
     //private IDatabaseService databaseService;
     public IInventoryManageService _inventoryManageService;
     public IFreeSql<MySqlFlag> taiwan_cain_2nd => DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain2nd);
-    public IFreeSql<MySqlFlag> taiwan_cain=> DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain);
+    public IFreeSql<MySqlFlag> taiwan_cain => DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain);
     public IFreeSql<SqliteFlag> _freeSqlite;
 
     // 构造函数
@@ -572,7 +572,7 @@ public class SendMailService : ISendMailService
         }
     }
 
-    public async Task <string> GetRoleNameById(int characNo)
+    public async Task<string> GetRoleNameById(int characNo)
     {
         string result = await taiwan_cain.Select<CharacInfo>().Where(a => a.CharacNo == characNo).FirstAsync(a => a.CharacName);
         if (result != null)

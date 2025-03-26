@@ -17,6 +17,6 @@ public partial class SkillLethe
     public sbyte Flag { get; set; } = 0;
 
     [JsonProperty, Column(Name = "skill_slot", DbType = "blob")]
-    public byte[] SkillSlot { get; set; }
+    public required byte[] SkillSlot { get; set; }
 
 }

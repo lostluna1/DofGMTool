@@ -11,6 +11,6 @@ public partial class PswdQstionDirect
     public int MId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "q_text", StringLength = 20, IsNullable = false)]
-    public string QText { get; set; }
+    public required string QText { get; set; }
 
 }

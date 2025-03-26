@@ -17,6 +17,6 @@ public partial class SkillIndex
     public int SkillIdx { get; set; } = 0;
 
     [JsonProperty, Column(Name = "skill_name", StringLength = 30, IsNullable = false)]
-    public string SkillName { get; set; }
+    public required string SkillName { get; set; }
 
 }

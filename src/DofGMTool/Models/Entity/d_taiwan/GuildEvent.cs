@@ -17,7 +17,7 @@ public partial class GuildEvent
     public DateTime EndDate { get; set; }
 
     [JsonProperty, Column(Name = "page_url", StringLength = 100, IsNullable = false)]
-    public string PageUrl { get; set; }
+    public required string PageUrl { get; set; }
 
     [JsonProperty, Column(Name = "stt_date", DbType = "date", InsertValueSql = "0000-00-00")]
     public DateTime SttDate { get; set; }

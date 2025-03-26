@@ -14,6 +14,6 @@ public partial class MemberKeyOption
     public ulong MId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "key_option", DbType = "blob")]
-    public byte[] KeyOption { get; set; }
+    public required byte[] KeyOption { get; set; }
 
 }

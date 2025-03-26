@@ -2,7 +2,6 @@
 using DofGMTool.Contracts.Services;
 using DofGMTool.Core.Contracts.Services;
 using DofGMTool.Core.Services;
-using DofGMTool.Helpers;
 using DofGMTool.Models;
 using DofGMTool.Services;
 using DofGMTool.ViewModels;
@@ -72,6 +71,9 @@ public partial class App : Application
             services.AddSingleton<IEquipSlotProcessor, EquipSlotProcessor>();
             services.AddSingleton<ICharacterManagerService, CharacterManagerService>();
             services.AddSingleton<ISendMailService, SendMailService>();
+            // HttpClient
+            services.AddHttpClient();
+            services.AddSingleton<IApiService, HttpService>();
             //services.AddSingleton<CharacInfo>();// 注册角色信息服务
 
             // Core Services
@@ -91,7 +93,7 @@ public partial class App : Application
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
 
-            Func<IServiceProvider, IFreeSql<SqliteFlag>> fsqlSqlite = r =>
+            static IFreeSql<SqliteFlag> fsqlSqlite(IServiceProvider r)
             {
                 string localFolder = ApplicationData.Current.LocalFolder.Path;
                 string sqlitePath = System.IO.Path.Combine(localFolder, "database.sqlite");
@@ -101,11 +103,12 @@ public partial class App : Application
                 .UseMonitorCommand(cmd => Debug.WriteLine($"Sql：{cmd.CommandText}"))
                 .Build<SqliteFlag>();
                 return fsql2;
-            };
+            }
 
             services.AddSingleton<IFreeSql<SqliteFlag>>(fsqlSqlite);
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
+            services.Configure<ApiSettings>(context.Configuration.GetSection(nameof(ApiSettings)));
         }).
         Build();
 

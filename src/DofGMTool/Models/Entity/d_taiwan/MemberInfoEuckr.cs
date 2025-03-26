@@ -11,13 +11,13 @@ public partial class MemberInfoEuckr
     public int MId { get; set; }
 
     [JsonProperty, Column(Name = "email", StringLength = 50, IsNullable = false)]
-    public string Email { get; set; }
+    public required string Email { get; set; }
 
     [JsonProperty, Column(Name = "email_yn", InsertValueSql = "'y'")]
     public MemberInfoEuckrEMAILYN EmailYn { get; set; }
 
     [JsonProperty, Column(Name = "first_ssn", StringLength = 6, IsNullable = false)]
-    public string FirstSsn { get; set; }
+    public required string FirstSsn { get; set; }
 
     [JsonProperty, Column(Name = "hangame_flag", DbType = "tinyint(4)")]
     public sbyte HangameFlag { get; set; } = 0;
@@ -26,16 +26,16 @@ public partial class MemberInfoEuckr
     public DateTime LastPlayTime { get; set; }
 
     [JsonProperty, Column(Name = "mobile_no", StringLength = 15, IsNullable = false)]
-    public string MobileNo { get; set; }
+    public required string MobileNo { get; set; }
 
     [JsonProperty, Column(Name = "nickname", StringLength = 16, IsNullable = false)]
-    public string Nickname { get; set; }
+    public required string Nickname { get; set; }
 
     [JsonProperty, Column(Name = "passwd", StringLength = 32, IsNullable = false)]
-    public string Passwd { get; set; }
+    public required string Passwd { get; set; }
 
     [JsonProperty, Column(Name = "q_answer", StringLength = 30, IsNullable = false)]
-    public string QAnswer { get; set; }
+    public required string QAnswer { get; set; }
 
     [JsonProperty, Column(Name = "q_no", DbType = "tinyint(4)")]
     public sbyte QNo { get; set; } = 0;
@@ -44,7 +44,7 @@ public partial class MemberInfoEuckr
     public int RegDate { get; set; } = 0;
 
     [JsonProperty, Column(Name = "second_ssn", StringLength = 7, IsNullable = false)]
-    public string SecondSsn { get; set; }
+    public required string SecondSsn { get; set; }
 
     [JsonProperty, Column(Name = "slot")]
     public uint Slot { get; set; } = 8;
@@ -59,10 +59,10 @@ public partial class MemberInfoEuckr
     public DateTime UpdtDate { get; set; }
 
     [JsonProperty, Column(Name = "user_id", StringLength = 30)]
-    public string UserId { get; set; }
+    public required string UserId { get; set; }
 
     [JsonProperty, Column(Name = "user_name", StringLength = 10, IsNullable = false)]
-    public string UserName { get; set; }
+    public required string UserName { get; set; }
 
 }
 

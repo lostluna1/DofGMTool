@@ -10,24 +10,24 @@ public partial class d_taiwan_DnfPcroom
     public int IpNo { get; set; }
 
     [JsonProperty, Column(Name = "address", StringLength = 75, IsNullable = false)]
-    public string Address { get; set; }
+    public required string Address { get; set; }
 
     [JsonProperty, Column(Name = "district", StringLength = 10, IsNullable = false)]
-    public string District { get; set; }
+    public required string District { get; set; }
 
     [JsonProperty, Column(Name = "end_ip", StringLength = 7, IsNullable = false)]
-    public string EndIp { get; set; }
+    public required string EndIp { get; set; }
 
     [JsonProperty, Column(Name = "firm_name", StringLength = 25, IsNullable = false)]
-    public string FirmName { get; set; }
+    public required string FirmName { get; set; }
 
     [JsonProperty, Column(Name = "leader", StringLength = 15, IsNullable = false)]
-    public string Leader { get; set; }
+    public required string Leader { get; set; }
 
     [JsonProperty, Column(Name = "start_ip", StringLength = 7, IsNullable = false)]
-    public string StartIp { get; set; }
+    public required string StartIp { get; set; }
 
     [JsonProperty, Column(Name = "telephone", StringLength = 10, IsNullable = false)]
-    public string Telephone { get; set; }
+    public required string Telephone { get; set; }
 }
 

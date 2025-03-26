@@ -29,28 +29,28 @@ public partial class Skill
     public uint RemainSp2nd { get; set; } = 0;
 
     [JsonProperty, Column(Name = "request_sp", DbType = "blob")]
-    public byte[] RequestSp { get; set; }
+    public required byte[] RequestSp { get; set; }
 
     [JsonProperty, Column(Name = "request_sp_2nd", DbType = "blob")]
-    public byte[] RequestSp2nd { get; set; }
+    public required byte[] RequestSp2nd { get; set; }
 
     [JsonProperty, Column(Name = "script_version", DbType = "tinyint(4)")]
     public sbyte ScriptVersion { get; set; } = 0;
 
     [JsonProperty, Column(Name = "skill_command", DbType = "blob")]
-    public byte[] SkillCommand { get; set; }
+    public required byte[] SkillCommand { get; set; }
 
     [JsonProperty, Column(Name = "skill_slot", DbType = "blob")]
-    public byte[] SkillSlot { get; set; }
+    public required byte[] SkillSlot { get; set; }
 
     [JsonProperty, Column(Name = "skill_slot_2nd", DbType = "blob")]
-    public byte[] SkillSlot2nd { get; set; }
+    public required byte[] SkillSlot2nd { get; set; }
 
     [JsonProperty, Column(Name = "skill_slot_lethe", DbType = "blob")]
-    public byte[] SkillSlotLethe { get; set; }
+    public required byte[] SkillSlotLethe { get; set; }
 
     [JsonProperty, Column(Name = "skill_slot_lethe_2nd", DbType = "blob")]
-    public byte[] SkillSlotLethe2nd { get; set; }
+    public required byte[] SkillSlotLethe2nd { get; set; }
 
     [JsonProperty, Column(Name = "sp_garbage", DbType = "int(11) unsigned")]
     public uint SpGarbage { get; set; } = 0;

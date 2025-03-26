@@ -1,7 +1,6 @@
 using DofGMTool.Models;
 using FreeSql;
 using MySqlConnector;
-using System.Collections.Concurrent;
 using System.Diagnostics;
 
 namespace DofGMTool.Helpers;
@@ -10,12 +9,22 @@ public static class DatabaseHelper
 {
     // 用于缓存不同数据库的 IFreeSql<MySqlFlag> 实例
     private static readonly Dictionary<string, IFreeSql<MySqlFlag>> _fsqlCache = new();
-    // 用于记录已初始化的连接
-    private static readonly ConcurrentDictionary<MySqlConnection, bool> _initializedConnections = new();
+
+    // 添加一个静态计数器来记录实例创建次数
+    private static int _fsqlInstanceCount = 0;
 
     // 获取数据库连接
-    public static IFreeSql<MySqlFlag> GetMySqlConnection(string databaseName)
+    public static IFreeSql<MySqlFlag>? GetMySqlConnection(string databaseName)
     {
+        // 获取调用堆栈信息
+        //var stackTrace = new StackTrace();
+        //var callingFrame = stackTrace.GetFrame(1);
+        //var method = callingFrame?.GetMethod();
+        //var callerName = method?.Name;
+        //var callerType = method?.DeclaringType?.FullName;
+
+        //Debug.WriteLine($"GetMySqlConnection 被调用者：{callerType}.{callerName}");
+
         ConnectionInfo? connectionInfo = GlobalVariables.Instance.ConnectionInfo;
         if (connectionInfo == null)
         {
@@ -33,9 +42,13 @@ public static class DatabaseHelper
             return null;
         }
 
+        // 构建缓存键，由连接信息和数据库名组成
+        string cacheKey = $"{connectionInfo.Ip}:{connectionInfo.Port}:{connectionInfo.User}:{databaseName}";
+
         // 如果缓存中已有对应的 IFreeSql<MySqlFlag> 实例，直接返回
-        if (_fsqlCache.TryGetValue(databaseName, out IFreeSql<MySqlFlag>? fsql))
+        if (_fsqlCache.TryGetValue(cacheKey, out IFreeSql<MySqlFlag>? fsql))
         {
+            Debug.WriteLine($"使用缓存的 FreeSql 实例，当前实例总数：{_fsqlInstanceCount}");
             return fsql;
         }
 
@@ -46,57 +59,38 @@ public static class DatabaseHelper
         {
             // 创建新的 IFreeSql<MySqlFlag> 实例
             fsql = new FreeSqlBuilder()
-                .UseConnectionString(DataType.MySql, connectionString)
+                .UseConnectionFactory(DataType.MySql, () =>
+                {
+                    var conn = new MySqlConnection(connectionString);
+                    conn.Open();
+                    using (MySqlCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = "SET Charset latin1;";
+                        cmd.ExecuteNonQuery();
+                    }
+                    return conn;
+                })
                 .UseAutoSyncStructure(false)
+                .UseAdoConnectionPool(true)
                 .UseMonitorCommand(cmd => Debug.WriteLine($"Sql：{cmd.CommandText}"))
                 .Build<MySqlFlag>(); // 指定泛型参数
 
+            // 递增实例计数器，并输出调试信息
+            _fsqlInstanceCount++;
+            Debug.WriteLine($"创建了新的 FreeSql 实例，当前实例总数：{_fsqlInstanceCount}");
+
             // 测试数据库连接
-            using (var conn = new MySqlConnection(connectionString))
-            {
-                conn.OpenAsync();
-
-                // 执行初始化命令
-                using MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SET Charset latin1;";
-                cmd.ExecuteNonQueryAsync();
-
-                conn.Close();
-            }
-
-            // 注册 AOP 事件，在连接打开后执行初始化命令
-            fsql.Aop.CommandBefore += async (s, e) =>
-            {
-                if (e.Command.Connection is MySqlConnection conn)
-                {
-                    if (conn.State != System.Data.ConnectionState.Open)
-                    {
-                        await conn.OpenAsync();
-                    }
-
-                    // 检查连接是否已初始化
-                    if (!_initializedConnections.ContainsKey(conn))
-                    {
-                        // 执行初始化命令
-                        using MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "SET Charset latin1;";
-                        await cmd.ExecuteNonQueryAsync();
-
-                        // 标记连接已初始化
-                        _initializedConnections.TryAdd(conn, true);
-                    }
-                }
-            };
+            //fsql.Ado.ExecuteConnectTest();
 
             // 缓存实例
-            _fsqlCache[databaseName] = fsql;
+            _fsqlCache[cacheKey] = fsql;
 
             return fsql;
         }
-        catch (MySqlException ex)
+        catch (Exception ex)
         {
             Debug.WriteLine($"无法连接到数据库 '{databaseName}'：{ex.Message}");
-            throw new Exception($"无法连接到数据库 '{databaseName}'：{ex.Message},请检查连接信息");
+            throw new Exception($"无法连接到数据库 '{databaseName}'：{ex.Message}, 请检查连接信息");
         }
     }
 }

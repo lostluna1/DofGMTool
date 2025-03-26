@@ -11,7 +11,7 @@ public partial class CharacAchievement
     public uint CharacNo { get; set; } = 0;
 
     [JsonProperty, Column(Name = "achievement", DbType = "blob")]
-    public byte[] Achievement { get; set; }
+    public required byte[] Achievement { get; set; }
 
     [JsonProperty, Column(Name = "last_update_time", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
     public DateTime LastUpdateTime { get; set; }

@@ -38,7 +38,7 @@ public partial class UserItemsDel
     public ushort HiddenOption { get; set; } = 0;
 
     [JsonProperty, Column(Name = "ipg_agency_no", StringLength = 32, IsNullable = false)]
-    public string IpgAgencyNo { get; set; }
+    public required string IpgAgencyNo { get; set; }
 
     [JsonProperty, Column(Name = "it_id")]
     public int ItId { get; set; } = 0;
@@ -47,7 +47,7 @@ public partial class UserItemsDel
     public sbyte ItemLockKey { get; set; } = 0;
 
     [JsonProperty, Column(Name = "jewel_socket", DbType = "varbinary(30)")]
-    public byte[] JewelSocket { get; set; }
+    public required byte[] JewelSocket { get; set; }
 
     [JsonProperty, Column(Name = "m_time", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
     public DateTime MTime { get; set; }
@@ -65,7 +65,7 @@ public partial class UserItemsDel
     public byte Stat { get; set; } = 0;
 
     [JsonProperty, Column(Name = "to_ipg_agency_no", StringLength = 32, IsNullable = false)]
-    public string ToIpgAgencyNo { get; set; }
+    public required string ToIpgAgencyNo { get; set; }
 
     [JsonProperty, Column(Name = "trade_restrict")]
     public byte TradeRestrict { get; set; } = 0;

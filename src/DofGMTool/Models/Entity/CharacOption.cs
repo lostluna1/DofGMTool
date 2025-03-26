@@ -11,15 +11,15 @@ public partial class CharacOption
     public int CharacNo { get; set; } = 0;
 
     [JsonProperty, Column(Name = "best_clear_time", DbType = "blob")]
-    public byte[] BestClearTime { get; set; }
+    public required byte[] BestClearTime { get; set; }
 
     [JsonProperty, Column(Name = "blue_marble_enter_count")]
     public byte BlueMarbleEnterCount { get; set; } = 0;
 
     [JsonProperty, Column(Name = "charac_inform_notice", IsNullable = false)]
-    public string CharacInformNotice { get; set; }
+    public required string CharacInformNotice { get; set; }
 
     [JsonProperty, Column(Name = "options", DbType = "blob")]
-    public byte[] Options { get; set; }
+    public required byte[] Options { get; set; }
 
 }

@@ -2,7 +2,6 @@ using DofGMTool.Constant;
 using DofGMTool.Contracts.Services;
 using DofGMTool.Helpers;
 using DofGMTool.Models;
-using MySqlConnector;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text;
@@ -11,7 +10,7 @@ using zlib;
 namespace DofGMTool.Services;
 public class EquipSlotProcessor : IEquipSlotProcessor
 {
-    public  IFreeSql<MySqlFlag>? _taiwan_cain_2nd;
+    public IFreeSql<MySqlFlag>? _taiwan_cain_2nd;
     public EquipSlotProcessor()
     {
         //DatabaseHelper database = DatabaseHelper.Instance;
@@ -22,9 +21,9 @@ public class EquipSlotProcessor : IEquipSlotProcessor
     {
         //先读取
         List<EquipSlotModel> readData = isCover ? GetWearsData12() : await GetEquipSlots(characno);
-        foreach (var item in readData)
+        foreach (EquipSlotModel item in readData)
         {
-            var obj = eData.Where(e => e.Type == item.Type).FirstOrDefault();
+            EquipSlotModel? obj = eData.Where(e => e.Type == item.Type).FirstOrDefault();
             if (obj != null)
             {
                 item.EquipId = obj.EquipId;
@@ -38,9 +37,9 @@ public class EquipSlotProcessor : IEquipSlotProcessor
             }
         }
 
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
 
-        foreach (var item in readData)
+        foreach (EquipSlotModel item in readData)
         {
             sb.Append(EquipslotDataHex(item));
         }
@@ -57,7 +56,7 @@ public class EquipSlotProcessor : IEquipSlotProcessor
         _taiwan_cain_2nd = DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain2nd);
         if (_taiwan_cain_2nd == null)
         {
-            throw new  Exception("数据库连接未初始化。");
+            throw new Exception("数据库连接未初始化。");
         }
         /*Type:
             *1:武器
@@ -111,8 +110,8 @@ public class EquipSlotProcessor : IEquipSlotProcessor
                 }
             }
         }
-        var a = ExtractEquipSlots(inventoryBytes);
-        var b = ConvertSlotsToEquipSlotModels(a);
+        List<byte[]> a = ExtractEquipSlots(inventoryBytes);
+        List<EquipSlotModel> b = ConvertSlotsToEquipSlotModels(a);
         return equipments;
 
     }

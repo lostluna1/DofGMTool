@@ -17,7 +17,7 @@ public partial class BakCharacInfo20130219
     public ushort CastSpeed { get; set; } = 0;
 
     [JsonProperty, Column(Name = "charac_name", StringLength = 20, IsNullable = false)]
-    public string CharacName { get; set; }
+    public required string CharacName { get; set; }
 
     [JsonProperty, Column(Name = "charac_weight")]
     public int CharacWeight { get; set; } = 0;
@@ -41,7 +41,7 @@ public partial class BakCharacInfo20130219
     public int DungeonClearPoint { get; set; } = 0;
 
     [JsonProperty, Column(Name = "element_resist", DbType = "tinyblob")]
-    public byte[] ElementResist { get; set; }
+    public required byte[] ElementResist { get; set; }
 
     [JsonProperty, Column(Name = "event_charac_level", DbType = "tinyint(4)")]
     public sbyte EventCharacLevel { get; set; } = 0;
@@ -155,7 +155,7 @@ public partial class BakCharacInfo20130219
     public sbyte SkillTreeIndex { get; set; } = -1;
 
     [JsonProperty, Column(Name = "spec_property", DbType = "tinyblob")]
-    public byte[] SpecProperty { get; set; }
+    public required byte[] SpecProperty { get; set; }
 
     [JsonProperty, Column(Name = "start_time")]
     public int StartTime { get; set; } = 0;

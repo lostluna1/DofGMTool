@@ -20,7 +20,7 @@ public partial class GuildHalloffame
     public int GuildId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "guild_name", StringLength = 40, IsNullable = false)]
-    public string GuildName { get; set; }
+    public required string GuildName { get; set; }
 
     [JsonProperty, Column(Name = "main_flag", DbType = "tinyint(4)")]
     public sbyte MainFlag { get; set; } = 0;

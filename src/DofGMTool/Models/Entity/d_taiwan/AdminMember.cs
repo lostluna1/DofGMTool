@@ -11,16 +11,16 @@ public partial class AdminMember
     public int No { get; set; }
 
     [JsonProperty, Column(Name = "comment", StringLength = -1)]
-    public string Comment { get; set; }
+    public string? Comment { get; set; }
 
     [JsonProperty, Column(Name = "confirm", DbType = "char(1)")]
     public string Confirm { get; set; } = "0";
 
     [JsonProperty, Column(Name = "email")]
-    public string Email { get; set; }
+    public string? Email { get; set; }
 
     [JsonProperty, Column(Name = "level", StringLength = 2000, IsNullable = false)]
-    public string Level { get; set; }
+    public string? Level { get; set; }
 
     [JsonProperty, Column(Name = "level_group1", StringLength = 2, IsNullable = false)]
     public string LevelGroup1 { get; set; } = "_";
@@ -41,21 +41,21 @@ public partial class AdminMember
     public string LevelGroup6 { get; set; } = "_";
 
     [JsonProperty, Column(Name = "msn", StringLength = 50)]
-    public string Msn { get; set; }
+    public string? Msn { get; set; }
 
     [JsonProperty, Column(Name = "name", StringLength = 20, IsNullable = false)]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     [JsonProperty, Column(Name = "password", StringLength = 20, IsNullable = false)]
-    public string Password { get; set; }
+    public string? Password { get; set; }
 
     [JsonProperty, Column(Name = "phone")]
-    public string Phone { get; set; }
+    public string? Phone { get; set; }
 
     [JsonProperty, Column(Name = "reg_date", DbType = "int(13)")]
     public int? RegDate { get; set; }
 
     [JsonProperty, Column(Name = "user_id", StringLength = 20, IsNullable = false)]
-    public string UserId { get; set; }
+    public string? UserId { get; set; }
 
 }

@@ -14,7 +14,7 @@ public partial class MemberPunishHack
     public sbyte AutoFlag { get; set; } = 0;
 
     [JsonProperty, Column(Name = "hack_ip", StringLength = 15, IsNullable = false)]
-    public string HackIp { get; set; }
+    public required string HackIp { get; set; }
 
     [JsonProperty, Column(Name = "now_flag", DbType = "tinyint(4)")]
     public sbyte NowFlag { get; set; } = 0;
@@ -26,6 +26,6 @@ public partial class MemberPunishHack
     public uint Period { get; set; } = 0;
 
     [JsonProperty, Column(Name = "reason", StringLength = 250, IsNullable = false)]
-    public string Reason { get; set; }
+    public required string Reason { get; set; }
 
 }

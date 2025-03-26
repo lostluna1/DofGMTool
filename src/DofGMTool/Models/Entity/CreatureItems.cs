@@ -29,7 +29,7 @@ public partial class CreatureItems
     public DateTime ExpireDate { get; set; } = DateTime.Parse("9999-12-31 23:59:59");
 
     [JsonProperty, Column(Name = "ipg_agency_no", StringLength = 32, IsNullable = false)]
-    public string IpgAgencyNo { get; set; }
+    public string? IpgAgencyNo { get; set; }
 
     [JsonProperty, Column(Name = "it_id")]
     public uint ItId { get; set; } = 0;
@@ -38,7 +38,7 @@ public partial class CreatureItems
     public byte ItemLockKey { get; set; } = 0;
 
     [JsonProperty, Column(Name = "name", StringLength = 12, IsNullable = false)]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     [JsonProperty, Column(Name = "no_charge", DbType = "tinyint(4)")]
     public sbyte NoCharge { get; set; } = 0;

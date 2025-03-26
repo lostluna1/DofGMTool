@@ -8,7 +8,7 @@ public partial class AutoPunishHackFullIp
 {
 
     [JsonProperty, Column(Name = "full_ip", StringLength = 15, IsPrimary = true, IsNullable = false)]
-    public string FullIp { get; set; }
+    public string? FullIp { get; set; }
 
     [JsonProperty, Column(Name = "hack_sub_type", IsPrimary = true)]
     public ushort HackSubType { get; set; } = 0;

@@ -11,12 +11,12 @@ public partial class CharacItemStat
     public int CharacNo { get; set; } = 0;
 
     [JsonProperty, Column(Name = "check_flag", DbType = "blob")]
-    public byte[] CheckFlag { get; set; }
+    public required byte[] CheckFlag { get; set; }
 
     [JsonProperty, Column(Name = "cooltime_item", DbType = "blob")]
-    public byte[] CooltimeItem { get; set; }
+    public required byte[] CooltimeItem { get; set; }
 
     [JsonProperty, Column(Name = "effect_item", DbType = "blob")]
-    public byte[] EffectItem { get; set; }
+    public required byte[] EffectItem { get; set; }
 
 }

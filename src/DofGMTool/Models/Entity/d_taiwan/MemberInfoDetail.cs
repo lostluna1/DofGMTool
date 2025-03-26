@@ -11,15 +11,15 @@ public partial class MemberInfoDetail
     public int MId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "address", StringLength = 80, IsNullable = false)]
-    public string Address { get; set; }
+    public required string Address { get; set; }
 
     [JsonProperty, Column(Name = "address_detail", StringLength = 70, IsNullable = false)]
-    public string AddressDetail { get; set; }
+    public required string AddressDetail { get; set; }
 
     [JsonProperty, Column(Name = "occ_date", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
     public DateTime OccDate { get; set; }
 
     [JsonProperty, Column(Name = "zipcode", StringLength = 7, IsNullable = false)]
-    public string Zipcode { get; set; }
+    public required string Zipcode { get; set; }
 
 }

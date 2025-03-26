@@ -11,16 +11,16 @@ public partial class EventServerMessage
     public byte ChannelNo { get; set; } = 0;
 
     [JsonProperty, Column(Name = "charac_name", DbType = "char(64)", IsNullable = false)]
-    public string CharacName { get; set; }
+    public required string CharacName { get; set; }
 
     [JsonProperty, Column(Name = "kind", DbType = "char(1)", IsNullable = false)]
-    public string Kind { get; set; }
+    public required string Kind { get; set; }
 
     [JsonProperty, Column(Name = "message", DbType = "char(128)", IsNullable = false)]
-    public string Message { get; set; }
+    public required string Message { get; set; }
 
     [JsonProperty, Column(Name = "message_index", DbType = "char(1)", IsNullable = false)]
-    public string MessageIndex { get; set; }
+    public required string MessageIndex { get; set; }
 
     [JsonProperty, Column(Name = "server_info", DbType = "tinyint(4) unsigned")]
     public byte ServerInfo { get; set; } = 0;

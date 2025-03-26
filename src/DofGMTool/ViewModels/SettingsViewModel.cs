@@ -7,6 +7,7 @@ using DofGMTool.Messages;
 using DofGMTool.Models;
 using Microsoft.UI.Xaml;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Input;
 using Windows.ApplicationModel;
@@ -15,6 +16,7 @@ namespace DofGMTool.ViewModels;
 
 public partial class SettingsViewModel : ObservableRecipient
 {
+    public IApiService ApiService { get; }
     public readonly IThemeSelectorService _themeSelectorService;
 
     [ObservableProperty]
@@ -50,8 +52,9 @@ public partial class SettingsViewModel : ObservableRecipient
     [ObservableProperty]
     public partial ObservableCollection<ConnectionInfo> Connections { get; set; } = [];
 
-    public SettingsViewModel(IThemeSelectorService themeSelectorService)
+    public SettingsViewModel(IThemeSelectorService themeSelectorService, IApiService apiService)
     {
+        ApiService = apiService;
         _themeSelectorService = themeSelectorService;
         ElementTheme = _themeSelectorService.Theme;
         VersionDescription = GetVersionDescription();
@@ -68,6 +71,55 @@ public partial class SettingsViewModel : ObservableRecipient
 
         //Connections  = ConnectionHelper.LoadConnectionsAsync();
     }
+
+
+    [RelayCommand]
+    public async Task SendMailByPluginAsync()
+    {
+        var request = new Request
+        {
+            UserId = 1,
+            Items =
+            [
+                new() { ItemId = 3037, Count = 500 },
+                new() { ItemId = 100, Count = 500 }
+            ]
+        };
+
+        try
+        {
+            ApiResponse<CharacInvenResponse> result = await ApiService.PostAsync<CharacInvenResponse>("/SendMailByUserId", request, true);
+            Debug.WriteLine(result.Msg);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error: {ex.Message}");
+            Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
+        }
+    }
+
+    [RelayCommand]
+    public async Task UpgradeEquippedItemsAsync()
+    {
+        try
+        {
+            var request = new
+            {
+                UserId = 1,
+                Level = 1,
+                Slot = 15
+            };
+            ApiResponse<CharacInvenResponse> result = await ApiService.PostAsync<CharacInvenResponse>("/UpgradeEquippedItems", request, true);
+            Debug.WriteLine(result.Msg);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error: {ex.Message}");
+            Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
+        }
+    }
+
+
 
     [RelayCommand]
     public async Task SaveNewConnectionAsync()
@@ -88,7 +140,7 @@ public partial class SettingsViewModel : ObservableRecipient
         };
 
         await ConnectionHelper.AddConnectionAsync(connection);
-        Connections =  await ConnectionHelper.LoadConnectionsAsync();
+        Connections = await ConnectionHelper.LoadConnectionsAsync();
 
         // 发送消息通知其他 ViewModel
         WeakReferenceMessenger.Default.Send(new ConnectionsUpdatedMessage(true));
@@ -113,7 +165,7 @@ public partial class SettingsViewModel : ObservableRecipient
         if (SelectedConnection != null)
         {
             await ConnectionHelper.DeleteConnectionAsync(SelectedConnection);
-            Connections =  await ConnectionHelper.LoadConnectionsAsync();
+            Connections = await ConnectionHelper.LoadConnectionsAsync();
 
             // 发送消息通知其他 ViewModel
             WeakReferenceMessenger.Default.Send(new ConnectionsUpdatedMessage(true));

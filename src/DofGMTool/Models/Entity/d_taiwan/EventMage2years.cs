@@ -17,7 +17,7 @@ public partial class EventMage2years
     public byte ServerInfo { get; set; } = 0;
 
     [JsonProperty, Column(Name = "charac_name", StringLength = 100, IsNullable = false)]
-    public string CharacName { get; set; }
+    public required string CharacName { get; set; }
 
     [JsonProperty, Column(Name = "create_time", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
     public DateTime CreateTime { get; set; }

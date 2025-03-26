@@ -17,10 +17,10 @@ public partial class GameChannel
     public short GcChGroup { get; set; } = 0;
 
     [JsonProperty, Column(Name = "gc_channel", StringLength = 32, IsNullable = false)]
-    public string GcChannel { get; set; }
+    public required string GcChannel { get; set; }
 
     [JsonProperty, Column(Name = "gc_channeltype", StringLength = 25, IsNullable = false)]
-    public string GcChanneltype { get; set; }
+    public required string GcChanneltype { get; set; }
 
     [JsonProperty, Column(Name = "gc_fighter_cnt")]
     public ushort GcFighterCnt { get; set; } = 0;
@@ -35,7 +35,7 @@ public partial class GameChannel
     public ushort GcHangame { get; set; } = 0;
 
     [JsonProperty, Column(Name = "gc_ip", StringLength = 64, IsNullable = false)]
-    public string GcIp { get; set; }
+    public required string GcIp { get; set; }
 
     [JsonProperty, Column(Name = "gc_mage_cnt")]
     public ushort GcMageCnt { get; set; } = 0;

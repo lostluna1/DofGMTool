@@ -26,7 +26,7 @@ public partial class LogGiftHistory
     public string QueryUser { get; set; } = "None";
 
     [JsonProperty, Column(Name = "recv_account_id", StringLength = 30, IsNullable = false)]
-    public string RecvAccountId { get; set; }
+    public required string RecvAccountId { get; set; }
 
     [JsonProperty, Column(Name = "recv_after_cera")]
     public uint RecvAfterCera { get; set; }
@@ -35,7 +35,7 @@ public partial class LogGiftHistory
     public uint RecvBeforCera { get; set; }
 
     [JsonProperty, Column(Name = "send_account_id", StringLength = 30, IsNullable = false)]
-    public string SendAccountId { get; set; }
+    public required string SendAccountId { get; set; }
 
     [JsonProperty, Column(Name = "send_after_cera")]
     public uint SendAfterCera { get; set; }
@@ -44,7 +44,7 @@ public partial class LogGiftHistory
     public uint SendBeforCera { get; set; }
 
     [JsonProperty, Column(Name = "send_charac_id", StringLength = 30, IsNullable = false)]
-    public string SendCharacId { get; set; }
+    public required string SendCharacId { get; set; }
 
     [JsonProperty, Column(Name = "tran_state")]
     public byte TranState { get; set; }

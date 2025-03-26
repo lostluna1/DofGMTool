@@ -14,10 +14,10 @@ public partial class BakLogErrorHistory201302214
     public int ErrorId { get; set; }
 
     [JsonProperty, Column(Name = "error_msg", IsNullable = false)]
-    public string ErrorMsg { get; set; }
+    public required string ErrorMsg { get; set; }
 
     [JsonProperty, Column(Name = "error_query", StringLength = 512, IsNullable = false)]
-    public string ErrorQuery { get; set; }
+    public required string ErrorQuery { get; set; }
 
     [JsonProperty, Column(Name = "occ_date", DbType = "datetime")]
     public DateTime OccDate { get; set; }
@@ -26,6 +26,6 @@ public partial class BakLogErrorHistory201302214
     public int ProcLine { get; set; }
 
     [JsonProperty, Column(Name = "proc_name", StringLength = 45, IsNullable = false)]
-    public string ProcName { get; set; }
+    public required string ProcName { get; set; }
 
 }

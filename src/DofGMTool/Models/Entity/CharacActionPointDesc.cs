@@ -14,6 +14,6 @@ public partial class CharacActionPointDesc
     public int ActionIndex { get; set; } = 0;
 
     [JsonProperty, Column(Name = "action_group_name", StringLength = 128)]
-    public string ActionGroupName { get; set; }
+    public required string ActionGroupName { get; set; }
 
 }

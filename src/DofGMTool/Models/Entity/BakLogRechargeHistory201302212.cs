@@ -14,7 +14,7 @@ public partial class BakLogRechargeHistory201302212
     public ulong TranId { get; set; }
 
     [JsonProperty, Column(Name = "account_id", StringLength = 30, IsNullable = false)]
-    public string AccountId { get; set; }
+    public required string AccountId { get; set; }
 
     [JsonProperty, Column(Name = "after_cera")]
     public uint AfterCera { get; set; }
@@ -26,7 +26,7 @@ public partial class BakLogRechargeHistory201302212
     public uint Cera { get; set; }
 
     [JsonProperty, Column(Name = "charac_id", StringLength = 30, IsNullable = false)]
-    public string CharacId { get; set; }
+    public required string CharacId { get; set; }
 
     [JsonProperty, Column(Name = "charge_type")]
     public byte ChargeType { get; set; }
@@ -35,7 +35,7 @@ public partial class BakLogRechargeHistory201302212
     public DateTime OccDate { get; set; }
 
     [JsonProperty, Column(Name = "order_tran_id", StringLength = 35, IsNullable = false)]
-    public string OrderTranId { get; set; }
+    public required string OrderTranId { get; set; }
 
     [JsonProperty, Column(Name = "tran_state")]
     public byte TranState { get; set; }

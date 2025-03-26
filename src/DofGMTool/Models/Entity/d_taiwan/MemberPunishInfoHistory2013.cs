@@ -11,7 +11,7 @@ public partial class MemberPunishInfoHistory2013
     public int No { get; set; }
 
     [JsonProperty, Column(Name = "admin_id", StringLength = 25)]
-    public string AdminId { get; set; }
+    public required string AdminId { get; set; }
 
     [JsonProperty, Column(Name = "apply_flag", DbType = "tinyint(4)")]
     public sbyte ApplyFlag { get; set; } = 0;
@@ -20,7 +20,7 @@ public partial class MemberPunishInfoHistory2013
     public DateTime EndTime { get; set; }
 
     [JsonProperty, Column(Name = "first_ssn", StringLength = 32)]
-    public string FirstSsn { get; set; }
+    public required string FirstSsn { get; set; }
 
     [JsonProperty, Column(Name = "is_kicked", DbType = "tinyint(4)")]
     public sbyte? IsKicked { get; set; }
@@ -38,10 +38,10 @@ public partial class MemberPunishInfoHistory2013
     public int PunishValue { get; set; } = 0;
 
     [JsonProperty, Column(Name = "reason", StringLength = 100)]
-    public string Reason { get; set; }
+    public required string Reason { get; set; }
 
     [JsonProperty, Column(Name = "second_ssn", StringLength = 32)]
-    public string SecondSsn { get; set; }
+    public required string SecondSsn { get; set; }
 
     [JsonProperty, Column(Name = "start_time", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
     public DateTime StartTime { get; set; }

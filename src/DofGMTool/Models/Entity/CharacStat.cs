@@ -65,7 +65,7 @@ public partial class CharacStat
     public ushort Emotion { get; set; } = 0;
 
     [JsonProperty, Column(Name = "escalade_tutorial_flag", StringLength = 32, IsNullable = false)]
-    public string EscaladeTutorialFlag { get; set; }
+    public required string EscaladeTutorialFlag { get; set; }
 
     [JsonProperty, Column(Name = "exp")]
     public int Exp { get; set; } = 0;
@@ -89,7 +89,7 @@ public partial class CharacStat
     public DateTime ForbiddenDueTo { get; set; }
 
     [JsonProperty, Column(Name = "forbidden_to_play", DbType = "char(1)", IsNullable = false)]
-    public string ForbiddenToPlay { get; set; }
+    public required string ForbiddenToPlay { get; set; }
 
     [JsonProperty, Column(Name = "growth_power_reward", DbType = "tinyint(4)")]
     public sbyte GrowthPowerReward { get; set; } = 0;

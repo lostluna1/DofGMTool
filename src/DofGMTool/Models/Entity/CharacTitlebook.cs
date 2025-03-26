@@ -11,15 +11,15 @@ public partial class CharacTitlebook
     public uint CharacNo { get; set; } = 0;
 
     [JsonProperty, Column(Name = "despair", DbType = "blob")]
-    public byte[] Despair { get; set; }
+    public required byte[] Despair { get; set; }
 
     [JsonProperty, Column(Name = "event", DbType = "blob")]
-    public byte[] Event { get; set; }
+    public required byte[] Event { get; set; }
 
     [JsonProperty, Column(Name = "general_section", DbType = "blob")]
-    public byte[] GeneralSection { get; set; }
+    public required byte[] GeneralSection { get; set; }
 
     [JsonProperty, Column(Name = "specific_section", DbType = "blob")]
-    public byte[] SpecificSection { get; set; }
+    public required byte[] SpecificSection { get; set; }
 
 }

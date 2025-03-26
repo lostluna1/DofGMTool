@@ -77,6 +77,6 @@ public partial class MemberSecurityGrade
     public int SecurityCardValidityTime { get; set; } = 0;
 
     [JsonProperty, Column(Name = "validity_ip", StringLength = 15, IsNullable = false)]
-    public string ValidityIp { get; set; }
+    public required string ValidityIp { get; set; }
 
 }

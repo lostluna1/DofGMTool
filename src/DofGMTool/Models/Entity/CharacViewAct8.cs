@@ -14,10 +14,10 @@ public partial class CharacViewAct8
     public byte CharacSlotLimit { get; set; } = 18;
 
     [JsonProperty, Column(Name = "hash_key", StringLength = 32, IsNullable = false)]
-    public string HashKey { get; set; }
+    public required string HashKey { get; set; }
 
     [JsonProperty, Column(Name = "info", DbType = "blob")]
-    public byte[] Info { get; set; }
+    public required byte[] Info { get; set; }
 
     [JsonProperty, Column(Name = "slot_effect_count")]
     public byte SlotEffectCount { get; set; } = 18;

@@ -11,6 +11,6 @@ public partial class CharacDungeonTest
     public int CharacNo { get; set; } = 0;
 
     [JsonProperty, Column(Name = "dungeon", DbType = "blob")]
-    public byte[] Dungeon { get; set; }
+    public required byte[] Dungeon { get; set; }
 
 }

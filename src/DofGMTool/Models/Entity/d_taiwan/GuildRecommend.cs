@@ -11,13 +11,13 @@ public partial class GuildRecommend
     public int No { get; set; } = 0;
 
     [JsonProperty, Column(Name = "charac_name", StringLength = 20, IsNullable = false)]
-    public string CharacName { get; set; }
+    public required string CharacName { get; set; }
 
     [JsonProperty, Column(Name = "charac_no")]
     public int CharacNo { get; set; } = 0;
 
     [JsonProperty, Column(Name = "comment", StringLength = 100, IsNullable = false)]
-    public string Comment { get; set; }
+    public required string Comment { get; set; }
 
     [JsonProperty, Column(Name = "guild_id")]
     public int GuildId { get; set; } = 0;

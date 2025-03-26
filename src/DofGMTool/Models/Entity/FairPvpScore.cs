@@ -17,7 +17,7 @@ public partial class FairPvpScore
     public sbyte GiveItem { get; set; } = 0;
 
     [JsonProperty, Column(Name = "job_score", DbType = "blob")]
-    public byte[] JobScore { get; set; }
+    public required byte[] JobScore { get; set; }
 
     [JsonProperty, Column(Name = "last_play_time", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
     public DateTime LastPlayTime { get; set; }
@@ -35,7 +35,7 @@ public partial class FairPvpScore
     public uint PrivateWin { get; set; } = 0;
 
     [JsonProperty, Column(Name = "pvp_mission_info", DbType = "blob")]
-    public byte[] PvpMissionInfo { get; set; }
+    public required byte[] PvpMissionInfo { get; set; }
 
     [JsonProperty, Column(Name = "relay_battle_2kill")]
     public uint RelayBattle2kill { get; set; } = 0;

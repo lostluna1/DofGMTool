@@ -23,13 +23,13 @@ public partial class UnderBillingConfirm
     public byte ParentConsentType { get; set; } = 0;
 
     [JsonProperty, Column(Name = "parent_email", StringLength = 25, IsNullable = false)]
-    public string ParentEmail { get; set; }
+    public required string ParentEmail { get; set; }
 
     [JsonProperty, Column(Name = "parent_jumin")]
     public ulong ParentJumin { get; set; } = 0;
 
     [JsonProperty, Column(Name = "parent_name", StringLength = 4, IsNullable = false)]
-    public string ParentName { get; set; }
+    public required string ParentName { get; set; }
 
     [JsonProperty, Column(Name = "parent_phone1")]
     public byte ParentPhone1 { get; set; } = 0;

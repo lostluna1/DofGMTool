@@ -8,7 +8,7 @@ public partial class GeoAllowCountry
 {
 
     [JsonProperty, Column(Name = "country_code", StringLength = 10, IsPrimary = true, IsNullable = false)]
-    public string CountryCode { get; set; }
+    public required string CountryCode { get; set; }
 
     [JsonProperty, Column(Name = "server_group", DbType = "tinyint(4)", IsPrimary = true)]
     public sbyte ServerGroup { get; set; }

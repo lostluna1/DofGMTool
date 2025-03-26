@@ -11,10 +11,10 @@ public partial class LogItemRefundHistory
     public uint PfRelId { get; set; }
 
     [JsonProperty, Column(Name = "account_id", DbType = "char(30)", IsNullable = false)]
-    public string AccountId { get; set; }
+    public required string AccountId { get; set; }
 
     [JsonProperty, Column(Name = "admin_id", StringLength = 30, IsNullable = false)]
-    public string AdminId { get; set; }
+    public required string AdminId { get; set; }
 
     [JsonProperty, Column(Name = "occ_date", DbType = "datetime")]
     public DateTime OccDate { get; set; }
@@ -26,7 +26,7 @@ public partial class LogItemRefundHistory
     public string QueryUser { get; set; } = "None";
 
     [JsonProperty, Column(Name = "reason", IsNullable = false)]
-    public string Reason { get; set; }
+    public required string Reason { get; set; }
 
     [JsonProperty, Column(Name = "recharge_tran_id")]
     public ulong RechargeTranId { get; set; }

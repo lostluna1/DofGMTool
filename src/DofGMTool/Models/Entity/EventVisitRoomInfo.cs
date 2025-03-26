@@ -14,7 +14,7 @@ public partial class EventVisitRoomInfo
     public DateTime UpdateTime { get; set; }
 
     [JsonProperty, Column(Name = "visit_charac_no", DbType = "blob")]
-    public byte[] VisitCharacNo { get; set; }
+    public required byte[] VisitCharacNo { get; set; }
 
     [JsonProperty, Column(Name = "visit_cnt", DbType = "tinyint(4) unsigned")]
     public byte VisitCnt { get; set; } = 0;

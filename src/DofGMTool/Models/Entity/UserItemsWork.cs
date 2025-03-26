@@ -20,7 +20,7 @@ public partial class UserItemsWork
     public DateTime ExpireDate { get; set; }
 
     [JsonProperty, Column(Name = "ipg_agency_no", StringLength = 32, IsNullable = false)]
-    public string IpgAgencyNo { get; set; }
+    public required string IpgAgencyNo { get; set; }
 
     [JsonProperty, Column(Name = "it_id")]
     public int ItId { get; set; } = 0;
@@ -29,7 +29,7 @@ public partial class UserItemsWork
     public byte ItemLockKey { get; set; } = 0;
 
     [JsonProperty, Column(Name = "jewel_socket", DbType = "blob")]
-    public byte[] JewelSocket { get; set; }
+    public required byte[] JewelSocket { get; set; }
 
     [JsonProperty, Column(Name = "obtain_from", DbType = "tinyint(4)")]
     public sbyte? ObtainFrom { get; set; }

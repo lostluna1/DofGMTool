@@ -14,7 +14,7 @@ public partial class LoginAccount3
     public DateTime LastLoginDate { get; set; }
 
     [JsonProperty, Column(Name = "login_ip", StringLength = 15, IsNullable = false)]
-    public string LoginIp { get; set; }
+    public required string LoginIp { get; set; }
 
     [JsonProperty, Column(Name = "login_status", DbType = "tinyint(1)")]
     public sbyte LoginStatus { get; set; } = 0;

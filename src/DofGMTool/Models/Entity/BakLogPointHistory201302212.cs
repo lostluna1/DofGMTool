@@ -11,13 +11,13 @@ public partial class BakLogPointHistory201302212
     public uint No { get; set; }
 
     [JsonProperty, Column(Name = "account_id", StringLength = 30, IsNullable = false)]
-    public string AccountId { get; set; }
+    public required string AccountId { get; set; }
 
     [JsonProperty, Column(Name = "cera_point")]
     public uint CeraPoint { get; set; } = 0;
 
     [JsonProperty, Column(Name = "charac_id", StringLength = 30, IsNullable = false)]
-    public string CharacId { get; set; }
+    public required string CharacId { get; set; }
 
     [JsonProperty, Column(Name = "charge_type", DbType = "tinyint(4)")]
     public sbyte ChargeType { get; set; } = 0;

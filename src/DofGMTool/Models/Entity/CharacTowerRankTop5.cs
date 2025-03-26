@@ -17,7 +17,7 @@ public partial class CharacTowerRankTop5
     public byte TowerIndex { get; set; } = 0;
 
     [JsonProperty, Column(Name = "member_info", DbType = "char(128)", IsNullable = false)]
-    public string MemberInfo { get; set; }
+    public required string MemberInfo { get; set; }
 
     [JsonProperty, Column(Name = "rank")]
     public ushort Rank { get; set; } = 0;

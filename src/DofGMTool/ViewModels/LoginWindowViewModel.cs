@@ -1,7 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using DofGMTool.Constant;
-using DofGMTool.Helpers;
 using DofGMTool.Models;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.ObjectModel;
@@ -45,7 +43,7 @@ public partial class LoginWindowViewModel : ObservableValidator
             bool connected = await Task.Run(() =>
             {
 
-                
+
                 return Fsql.Ado.ExecuteConnectTest();
             });
             if (connected)

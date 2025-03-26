@@ -5,11 +5,13 @@ using DofGMTool.Contracts.Services;
 using DofGMTool.Helpers;
 using DofGMTool.Models;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace DofGMTool.ViewModels;
 
 public partial class CharacterManageViewModel : ObservableRecipient
 {
+    public readonly IApiService ApiService;
     public IFreeSql<MySqlFlag> d_taiwan;
     public IFreeSql<MySqlFlag> taiwan_cain_2nd;
     public IFreeSql<MySqlFlag> taiwan_login;
@@ -308,19 +310,45 @@ public partial class CharacterManageViewModel : ObservableRecipient
     }
 
     [RelayCommand]
-    public void PowerupCurrentEquip(/*int curSlot*/)
+    public async Task PowerupCurrentEquip(/*int curSlot*/)
     {
-        _characterManagerService.PowerupCurrentEquip(PowerupLevel, CurrentSlot);
-        LoadCurrentCharacinfo();
+        try
+        {
+            var request = new
+            {
+                UserId = 1,
+                Level = PowerupLevel,
+                Slot = CurrentSlot
+            };
+            ApiResponse<PowerUpEquipResponse> result = await ApiService.PostAsync<PowerUpEquipResponse>("/UpgradeEquippedItems", request, true);
+            if (result.Code == "0")
+            {
+
+                Debug.WriteLine(result.Data.Level);
+            }
+            else
+            {
+                Debug.WriteLine(result.Msg);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error: {ex.Message}");
+            Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
+        }
+        //_characterManagerService.PowerupCurrentEquip(PowerupLevel, CurrentSlot);
+        //LoadCurrentCharacinfo();
 
     }
 
     public CharacterManageViewModel(
         ICharacterManagerService characterManagerService,
         IInventoryManageService inventoryManageService,
+        IApiService apiService,
         IEquipSlotProcessor equipSlotProcessor, IFreeSql<SqliteFlag> freeSql)
     {
         //DatabaseHelper databaseService = DatabaseHelper.Instance;
+        ApiService = apiService;
         d_taiwan = DatabaseHelper.GetMySqlConnection(DBNames.D_Taiwan);
         _inventoryManageService = inventoryManageService;
         _characterManagerService = characterManagerService;
@@ -341,7 +369,7 @@ public partial class CharacterManageViewModel : ObservableRecipient
             return;
         }
         CharacInfo currentCharacInfo = GlobalVariables.Instance.GlobalCurrentCharacInfo; //taiwan_cain.Select<CharacInfo>().Where(a => a.CharacNo == newVal.CharacNo).First();
-        var equipSlots1 = await _equipSlotProcessor.GetEquipSlots(currentCharacInfo.CharacNo);
+        List<EquipSlotModel> equipSlots1 = await _equipSlotProcessor.GetEquipSlots(currentCharacInfo.CharacNo);
 
         _Inventory a = taiwan_cain_2nd.Ado.QuerySingle<_Inventory>($"SELECT UNCOMPRESS(equipslot) as EquipSlot  FROM inventory WHERE charac_no = {currentCharacInfo.CharacNo}");
         //var b = taiwan_cain_2nd.Select<_Inventory>().Where(w => w.CharacNo == currentCharacInfo.CharacNo).ToList();
@@ -357,8 +385,8 @@ public partial class CharacterManageViewModel : ObservableRecipient
         if (EquipSlotModels != null)
         {
 
-            EquipSlotModels[6].EquipId = 120087;
-            //AllEquipments = GetEquipment(EquipSlotModels);
+            //EquipSlotModels[6].EquipId = 120087;
+            AllEquipments = GetEquipment(EquipSlotModels);
             Weapon = AllEquipments.FirstOrDefault(a => a.EquipmentType == "武器");
             Jacket = AllEquipments.FirstOrDefault(a => a.EquipmentType == "胸甲");
             Shoulder = AllEquipments.FirstOrDefault(a => a.EquipmentType == "肩膀");
@@ -372,7 +400,7 @@ public partial class CharacterManageViewModel : ObservableRecipient
             Magicstone = AllEquipments.FirstOrDefault(a => a.EquipmentType == "魔法石");
             Support = AllEquipments.FirstOrDefault(a => a.EquipmentType == "辅助装备");
             NPKHelper.GetBitMaps(AllEquipments);
-            await _equipSlotProcessor.SetEquipSlots(GlobalVariables.Instance.GlobalCurrentCharacInfo.CharacNo, EquipSlotModels,true);
+            await _equipSlotProcessor.SetEquipSlots(GlobalVariables.Instance.GlobalCurrentCharacInfo.CharacNo, EquipSlotModels, true);
             //GetBitMaps(EquipSlotModels);
         }
         Avatars = _characterManagerService.GetAvatar(GlobalVariables.Instance.GlobalCurrentCharacInfo.CharacNo);

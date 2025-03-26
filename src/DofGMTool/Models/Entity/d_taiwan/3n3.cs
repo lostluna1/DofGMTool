@@ -10,11 +10,11 @@ public partial class N3n3
     public int Id { get; set; }
 
     [JsonProperty, Column(StringLength = 100, IsNullable = false)]
-    public string N3n1 { get; set; }
+    public string? N3n1 { get; set; }
 
     [JsonProperty, Column(StringLength = 100, IsNullable = false)]
-    public string N3n2 { get; set; }
+    public string? N3n2 { get; set; }
 
     [JsonProperty, Column(StringLength = 100, IsNullable = false)]
-    public string N_3n3 { get; set; }
+    public string? N_3n3 { get; set; }
 }

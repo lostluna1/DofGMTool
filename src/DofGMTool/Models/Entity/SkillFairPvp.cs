@@ -32,19 +32,19 @@ public partial class SkillFairPvp
     public sbyte ScriptVersion { get; set; } = 0;
 
     [JsonProperty, Column(Name = "skill_command", DbType = "blob")]
-    public byte[] SkillCommand { get; set; }
+    public required byte[] SkillCommand { get; set; }
 
     [JsonProperty, Column(Name = "skill_slot", DbType = "blob")]
-    public byte[] SkillSlot { get; set; }
+    public required byte[] SkillSlot { get; set; }
 
     [JsonProperty, Column(Name = "skill_slot_2nd", DbType = "blob")]
-    public byte[] SkillSlot2nd { get; set; }
+    public required byte[] SkillSlot2nd { get; set; }
 
     [JsonProperty, Column(Name = "skill_slot_lethe", DbType = "blob")]
-    public byte[] SkillSlotLethe { get; set; }
+    public required byte[] SkillSlotLethe { get; set; }
 
     [JsonProperty, Column(Name = "skill_slot_lethe_2nd", DbType = "blob")]
-    public byte[] SkillSlotLethe2nd { get; set; }
+    public required byte[] SkillSlotLethe2nd { get; set; }
 
     [JsonProperty, Column(Name = "sp_garbage")]
     public uint SpGarbage { get; set; } = 0;

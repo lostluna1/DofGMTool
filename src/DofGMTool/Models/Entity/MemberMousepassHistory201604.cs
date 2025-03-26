@@ -14,15 +14,15 @@ public partial class MemberMousepassHistory201604
     public DateTime OccTime { get; set; }
 
     [JsonProperty, Column(Name = "ip_info", StringLength = 15, IsNullable = false)]
-    public string IpInfo { get; set; }
+    public required string IpInfo { get; set; }
 
     [JsonProperty, Column(Name = "modify_type", DbType = "tinyint(4)")]
     public sbyte ModifyType { get; set; } = 0;
 
     [JsonProperty, Column(Name = "port_info", StringLength = 5, IsNullable = false)]
-    public string PortInfo { get; set; }
+    public required string PortInfo { get; set; }
 
     [JsonProperty, Column(Name = "pre_mousepass", StringLength = 32, IsNullable = false)]
-    public string PreMousepass { get; set; }
+    public required string PreMousepass { get; set; }
 
 }

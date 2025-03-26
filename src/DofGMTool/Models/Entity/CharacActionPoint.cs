@@ -14,7 +14,7 @@ public partial class CharacActionPoint
     public DateTime OccDate { get; set; }
 
     [JsonProperty, Column(Name = "ap_clear_state", DbType = "blob")]
-    public byte[] ApClearState { get; set; }
+    public required byte[] ApClearState { get; set; }
 
     [JsonProperty, Column(Name = "ap_sum")]
     public uint ApSum { get; set; } = 0;

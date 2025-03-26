@@ -14,7 +14,7 @@ public partial class CharacBlackList
     public uint MId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "charac_name", StringLength = 20, IsNullable = false)]
-    public string CharacName { get; set; }
+    public required string CharacName { get; set; }
 
     [JsonProperty, Column(Name = "occ_time", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
     public DateTime OccTime { get; set; }

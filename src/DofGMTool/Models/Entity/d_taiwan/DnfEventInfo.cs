@@ -17,10 +17,10 @@ public partial class DnfEventInfo
     public DateTime EndDate { get; set; }
 
     [JsonProperty, Column(Name = "event_explain", StringLength = 100, IsNullable = false)]
-    public string EventExplain { get; set; }
+    public required string EventExplain { get; set; }
 
     [JsonProperty, Column(Name = "event_name", StringLength = 30, IsNullable = false)]
-    public string EventName { get; set; }
+    public required string EventName { get; set; }
 
     [JsonProperty, Column(Name = "start_date", DbType = "date", InsertValueSql = "0000-00-00")]
     public DateTime StartDate { get; set; }

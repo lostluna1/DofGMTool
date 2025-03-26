@@ -11,6 +11,6 @@ public partial class BakMId201304263
     public DateTime? RegDate { get; set; }
 
     [JsonProperty, Column(Name = "user_id", StringLength = 30)]
-    public string UserId { get; set; }
+    public string? UserId { get; set; }
 
 }

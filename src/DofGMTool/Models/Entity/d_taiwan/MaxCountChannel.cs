@@ -8,7 +8,7 @@ public partial class MaxCountChannel
 {
 
     [JsonProperty, Column(Name = "gc_channeltype", StringLength = 25, IsNullable = false)]
-    public string GcChanneltype { get; set; }
+    public required string GcChanneltype { get; set; }
 
     [JsonProperty, Column(Name = "mc_date", DbType = "datetime", InsertValueSql = "0000-00-00 00:00:00")]
     public DateTime McDate { get; set; }

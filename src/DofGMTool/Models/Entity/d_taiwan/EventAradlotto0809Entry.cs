@@ -11,7 +11,7 @@ public partial class EventAradlotto0809Entry
     public int MId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "lotto_num", DbType = "char(7)", IsNullable = false)]
-    public string LottoNum { get; set; }
+    public required string LottoNum { get; set; }
 
     [JsonProperty, Column(Name = "occ_date")]
     public int OccDate { get; set; } = 0;

@@ -14,9 +14,9 @@ public partial class GuildFiles
     public int Gno { get; set; } = 0;
 
     [JsonProperty, Column(Name = "file_location", StringLength = 100, IsNullable = false)]
-    public string FileLocation { get; set; }
+    public required string FileLocation { get; set; }
 
     [JsonProperty, Column(Name = "file_server", StringLength = 50, IsNullable = false)]
-    public string FileServer { get; set; }
+    public required string FileServer { get; set; }
 
 }

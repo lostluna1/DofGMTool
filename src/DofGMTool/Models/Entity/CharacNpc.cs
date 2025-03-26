@@ -14,6 +14,6 @@ public partial class CharacNpc
     public byte NpcCnt { get; set; } = 0;
 
     [JsonProperty, Column(Name = "npc_data", DbType = "blob")]
-    public byte[] NpcData { get; set; }
+    public required byte[] NpcData { get; set; }
 
 }

@@ -11,9 +11,9 @@ public partial class LogQueryDbmwRef
     public ushort QId { get; set; }
 
     [JsonProperty, Column(Name = "query", StringLength = -1, IsNullable = false)]
-    public string Query { get; set; }
+    public required string Query { get; set; }
 
     [JsonProperty, Column(Name = "query_hash", StringLength = 16, IsNullable = false)]
-    public string QueryHash { get; set; }
+    public required string QueryHash { get; set; }
 
 }

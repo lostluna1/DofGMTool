@@ -11,7 +11,7 @@ public partial class AutoPunishBlackipInfo
     public byte EndIp { get; set; } = 0;
 
     [JsonProperty, Column(Name = "ip", StringLength = 11, IsPrimary = true, IsNullable = false)]
-    public string Ip { get; set; }
+    public required string Ip { get; set; }
 
     [JsonProperty, Column(Name = "start_ip", IsPrimary = true)]
     public byte StartIp { get; set; } = 0;

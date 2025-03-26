@@ -17,7 +17,7 @@ public partial class DnfMasterCharac
     public sbyte ServerId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "charac_name", StringLength = 20, IsNullable = false)]
-    public string CharacName { get; set; }
+    public required string CharacName { get; set; }
 
     [JsonProperty, Column(Name = "charac_no")]
     public int CharacNo { get; set; } = 0;

@@ -23,7 +23,7 @@ public partial class CharacAdvanceAltar
     /// ｾ?ﾗｷｹﾀﾌｵ?ｻ?｡ｿ｡ｼｭ ｱｸｸﾅﾇﾑ ｾﾆﾀﾌﾅﾛ ｸｮｽｺﾆｮ
     /// </summary>
     [JsonProperty, Column(Name = "buy_item_list", DbType = "blob")]
-    public byte[] BuyItemList { get; set; }
+    public required byte[] BuyItemList { get; set; }
 
     /// <summary>
     /// ｽｺﾅﾗﾀﾌﾁ?unlock ﾀﾌﾆ衄ｮｸｦ ｺｸｿｩﾁ狎ﾟ ﾇﾏｴﾂﾁ?
@@ -35,19 +35,19 @@ public partial class CharacAdvanceAltar
     /// ｾ??ｺｸｻ?ｸｮｽｺﾆｮ
     /// </summary>
     [JsonProperty, Column(Name = "reward_list", DbType = "blob")]
-    public byte[] RewardList { get; set; }
+    public required byte[] RewardList { get; set; }
 
     /// <summary>
     /// ｽｽｷﾔ ｸｮｽｺﾆｮ
     /// </summary>
     [JsonProperty, Column(Name = "slot_list", DbType = "blob")]
-    public byte[] SlotList { get; set; }
+    public required byte[] SlotList { get; set; }
 
     /// <summary>
     /// ﾅｬｸｮｾ?ﾑ, ﾀﾔﾀ?ﾇﾒ ｼ?ﾀﾖｴﾂ ｽｺﾅﾗﾀﾌﾁ?ｮｽｺﾆｮ
     /// </summary>
     [JsonProperty, Column(Name = "stage_list", DbType = "blob")]
-    public byte[] StageList { get; set; }
+    public required byte[] StageList { get; set; }
 
     /// <summary>
     /// ｼｼｶ?･ｿ｡ｼｭ ｱｸｸﾅﾇﾑ ﾀｯｷ?star(ﾁ?｡ﾇﾏｰ?ｰｨｼﾒ ｾ?ｽ)

@@ -14,7 +14,7 @@ public partial class DnfEventLog
     public int EndTime { get; set; } = 0;
 
     [JsonProperty, Column(Name = "etc", StringLength = 100, IsNullable = false)]
-    public string Etc { get; set; }
+    public required string Etc { get; set; }
 
     [JsonProperty, Column(Name = "event_flag")]
     public sbyte? EventFlag { get; set; } = 0;
@@ -23,7 +23,7 @@ public partial class DnfEventLog
     public byte EventType { get; set; } = 0;
 
     [JsonProperty, Column(Name = "expl", StringLength = 200, IsNullable = false)]
-    public string Expl { get; set; }
+    public required string Expl { get; set; }
 
     [JsonProperty, Column(Name = "m_id")]
     public int MId { get; set; } = 0;

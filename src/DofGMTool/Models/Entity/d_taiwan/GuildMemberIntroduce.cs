@@ -14,6 +14,6 @@ public partial class GuildMemberIntroduce
     public int GuildId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "introduce", StringLength = 200, IsNullable = false)]
-    public string Introduce { get; set; }
+    public required string Introduce { get; set; }
 
 }

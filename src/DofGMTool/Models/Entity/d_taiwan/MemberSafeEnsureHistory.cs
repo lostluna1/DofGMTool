@@ -14,7 +14,7 @@ public partial class MemberSafeEnsureHistory
     public uint MId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "mobile_no", StringLength = 15, IsNullable = false)]
-    public string MobileNo { get; set; }
+    public required string MobileNo { get; set; }
 
     [JsonProperty, Column(Name = "mod_flag", DbType = "tinyint(4)")]
     public sbyte ModFlag { get; set; } = 0;
@@ -29,7 +29,7 @@ public partial class MemberSafeEnsureHistory
     public sbyte ServiceFlag { get; set; } = 0;
 
     [JsonProperty, Column(Name = "settle_id", StringLength = 18, IsNullable = false)]
-    public string SettleId { get; set; }
+    public required string SettleId { get; set; }
 
     [JsonProperty, Column(Name = "type1_flag", DbType = "tinyint(4)")]
     public sbyte Type1Flag { get; set; } = 0;

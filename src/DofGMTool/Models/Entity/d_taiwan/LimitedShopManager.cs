@@ -71,10 +71,10 @@ public partial class LimitedShopManager
     public uint RealEndTime { get; set; } = 0;
 
     [JsonProperty, Column(Name = "reason_etc", StringLength = 200, IsNullable = false)]
-    public string ReasonEtc { get; set; }
+    public required string ReasonEtc { get; set; }
 
     [JsonProperty, Column(Name = "reason_stop", StringLength = 200, IsNullable = false)]
-    public string ReasonStop { get; set; }
+    public required string ReasonStop { get; set; }
 
     [JsonProperty, Column(Name = "restrict_no")]
     public uint RestrictNo { get; set; } = 0;
@@ -89,7 +89,7 @@ public partial class LimitedShopManager
     public byte StatusFlag { get; set; } = 0;
 
     [JsonProperty, Column(Name = "title", StringLength = 50, IsNullable = false)]
-    public string Title { get; set; }
+    public required string Title { get; set; }
 
     [JsonProperty, Column(Name = "total_cnt")]
     public int TotalCnt { get; set; } = 0;

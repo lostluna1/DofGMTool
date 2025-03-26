@@ -14,7 +14,7 @@ public partial class GuildBbs
     public sbyte BdId { get; set; } = 0;
 
     [JsonProperty, Column(Name = "body_type", DbType = "char(1)", IsNullable = false)]
-    public string BodyType { get; set; }
+    public required string BodyType { get; set; }
 
     [JsonProperty, Column(Name = "empyn", DbType = "tinyint(4)")]
     public sbyte Empyn { get; set; } = 0;
@@ -41,9 +41,9 @@ public partial class GuildBbs
     public int RegDate { get; set; } = 0;
 
     [JsonProperty, Column(Name = "reg_id", StringLength = 20, IsNullable = false)]
-    public string RegId { get; set; }
+    public required string RegId { get; set; }
 
     [JsonProperty, Column(Name = "subject", StringLength = 50, IsNullable = false)]
-    public string Subject { get; set; }
+    public required string Subject { get; set; }
 
 }

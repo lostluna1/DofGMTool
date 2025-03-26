@@ -11,6 +11,6 @@ public partial class CharacItemLockInfo
     public uint CharacNo { get; set; } = 0;
 
     [JsonProperty, Column(Name = "item_lock_info", DbType = "blob")]
-    public byte[] ItemLockInfo { get; set; }
+    public required byte[] ItemLockInfo { get; set; }
 
 }

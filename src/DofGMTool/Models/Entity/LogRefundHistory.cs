@@ -8,7 +8,7 @@ public partial class LogRefundHistory
 {
 
     [JsonProperty, Column(Name = "account_id", StringLength = 30, IsPrimary = true, IsNullable = false)]
-    public string AccountId { get; set; }
+    public required string AccountId { get; set; }
 
     [JsonProperty, Column(Name = "tran_id", IsPrimary = true)]
     public ulong TranId { get; set; }
@@ -20,7 +20,7 @@ public partial class LogRefundHistory
     public DateTime OccDate { get; set; }
 
     [JsonProperty, Column(Name = "order_tran_id", StringLength = 35, IsNullable = false)]
-    public string OrderTranId { get; set; }
+    public required string OrderTranId { get; set; }
 
     [JsonProperty, Column(Name = "query_user", StringLength = 45, IsNullable = false)]
     public string QueryUser { get; set; } = "None";
