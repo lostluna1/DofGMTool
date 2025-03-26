@@ -35,19 +35,27 @@ public partial class SettingsViewModel : ObservableRecipient
     public partial string? NewConnectionIp { get; set; }
 
     [ObservableProperty]
-    public partial string? NewConnectionPort { get; set; }
+    public partial string? NewConnectionPort { get; set; } = "3306";
 
     [ObservableProperty]
     public partial string? NewConnectionUser { get; set; }
 
     [ObservableProperty]
-    public partial string? NewConnectionPassword { get; set; }
+    public partial string? NewConnectionPassword { get; set; } = "uu5!^%jg";
     [ObservableProperty]
     public partial string? SelectedPassword { get; set; }
 
     [ObservableProperty]
     public partial ConnectionInfo? SelectedConnection { get; set; }
 
+    /// <summary>
+    /// 测试连接是否成功
+    /// </summary>
+    [ObservableProperty]
+    public partial bool TestFail { get; set; } = false;
+
+    [ObservableProperty]
+    public partial string? TestResult { get; set; } = string.Empty;
 
     [ObservableProperty]
     public partial ObservableCollection<ConnectionInfo> Connections { get; set; } = [];
@@ -71,54 +79,21 @@ public partial class SettingsViewModel : ObservableRecipient
 
         //Connections  = ConnectionHelper.LoadConnectionsAsync();
     }
-
-
     [RelayCommand]
-    public async Task SendMailByPluginAsync()
+    public async Task TestConnection()
     {
-        var request = new Request
+        var connection = new ConnectionInfo
         {
-            UserId = 1,
-            Items =
-            [
-                new() { ItemId = 3037, Count = 500 },
-                new() { ItemId = 100, Count = 500 }
-            ]
+            Name = NewConnectionName,
+            Ip = NewConnectionIp,
+            Port = NewConnectionPort,
+            User = NewConnectionUser,
+            Password = NewConnectionPassword
         };
 
-        try
-        {
-            ApiResponse<CharacInvenResponse> result = await ApiService.PostAsync<CharacInvenResponse>("/SendMailByUserId", request, true);
-            Debug.WriteLine(result.Msg);
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"Error: {ex.Message}");
-            Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
-        }
+        var isSuccess = await DatabaseHelper.TestDatabaseConnectionAsync(connection);
+        GrowlMsg.Show("", isSuccess);
     }
-
-    [RelayCommand]
-    public async Task UpgradeEquippedItemsAsync()
-    {
-        try
-        {
-            var request = new
-            {
-                UserId = 1,
-                Level = 1,
-                Slot = 15
-            };
-            ApiResponse<CharacInvenResponse> result = await ApiService.PostAsync<CharacInvenResponse>("/UpgradeEquippedItems", request, true);
-            Debug.WriteLine(result.Msg);
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"Error: {ex.Message}");
-            Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
-        }
-    }
-
 
 
     [RelayCommand]

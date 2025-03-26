@@ -12,8 +12,8 @@ public class SendMailService : ISendMailService
 {
     //private IDatabaseService databaseService;
     public IInventoryManageService _inventoryManageService;
-    public IFreeSql<MySqlFlag> taiwan_cain_2nd => DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain2nd);
-    public IFreeSql<MySqlFlag> taiwan_cain => DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain);
+    public IFreeSql taiwan_cain_2nd => DatabaseHelper.TaiwanCain2nd;
+    public IFreeSql taiwan_cain => DatabaseHelper.TaiwanCain;
     public IFreeSql<SqliteFlag> _freeSqlite;
 
     // 构造函数

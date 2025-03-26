@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using DofGMTool.Constant;
 using DofGMTool.Contracts.Services;
 using DofGMTool.Helpers;
 using DofGMTool.Messages;
@@ -14,9 +13,7 @@ namespace DofGMTool.ViewModels;
 
 public partial class ShellViewModel : ObservableRecipient
 {
-    //public CharacterManageViewModel CharacInfoViewModel { get; }
-    public IFreeSql<MySqlFlag>? _taiwan_cain;
-    public IFreeSql<MySqlFlag>? d_taiwan;
+
 
     [ObservableProperty]
     public partial Accounts? SeletedAccount { get; set; }
@@ -51,11 +48,7 @@ public partial class ShellViewModel : ObservableRecipient
         {
             return;
         }
-        if (_taiwan_cain == null || d_taiwan == null)
-        {
-            Debug.WriteLine("无法建立数据库连接，请检查连接信息。");
-            return;
-        }
+        var _taiwan_cain = DatabaseHelper.TaiwanCain;
         CharacInfos = new ObservableCollection<CharacInfo>(_taiwan_cain.Select<CharacInfo>().Where(w => w.MId == value.UID && w.DeleteFlag != 1).ToList());
         GlobalVariables.Instance.Accounts = value;
     }
@@ -90,30 +83,25 @@ public partial class ShellViewModel : ObservableRecipient
     public partial bool IsConnecting { get; set; } = true;
     partial void OnSelectedConnectionChanged(ConnectionInfo? value)
     {
+        //IsConnecting = true;
         if (value == null)
         {
             return;
         }
         GlobalVariables.Instance.ConnectionInfo = value;
 
-        //DatabaseHelper databaseHelper = DatabaseHelper.Instance;
-        //databaseHelper.SetConnectionInfo(value);
-        var a = _taiwan_cain = DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain);
-        var b = d_taiwan = DatabaseHelper.GetMySqlConnection(DBNames.D_Taiwan);
-        var isConnected = a.Ado.ExecuteConnectTest();
-        var isConnected2 = b.Ado.ExecuteConnectTest();
-        if (isConnected && isConnected2)
+        try
+        {
+            DatabaseHelper.ResetConnections();
+            var d_taiwan = DatabaseHelper.DTaiwan;
+            IsConnecting = false;
+            AccountInfos = new ObservableCollection<Accounts>(d_taiwan.Select<Accounts>().ToList());
+        }
+        catch (Exception)
         {
             IsConnecting = false;
+            throw new Exception($"{GlobalVariables.Instance.ConnectionInfo.Name} : 连接失败，请检查连接信息");
         }
-
-        if (_taiwan_cain == null || d_taiwan == null)
-        {
-            Debug.WriteLine("无法建立数据库连接，请检查连接信息。");
-            return;
-        }
-
-        AccountInfos = new ObservableCollection<Accounts>(d_taiwan.Select<Accounts>().ToList());
     }
 
     partial void OnSelectedCharacInfoChanged(CharacInfo? value)

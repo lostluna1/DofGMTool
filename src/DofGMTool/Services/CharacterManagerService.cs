@@ -10,10 +10,10 @@ public class CharacterManagerService : ICharacterManagerService
     //private IDatabaseService _databaseService;
     private readonly IEquipSlotProcessor _equipSlotProcessor;
     private readonly IFreeSql<SqliteFlag> _fsql;
-    private IFreeSql<MySqlFlag> _d_taiwan => DatabaseHelper.GetMySqlConnection(DBNames.D_Taiwan);
-    private IFreeSql<MySqlFlag> _taiwan_cain_2nd => DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain2nd);
-    private IFreeSql<MySqlFlag> _taiwan_cain => DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain);
-    private IFreeSql<MySqlFlag> _taiwan_billing => DatabaseHelper.GetMySqlConnection(DBNames.TaiwanBilling);
+    private IFreeSql _d_taiwan => DatabaseHelper.DTaiwan;
+    private IFreeSql _taiwan_cain_2nd => DatabaseHelper.TaiwanCain2nd;
+    private IFreeSql _taiwan_cain => DatabaseHelper.TaiwanCain;
+    private IFreeSql _taiwan_billing => DatabaseHelper.TaiwanBilling;
 
     public CharacterManagerService(IEquipSlotProcessor equipSlotProcessor, IFreeSql<SqliteFlag> freeSql)
     {

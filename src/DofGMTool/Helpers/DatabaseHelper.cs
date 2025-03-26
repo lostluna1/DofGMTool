@@ -1,3 +1,4 @@
+using DofGMTool.Constant;
 using DofGMTool.Models;
 using FreeSql;
 using MySqlConnector;
@@ -7,29 +8,97 @@ namespace DofGMTool.Helpers;
 
 public static class DatabaseHelper
 {
-    // 用于缓存不同数据库的 IFreeSql<MySqlFlag> 实例
-    private static readonly Dictionary<string, IFreeSql<MySqlFlag>> _fsqlCache = new();
-
-    // 添加一个静态计数器来记录实例创建次数
-    private static int _fsqlInstanceCount = 0;
-
-    // 获取数据库连接
-    public static IFreeSql<MySqlFlag>? GetMySqlConnection(string databaseName)
+    // 用于缓存不同数据库的 IFreeSql 实例
+    private static  Lazy<IFreeSql> _dTaiwan = new(() =>
     {
-        // 获取调用堆栈信息
-        //var stackTrace = new StackTrace();
-        //var callingFrame = stackTrace.GetFrame(1);
-        //var method = callingFrame?.GetMethod();
-        //var callerName = method?.Name;
-        //var callerType = method?.DeclaringType?.FullName;
+        return CreateFreeSqlInstance(DBNames.D_Taiwan);
+    });
 
-        //Debug.WriteLine($"GetMySqlConnection 被调用者：{callerType}.{callerName}");
+    private static  Lazy<IFreeSql> _taiwanCain = new(() =>
+    {
+        return CreateFreeSqlInstance(DBNames.TaiwanCain);
+    });
 
+    private static  Lazy<IFreeSql> _taiwanCain2nd = new(() =>
+    {
+        return CreateFreeSqlInstance(DBNames.TaiwanCain2nd);
+    });
+
+    private static  Lazy<IFreeSql> _taiwanBilling = new(() =>
+    {
+        return CreateFreeSqlInstance(DBNames.TaiwanBilling);
+    });
+    
+    private static  Lazy<IFreeSql> _taiwanLogin = new(() =>
+    {
+        return CreateFreeSqlInstance(DBNames.TaiwanLogin);
+    });
+
+    // 公共属性，提供外部访问
+    public static IFreeSql DTaiwan => _dTaiwan.Value;
+    public static IFreeSql TaiwanCain => _taiwanCain.Value;
+    public static IFreeSql TaiwanCain2nd => _taiwanCain2nd.Value;
+    public static IFreeSql TaiwanBilling => _taiwanBilling.Value;
+    public static IFreeSql TaiwanLogin => _taiwanLogin.Value;
+    public static void ResetConnections()
+    {
+        _dTaiwan = new(() => CreateFreeSqlInstance(DBNames.D_Taiwan));
+        // 如果有其他数据库实例，也需要重置
+        _taiwanCain = new(() => CreateFreeSqlInstance(DBNames.TaiwanCain));
+        _taiwanCain2nd = new(() => CreateFreeSqlInstance(DBNames.TaiwanCain2nd));
+        _taiwanBilling = new(() => CreateFreeSqlInstance(DBNames.TaiwanBilling));
+        _taiwanLogin = new(() => CreateFreeSqlInstance(DBNames.TaiwanLogin));
+    }
+
+    /// <summary>
+    /// 测试数据库连接是否有效。
+    /// </summary>
+    /// <param name="connectionInfo">包含连接信息的 ConnectionInfo 对象。</param>
+    /// <returns>如果连接成功，返回 true；否则返回 false。</returns>
+    public static async Task<bool> TestDatabaseConnectionAsync(ConnectionInfo connectionInfo)
+    {
+        if (connectionInfo == null)
+        {
+            throw new ArgumentNullException(nameof(connectionInfo), "连接信息不能为空。");
+        }
+
+        // 检查必填字段是否为空
+        //if (string.IsNullOrWhiteSpace(connectionInfo.Ip) ||
+        //    string.IsNullOrWhiteSpace(connectionInfo.Port) ||
+        //    string.IsNullOrWhiteSpace(connectionInfo.User) ||
+        //    string.IsNullOrWhiteSpace(connectionInfo.Password))
+        //{
+        //    throw new InvalidOperationException("连接信息不完整，请检查 IP、端口、用户名和密码是否已填写。");
+        //}
+
+        // 构建连接字符串
+        string connectionString = $"Server={connectionInfo.Ip};Port={connectionInfo.Port};User ID={connectionInfo.User};Password={connectionInfo.Password};SslMode=None;";
+
+        try
+        {
+            using (var connection = new MySqlConnection(connectionString))
+            {
+                await connection.OpenAsync();
+                // 连接成功
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            // 记录异常信息
+            Debug.WriteLine($"数据库连接测试失败：{ex.Message}");
+            // 连接失败
+            return false;
+        }
+    }
+
+    // 创建 IFreeSql 实例的方法
+    private static IFreeSql CreateFreeSqlInstance(string databaseName)
+    {
         ConnectionInfo? connectionInfo = GlobalVariables.Instance.ConnectionInfo;
         if (connectionInfo == null)
         {
-            Debug.WriteLine("全局变量未初始化，请检查。");
-            return null;
+            throw new InvalidOperationException("连接信息未初始化，请检查。");
         }
 
         // 检查必填字段是否为空
@@ -38,31 +107,19 @@ public static class DatabaseHelper
             string.IsNullOrWhiteSpace(connectionInfo.User) ||
             string.IsNullOrWhiteSpace(connectionInfo.Password))
         {
-            Debug.WriteLine("连接信息不完整，请检查IP、端口、用户名和密码是否已填写。");
-            return null;
-        }
-
-        // 构建缓存键，由连接信息和数据库名组成
-        string cacheKey = $"{connectionInfo.Ip}:{connectionInfo.Port}:{connectionInfo.User}:{databaseName}";
-
-        // 如果缓存中已有对应的 IFreeSql<MySqlFlag> 实例，直接返回
-        if (_fsqlCache.TryGetValue(cacheKey, out IFreeSql<MySqlFlag>? fsql))
-        {
-            Debug.WriteLine($"使用缓存的 FreeSql 实例，当前实例总数：{_fsqlInstanceCount}");
-            return fsql;
+            throw new InvalidOperationException("连接信息不完整，请检查IP、端口、用户名和密码是否已填写。");
         }
 
         // 构建连接字符串
-        string connectionString = $"Data Source={connectionInfo.Ip};Port={connectionInfo.Port};User ID={connectionInfo.User};Password={connectionInfo.Password};Initial Catalog={databaseName};Charset=latin1;SslMode=none;ConvertZeroDateTime=True;Pooling=true;Min Pool Size=1;Max Pool Size=100;Connection Timeout=25;";
+        string connectionString = $"Data Source={connectionInfo.Ip};Port={connectionInfo.Port};User ID={connectionInfo.User};Password={connectionInfo.Password};Initial Catalog={databaseName};Charset=latin1;SslMode=none;ConvertZeroDateTime=True;Pooling=true;Min Pool Size=1;Max Pool Size=4000;Connection Timeout=25;";
 
         try
         {
-            // 创建新的 IFreeSql<MySqlFlag> 实例
-            fsql = new FreeSqlBuilder()
+            var fsql = new FreeSqlBuilder()
                 .UseConnectionFactory(DataType.MySql, () =>
                 {
                     var conn = new MySqlConnection(connectionString);
-                    conn.Open();
+                    conn.Open(); // 可能抛出异常
                     using (MySqlCommand cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = "SET Charset latin1;";
@@ -73,24 +130,17 @@ public static class DatabaseHelper
                 .UseAutoSyncStructure(false)
                 .UseAdoConnectionPool(true)
                 .UseMonitorCommand(cmd => Debug.WriteLine($"Sql：{cmd.CommandText}"))
-                .Build<MySqlFlag>(); // 指定泛型参数
+                .Build();
 
-            // 递增实例计数器，并输出调试信息
-            _fsqlInstanceCount++;
-            Debug.WriteLine($"创建了新的 FreeSql 实例，当前实例总数：{_fsqlInstanceCount}");
-
-            // 测试数据库连接
-            //fsql.Ado.ExecuteConnectTest();
-
-            // 缓存实例
-            _fsqlCache[cacheKey] = fsql;
+            Debug.WriteLine($"创建了新的 FreeSql 实例，数据库：{databaseName}");
 
             return fsql;
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"无法连接到数据库 '{databaseName}'：{ex.Message}");
-            throw new Exception($"无法连接到数据库 '{databaseName}'：{ex.Message}, 请检查连接信息");
+            Debug.WriteLine($"创建 FreeSql 实例时发生错误：{ex.Message}");
+            // 抛出自定义异常，供调用方处理
+            throw new Exception($"无法连接到数据库 {databaseName}，请检查连接信息。", ex);
         }
     }
 }

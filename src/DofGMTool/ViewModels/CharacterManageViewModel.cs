@@ -12,10 +12,10 @@ namespace DofGMTool.ViewModels;
 public partial class CharacterManageViewModel : ObservableRecipient
 {
     public readonly IApiService ApiService;
-    public IFreeSql<MySqlFlag> d_taiwan;
-    public IFreeSql<MySqlFlag> taiwan_cain_2nd;
-    public IFreeSql<MySqlFlag> taiwan_login;
-    public IFreeSql<MySqlFlag> taiwan_cain;
+    public IFreeSql d_taiwan => DatabaseHelper.DTaiwan;
+    public IFreeSql taiwan_cain_2nd =>DatabaseHelper.TaiwanCain2nd;
+    public IFreeSql taiwan_login => DatabaseHelper.TaiwanLogin;
+    public IFreeSql taiwan_cain =>DatabaseHelper.TaiwanCain;
     public IFreeSql<SqliteFlag> _fsql;
     public IInventoryManageService _inventoryManageService;
     public ICharacterManagerService _characterManagerService;
@@ -349,13 +349,10 @@ public partial class CharacterManageViewModel : ObservableRecipient
     {
         //DatabaseHelper databaseService = DatabaseHelper.Instance;
         ApiService = apiService;
-        d_taiwan = DatabaseHelper.GetMySqlConnection(DBNames.D_Taiwan);
         _inventoryManageService = inventoryManageService;
         _characterManagerService = characterManagerService;
         _fsql = freeSql;
-        taiwan_cain = DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain);
-        taiwan_cain_2nd = DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain2nd);
-        taiwan_login = DatabaseHelper.GetMySqlConnection(DBNames.TaiwanLogin);
+
         _equipSlotProcessor = equipSlotProcessor;
         PayOptions = new ObservableCollection<Pay>(Enum.GetValues(typeof(Pay)).Cast<Pay>());
         LoadCurrentCharacinfo();

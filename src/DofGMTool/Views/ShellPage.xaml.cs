@@ -58,7 +58,7 @@ public sealed partial class ShellPage : Page
         {
             ObservableCollection<ConnectionInfo> connections = await ConnectionHelper.LoadConnectionsAsync();
             // 直接更新 ViewModel
-            ViewModel.Connections = connections ?? new ObservableCollection<ConnectionInfo>();
+            ViewModel.Connections = connections ?? [];
             ViewModel.SelectedConnection = ViewModel.Connections.FirstOrDefault(c => c.IsSelected) ?? ViewModel.Connections.FirstOrDefault();
             ViewModel.IsConnecting = false;
         }
@@ -77,33 +77,34 @@ public sealed partial class ShellPage : Page
             {
                 // 如果日志写入失败，输出调试信息
                 Debug.WriteLine($"Failed to write log: {logEx.Message}");
+                
             }
+            throw new Exception($"{ViewModel.SelectedConnection.Name} : 连接失败，请检查连接信息");
+            //// 弹出对话框，提示用户重试
+            //var dialog = new ContentDialog
+            //{
+            //    Title = "加载连接信息失败",
+            //    Content = "无法加载连接信息，请检查网络连接或联系管理员。",
+            //    PrimaryButtonText = "重试",
+            //    CloseButtonText = "取消",
+            //    XamlRoot = App.MainWindow.Content.XamlRoot
+            //};
 
-            // 弹出对话框，提示用户重试
-            var dialog = new ContentDialog
-            {
-                Title = "加载连接信息失败",
-                Content = "无法加载连接信息，请检查网络连接或联系管理员。",
-                PrimaryButtonText = "重试",
-                CloseButtonText = "取消",
-                XamlRoot = App.MainWindow.Content.XamlRoot
-            };
+            //ContentDialogResult result = await dialog.ShowAsync();
 
-            ContentDialogResult result = await dialog.ShowAsync();
+            //if (result == ContentDialogResult.Primary)
+            //{
+            //    // 用户点击重试按钮，重新启动应用程序
+            //    var processStartInfo = new ProcessStartInfo
+            //    {
+            //        FileName = Environment.ProcessPath,
+            //        UseShellExecute = true
+            //    };
+            //    Process.Start(processStartInfo);
 
-            if (result == ContentDialogResult.Primary)
-            {
-                // 用户点击重试按钮，重新启动应用程序
-                var processStartInfo = new ProcessStartInfo
-                {
-                    FileName = Environment.ProcessPath,
-                    UseShellExecute = true
-                };
-                Process.Start(processStartInfo);
-
-                // 退出当前进程
-                Process.GetCurrentProcess().Kill();
-            }
+            //    // 退出当前进程
+            //    Process.GetCurrentProcess().Kill();
+            //}
         }
 
     }

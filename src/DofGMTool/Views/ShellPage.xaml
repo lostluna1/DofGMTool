@@ -157,6 +157,15 @@
             <wuc:ProgressRing Width="100" IsActive="{x:Bind ViewModel.IsConnecting, Mode=TwoWay}" />
             <TextBlock Text="初始化数据库连接中..." Visibility="{x:Bind ViewModel.IsConnecting, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
         </StackPanel>
-
+        <StackPanel
+            Margin="0,50,0,0"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <StackPanel MinWidth="240" wuc:Growl.GrowlParent="True" />
+            <StackPanel
+                MinWidth="240"
+                wuc:Growl.GrowlParent="True"
+                wuc:Growl.Token="Test" />
+        </StackPanel>
     </Grid>
 </Page>

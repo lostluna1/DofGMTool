@@ -10,7 +10,7 @@ using zlib;
 namespace DofGMTool.Services;
 public class EquipSlotProcessor : IEquipSlotProcessor
 {
-    public IFreeSql<MySqlFlag>? _taiwan_cain_2nd;
+    public IFreeSql _taiwan_cain_2nd => DatabaseHelper.TaiwanCain2nd;
     public EquipSlotProcessor()
     {
         //DatabaseHelper database = DatabaseHelper.Instance;
@@ -53,7 +53,7 @@ public class EquipSlotProcessor : IEquipSlotProcessor
 
     public async Task<List<EquipSlotModel>> GetEquipSlots(int characno)
     {
-        _taiwan_cain_2nd = DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain2nd);
+        //_taiwan_cain_2nd = DatabaseHelper.GetMySqlConnection(DBNames.TaiwanCain2nd);
         if (_taiwan_cain_2nd == null)
         {
             throw new Exception("数据库连接未初始化。");

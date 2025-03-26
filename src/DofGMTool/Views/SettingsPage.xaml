@@ -84,8 +84,6 @@
         </StackPanel>
 
         <StackPanel Grid.Column="1" Style="{ThemeResource StackPanelStyle}">
-            <Button Command="{x:Bind ViewModel.SendMailByPluginCommand}">发送邮件</Button>
-            <Button Command="{x:Bind ViewModel.UpgradeEquippedItemsCommand}">强化</Button>
             <Button Click="AddNewConnection" Content="新增连接" />
             <ListView
                 ItemsSource="{x:Bind ViewModel.Connections, Mode=TwoWay}"
