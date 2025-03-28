@@ -1,6 +1,7 @@
 ﻿using DofGMTool.Contracts.Services;
 using DofGMTool.Helpers;
 using DofGMTool.Models;
+using DofGMTool.Services;
 using DofGMTool.ViewModels;
 
 using Microsoft.UI.Xaml;
@@ -51,62 +52,39 @@ public sealed partial class ShellPage : Page
         KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoBack));
 
         _activationCount++;
-
+        ObservableCollection<ConnectionInfo> connections = await ConnectionHelper.LoadConnectionsAsync();
+        // 直接更新 ViewModel
+        ViewModel.Connections = connections ?? [];
         Debug.WriteLine($"OnLoaded 方法已被调用 {_activationCount} 次。");
-
-        try
+        if (connections?.Count==0)
         {
-            ObservableCollection<ConnectionInfo> connections = await ConnectionHelper.LoadConnectionsAsync();
-            // 直接更新 ViewModel
-            ViewModel.Connections = connections ?? [];
-            ViewModel.SelectedConnection = ViewModel.Connections.FirstOrDefault(c => c.IsSelected) ?? ViewModel.Connections.FirstOrDefault();
             ViewModel.IsConnecting = false;
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"Error loading connections in OnLoaded: {ex.Message}");
+            // 需要弹出一个dialog，提示用户设置连接信息
+            var dialog = new ContentDialog
+            {
+                Title = "提示",
+                Content = "首次使用请设置数据库连接",
+                CloseButtonText = "现在设置",
+                XamlRoot = /*App.CurrentWindow.Content.XamlRoot//*/App.MainWindow.Content.XamlRoot
+            };
 
-            // 写入异常信息到 D:\log.txt 文件
+            await dialog.ShowAsync();
+            ViewModel.NavigationService.NavigateTo(typeof(SettingsViewModel).FullName!);
+        }else
+        {
             try
             {
-                string logFilePath = @"D:\log.txt";
-                string logMessage = $"[{DateTime.Now}] Error loading connections in OnLoaded: {ex.Message}\n{ex.StackTrace}\n\n";
-                File.AppendAllText(logFilePath, logMessage);
-            }
-            catch (Exception logEx)
-            {
-                // 如果日志写入失败，输出调试信息
-                Debug.WriteLine($"Failed to write log: {logEx.Message}");
                 
+                ViewModel.SelectedConnection = ViewModel.Connections.FirstOrDefault(c => c.IsSelected) ?? ViewModel.Connections.FirstOrDefault();
+                ViewModel.IsConnecting = false;
             }
-            throw new Exception($"{ViewModel.SelectedConnection.Name} : 连接失败，请检查连接信息");
-            //// 弹出对话框，提示用户重试
-            //var dialog = new ContentDialog
-            //{
-            //    Title = "加载连接信息失败",
-            //    Content = "无法加载连接信息，请检查网络连接或联系管理员。",
-            //    PrimaryButtonText = "重试",
-            //    CloseButtonText = "取消",
-            //    XamlRoot = App.MainWindow.Content.XamlRoot
-            //};
-
-            //ContentDialogResult result = await dialog.ShowAsync();
-
-            //if (result == ContentDialogResult.Primary)
-            //{
-            //    // 用户点击重试按钮，重新启动应用程序
-            //    var processStartInfo = new ProcessStartInfo
-            //    {
-            //        FileName = Environment.ProcessPath,
-            //        UseShellExecute = true
-            //    };
-            //    Process.Start(processStartInfo);
-
-            //    // 退出当前进程
-            //    Process.GetCurrentProcess().Kill();
-            //}
+            catch (Exception ex)
+            {
+                _ = Logger.Instance.WriteLogAsync($"ShellPage.OnLoaded : {ex}", "connectionLog.txt");
+                throw new Exception($"{ViewModel.SelectedConnection?.Name} : 连接失败，请检查连接信息", ex);
+            }
         }
-
+        
     }
 
 

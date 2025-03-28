@@ -63,6 +63,9 @@ public partial class ShellViewModel : ObservableRecipient
         NavigationService.Navigated += OnNavigated;
         NavigationViewService = navigationViewService;
         Initialize();
+        
+        //var d_taiwan = DatabaseHelper.DTaiwan;
+        //d_taiwan.CodeFirst.SyncStructure<Accounts>();
         //CharacInfoViewModel = characInfoViewModel;
     }
 
@@ -94,13 +97,15 @@ public partial class ShellViewModel : ObservableRecipient
         {
             DatabaseHelper.ResetConnections();
             var d_taiwan = DatabaseHelper.DTaiwan;
+            d_taiwan.CodeFirst.SyncStructure<Accounts>();
             IsConnecting = false;
             AccountInfos = new ObservableCollection<Accounts>(d_taiwan.Select<Accounts>().ToList());
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             IsConnecting = false;
-            throw new Exception($"{GlobalVariables.Instance.ConnectionInfo.Name} : 连接失败，请检查连接信息");
+            _ = Logger.Instance.WriteLogAsync($"OnSelectedConnectionChanged : {ex}", "connectionLog.txt");
+            throw new Exception($"{GlobalVariables.Instance.ConnectionInfo.Name} : 连接失败，请检查连接信息",ex);
         }
     }
 

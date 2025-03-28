@@ -323,11 +323,13 @@ public partial class CharacterManageViewModel : ObservableRecipient
             ApiResponse<PowerUpEquipResponse> result = await ApiService.PostAsync<PowerUpEquipResponse>("/UpgradeEquippedItems", request, true);
             if (result.Code == "0")
             {
+                GrowlMsg.Show(result?.Msg!, true);
 
                 Debug.WriteLine(result.Data.Level);
             }
             else
             {
+                GrowlMsg.Show(result?.Msg!, false);
                 Debug.WriteLine(result.Msg);
             }
         }

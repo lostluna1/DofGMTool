@@ -1,5 +1,6 @@
 using DofGMTool.Contracts.Services;
 using DofGMTool.Core.Helpers;
+using DofGMTool.Models;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 using System.Text;
@@ -21,6 +22,11 @@ public class HttpService : IApiService
     {
         _httpClient = httpClient;
         _apiBaseUrl = apiSettings.Value.BaseUrl!;
+        var connectionInfo = GlobalVariables.Instance.ConnectionInfo;
+        if (connectionInfo?.Ip is not null)
+        {
+            _apiBaseUrl = $"http://{connectionInfo.Ip}:41817";
+        }
     }
     public void SetToken(string token)
     {

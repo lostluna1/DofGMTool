@@ -41,7 +41,6 @@ public class PvfExtensionsService : IPvfExtensionsService
 
     public async Task<ObservableCollection<Equipments>> GetEquipments(PvfFile pvf)
     {
-        //GetPartsets(pvf);
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         var _pvfEncoding = Encoding.GetEncoding("gb2312");
         string? itemDic = pvf.GetPvfFileByPath("equipment/equipment.lst", Encoding.UTF8);
@@ -102,7 +101,7 @@ public class PvfExtensionsService : IPvfExtensionsService
                         no = iconMark[1].Contains("`") ? uint.Parse(iconMark[2]) : uint.Parse(iconMark[1]);
                     }
 
-                    int rarity = parsedContent.ContainsKey("[rarity]") && parsedContent["[rarity]"].Any() ? int.Parse(parsedContent["[rarity]"].First()) : 0;
+                    var rarity = parsedContent.ContainsKey("[rarity]") && parsedContent["[rarity]"].Any() ? double.Parse(parsedContent["[rarity]"].First()) : 0;
                     RarityOption rarityOption = rarity switch
                     {
                         0 => RarityOption.Common,
@@ -133,9 +132,9 @@ public class PvfExtensionsService : IPvfExtensionsService
                     string waterAttack = parsedContent.ContainsKey("[water attack]") ? string.Join("\n", parsedContent["[water attack]"].First()) : string.Empty;
                     string fireAttack = parsedContent.ContainsKey("[fire attack]") ? string.Join("\n", parsedContent["[fire attack]"].First()) : string.Empty;
                     string setName = parsedContent.ContainsKey("[set name]") ? string.Join("\n", parsedContent["[set name]"]) : string.Empty;
+
                     list.Add(new Equipments
                     {
-
                         SetName = ChineseConverter.Convert(setName, ChineseConversionDirection.TraditionalToSimplified),
                         PartsetItemArr = parsedContent.ContainsKey("[set item]") ? string.Join("\n", parsedContent["[set item]"]) : string.Empty,
                         PartsetIndex = parsedContent.ContainsKey("[part set index]") ? int.Parse(parsedContent["[part set index]"].First()) : 0,
@@ -151,36 +150,43 @@ public class PvfExtensionsService : IPvfExtensionsService
                         DarkAttack = darkAttack,
                         WaterAttack = waterAttack,
                         FlavorText = parsedContent.ContainsKey("[flavor text]") ? string.Join("\n", parsedContent["[flavor text]"]) : string.Empty,
-                        Grade = parsedContent.ContainsKey("[grade]") ? int.Parse(parsedContent["[grade]"].First()) : 0,
-                        MinimumLevel = parsedContent.ContainsKey("[minimum level]") ? int.Parse(parsedContent["[minimum level]"].First()) : 0,
-                        MagicalAttack = parsedContent.ContainsKey("[magical attack]") ? int.Parse(parsedContent["[magical attack]"].First()) : 0,
-                        PhysicalAttack = parsedContent.ContainsKey("[physical attack]") ? int.Parse(parsedContent["[physical attack]"].First()) : 0,
-                        CastSpeed = parsedContent.ContainsKey("[cast speed]") ? int.Parse(parsedContent["[cast speed]"].First()) : 0,
-                        Price = parsedContent.ContainsKey("[price]") ? int.Parse(parsedContent["[price]"].First()) : 0,
-                        EquipmentPhysicalAttack = parsedContent.ContainsKey("[equipment physical attack]") ? parsedContent["[equipment physical attack]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
-                        EquipmentMagicalAttack = parsedContent.ContainsKey("[equipment magical attack]") ? parsedContent["[equipment magical attack]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
-                        SeparateAttack = parsedContent.ContainsKey("[separate attack]") ? parsedContent["[separate attack]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
-                        MagicalCriticalHit = parsedContent.ContainsKey("[magical critical hit]") ? int.Parse(parsedContent["[magical critical hit]"].First()) : 0,
-                        PhysicalCriticalHit = parsedContent.ContainsKey("[physical critical hit]") ? int.Parse(parsedContent["[physical critical hit]"].First()) : 0,
-                        PhysicalDefense = parsedContent.ContainsKey("[physical defense]") ? int.Parse(parsedContent["[physical defense]"].First()) : 0,
+                        Grade = parsedContent.ContainsKey("[grade]") ? float.Parse(parsedContent["[grade]"].First()) : 0,
+                        MinimumLevel = parsedContent.ContainsKey("[minimum level]") ? float.Parse(parsedContent["[minimum level]"].First()) : 0,
+                        MagicalAttack = parsedContent.ContainsKey("[magical attack]") ? float.Parse(parsedContent["[magical attack]"].First()) : 0,
+                        PhysicalAttack = parsedContent.ContainsKey("[physical attack]") ? float.Parse(parsedContent["[physical attack]"].First()) : 0,
+                        CastSpeed = parsedContent.ContainsKey("[cast speed]") ? float.Parse(parsedContent["[cast speed]"].First()) : 0,
+                        Price = parsedContent.ContainsKey("[price]") ? float.Parse(parsedContent["[price]"].First()) : 0,
+                        EquipmentPhysicalAttack = parsedContent.ContainsKey("[equipment physical attack]") ? parsedContent["[equipment physical attack]"].Select(s => s.Split('\t').Select(float.Parse).Max()).FirstOrDefault() : null,
+                        EquipmentMagicalAttack = parsedContent.ContainsKey("[equipment magical attack]") ? parsedContent["[equipment magical attack]"].Select(s => s.Split('\t').Select(float.Parse).Max()).FirstOrDefault() : null,
+                        SeparateAttack = parsedContent.ContainsKey("[separate attack]") ? parsedContent["[separate attack]"].Select(s => s.Split('\t').Select(float.Parse).Max()).FirstOrDefault() : null,
+                        MagicalCriticalHit = parsedContent.ContainsKey("[magical critical hit]") ? float.Parse(parsedContent["[magical critical hit]"].First()) : 0,
+                        PhysicalCriticalHit = parsedContent.ContainsKey("[physical critical hit]") ? float.Parse(parsedContent["[physical critical hit]"].First()) : 0,
+                        PhysicalDefense = parsedContent.ContainsKey("[physical defense]") ? float.Parse(parsedContent["[physical defense]"].First()) : 0,
                         EquipmentType = convertedEquipmentType,
-                        Weight = parsedContent.ContainsKey("[weight]") ? int.Parse(parsedContent["[weight]"].First()) : 0,
-                        EquipmentPhysicalDefense = parsedContent.ContainsKey("[equipment physical defense]") ? parsedContent["[equipment physical defense]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
-                        EquipmentMagicDefense = parsedContent.ContainsKey("[equipment magical defense]") ? parsedContent["[equipment magical defense]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
-                        MagicalDefense = parsedContent.ContainsKey("[magical defense]") ? int.Parse(parsedContent["[magical defense]"].First()) : 0,
+                        Weight = parsedContent.ContainsKey("[weight]") ? float.Parse(parsedContent["[weight]"].First()) : 0,
+                        EquipmentPhysicalDefense = parsedContent.ContainsKey("[equipment physical defense]") ? parsedContent["[equipment physical defense]"].Select(s => s.Split('\t').Select(float.Parse).Max()).FirstOrDefault() : null,
+                        EquipmentMagicDefense = parsedContent.ContainsKey("[equipment magical defense]") ? parsedContent["[equipment magical defense]"].Select(s => s.Split('\t').Select(float.Parse).Max()).FirstOrDefault() : null,
+                        MagicalDefense = parsedContent.ContainsKey("[magical defense]") ? float.Parse(parsedContent["[magical defense]"].First()) : 0,
                         UsableJob = usableJob,
                         AttachType = attachType,
                         SubType = parsedContent.ContainsKey("[sub type]") ? parsedContent["[sub type]"].First() : string.Empty,
-                        Durability = parsedContent.ContainsKey("[durability]") ? int.Parse(parsedContent["[durability]"].First()) : 0,
+                        Durability = parsedContent.ContainsKey("[durability]") ? float.Parse(parsedContent["[durability]"].First()) : 0,
                         ItemGroupName = itemGroupName,
                         ElementalProperty = elementalProperty,
-                        HpMax = parsedContent.ContainsKey("[HP MAX]") ? parsedContent["[HP MAX]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
-                        MpMax = parsedContent.ContainsKey("[MP MAX]") ? parsedContent["[MP MAX]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
-                        AttackSpeed = parsedContent.ContainsKey("[attack speed]") ? parsedContent["[attack speed]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
-                        MoveSpeed = parsedContent.ContainsKey("[move speed]") ? parsedContent["[move speed]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
-                        Stuck = parsedContent.ContainsKey("[stuck]") ? parsedContent["[stuck]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
+                        HpMax = parsedContent.ContainsKey("[HP MAX]") ? parsedContent["[HP MAX]"].Select(s => s.Split('\t').Select(float.Parse).Max()).FirstOrDefault() : null,
+                        MpMax = parsedContent.ContainsKey("[MP MAX]") ? parsedContent["[MP MAX]"].Select(s => s.Split('\t').Select(float.Parse).Max()).FirstOrDefault() : null,
+                        AttackSpeed = parsedContent.ContainsKey("[attack speed]") ? parsedContent["[attack speed]"].Select(s => s.Split('\t').Select(float.Parse).Max()).FirstOrDefault() : null,
+                        MoveSpeed = parsedContent.ContainsKey("[move speed]") ? parsedContent["[move speed]"].Select(s => s.Split('\t').Select(float.Parse).Max()).FirstOrDefault() : null,
+                        Stuck = parsedContent.ContainsKey("[stuck]") ? parsedContent["[stuck]"].Select(s => s.Split('\t').Select(float.Parse).Max()).FirstOrDefault() : null,
                         SkillLevelUp = skillLevelUp
                     });
+                }
+                catch (FormatException ex)
+                {
+                    // 记录出错的 item 信息和字段信息
+                    Debug.WriteLine($"Error processing item: {item}");
+                    Debug.WriteLine($"Field causing error: {ex.Message}");
+                    Debug.WriteLine(ex);
                 }
                 catch (Exception ex)
                 {
@@ -198,6 +204,7 @@ public class PvfExtensionsService : IPvfExtensionsService
 
         return new ObservableCollection<Equipments>(list);
     }
+
 
     public async Task<ObservableCollection<EquipmentPartset>> GetPartsets(PvfFile pvf)
     {
@@ -529,12 +536,12 @@ public class PvfExtensionsService : IPvfExtensionsService
                         //DarkAttack = darkAttack,
                         //WaterAttack = waterAttack,
                         FlavorText = parsedContent.ContainsKey("[flavor text]") ? string.Join("\n", parsedContent["[flavor text]"]) : string.Empty,
-                        Grade = parsedContent.ContainsKey("[grade]") ? int.Parse(parsedContent["[grade]"].First()) : 0,
-                        MinimumLevel = parsedContent.ContainsKey("[minimum level]") ? int.Parse(parsedContent["[minimum level]"].First()) : 0,
+                        Grade = parsedContent.ContainsKey("[grade]") ? float.Parse(parsedContent["[grade]"].First()) : 0,
+                        MinimumLevel = parsedContent.ContainsKey("[minimum level]") ? float.Parse(parsedContent["[minimum level]"].First()) : 0,
                         //MagicalAttack = parsedContent.ContainsKey("[magical attack]") ? int.Parse(parsedContent["[magical attack]"].First()) : 0,
                         //PhysicalAttack = parsedContent.ContainsKey("[physical attack]") ? int.Parse(parsedContent["[physical attack]"].First()) : 0,
                         //CastSpeed = parsedContent.ContainsKey("[cast speed]") ? int.Parse(parsedContent["[cast speed]"].First()) : 0,
-                        Price = parsedContent.ContainsKey("[price]") ? int.Parse(parsedContent["[price]"].First()) : 0,
+                        Price = parsedContent.ContainsKey("[price]") ? float.Parse(parsedContent["[price]"].First()) : 0,
                         //EquipmentPhysicalAttack = parsedContent.ContainsKey("[equipment physical attack]") ? parsedContent["[equipment physical attack]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
                         //EquipmentMagicalAttack = parsedContent.ContainsKey("[equipment magical attack]") ? parsedContent["[equipment magical attack]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
                         //SeparateAttack = parsedContent.ContainsKey("[separate attack]") ? parsedContent["[separate attack]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
@@ -542,7 +549,7 @@ public class PvfExtensionsService : IPvfExtensionsService
                         //PhysicalCriticalHit = parsedContent.ContainsKey("[physical critical hit]") ? int.Parse(parsedContent["[physical critical hit]"].First()) : 0,
                         //PhysicalDefense = parsedContent.ContainsKey("[physical defense]") ? int.Parse(parsedContent["[physical defense]"].First()) : 0,
                         EquipmentType = "消耗品/材料",//convertedEquipmentType,
-                        Weight = parsedContent.ContainsKey("[weight]") ? int.Parse(parsedContent["[weight]"].First()) : 0,
+                        Weight = parsedContent.ContainsKey("[weight]") ? float.Parse(parsedContent["[weight]"].First()) : 0,
                         //EquipmentPhysicalDefense = parsedContent.ContainsKey("[equipment physical defense]") ? parsedContent["[equipment physical defense]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
                         //EquipmentMagicDefense = parsedContent.ContainsKey("[equipment magical defense]") ? parsedContent["[equipment magical defense]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
                         //MagicalDefense = parsedContent.ContainsKey("[magical defense]") ? int.Parse(parsedContent["[magical defense]"].First()) : 0,
@@ -552,8 +559,8 @@ public class PvfExtensionsService : IPvfExtensionsService
                         //Durability = parsedContent.ContainsKey("[durability]") ? int.Parse(parsedContent["[durability]"].First()) : 0,
                         ItemGroupName = itemGroupName,
                         //ElementalProperty = elementalProperty,
-                        HpMax = parsedContent.ContainsKey("[HP MAX]") ? parsedContent["[HP MAX]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
-                        MpMax = parsedContent.ContainsKey("[MP MAX]") ? parsedContent["[MP MAX]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
+                        HpMax = parsedContent.ContainsKey("[HP MAX]") ? parsedContent["[HP MAX]"].Select(s => s.Split('\t').Select(float.Parse).Max()).FirstOrDefault() : null,
+                        MpMax = parsedContent.ContainsKey("[MP MAX]") ? parsedContent["[MP MAX]"].Select(s => s.Split('\t').Select(float.Parse).Max()).FirstOrDefault() : null,
                         //AttackSpeed = parsedContent.ContainsKey("[attack speed]") ? parsedContent["[attack speed]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
                         //MoveSpeed = parsedContent.ContainsKey("[move speed]") ? parsedContent["[move speed]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,
                         //Stuck = parsedContent.ContainsKey("[stuck]") ? parsedContent["[stuck]"].Select(s => s.Split('\t').Select(int.Parse).Max()).FirstOrDefault() : null,

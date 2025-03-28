@@ -19,7 +19,7 @@ public partial class Equipments : ObservableObject
     public partial BitmapImage? BitMap { get; set; }
 
     [ObservableProperty]
-    public partial int PartsetIndex { get; set; }
+    public partial float PartsetIndex { get; set; }
 
     [ObservableProperty]
     public partial string PartsetItemArr { get; set; }
@@ -144,92 +144,92 @@ public partial class Equipments : ObservableObject
     }
 
     [ObservableProperty]
-    public partial int Grade
+    public partial float Grade
     {
         get; set;
     }
 
     [ObservableProperty]
-    public partial int MinimumLevel
+    public partial float MinimumLevel
     {
         get; set;
     }
 
     [ObservableProperty]
-    public partial int MagicalAttack
+    public partial float MagicalAttack
     {
         get; set;
     }
     [ObservableProperty]
-    public partial int PhysicalAttack
-    {
-        get; set;
-    }
-
-    [ObservableProperty]
-    public partial int? CastSpeed
-    {
-        get; set;
-    }
-    [ObservableProperty]
-    public partial int? AttackSpeed
-    {
-        get; set;
-    }
-    [ObservableProperty]
-    public partial int? MoveSpeed
-    {
-        get; set;
-    }
-    [ObservableProperty]
-    public partial int? HpMax
-    {
-        get; set;
-    }
-    [ObservableProperty]
-    public partial int? Stuck
-    {
-        get; set;
-    }
-    [ObservableProperty]
-    public partial int? MpMax
+    public partial float PhysicalAttack
     {
         get; set;
     }
 
     [ObservableProperty]
-    public partial int Price
+    public partial float? CastSpeed
+    {
+        get; set;
+    }
+    [ObservableProperty]
+    public partial float? AttackSpeed
+    {
+        get; set;
+    }
+    [ObservableProperty]
+    public partial float? MoveSpeed
+    {
+        get; set;
+    }
+    [ObservableProperty]
+    public partial float? HpMax
+    {
+        get; set;
+    }
+    [ObservableProperty]
+    public partial float? Stuck
+    {
+        get; set;
+    }
+    [ObservableProperty]
+    public partial float? MpMax
     {
         get; set;
     }
 
     [ObservableProperty]
-    public partial int? EquipmentPhysicalAttack
+    public partial float Price
     {
         get; set;
     }
 
     [ObservableProperty]
-    public partial int? EquipmentMagicalAttack
+    public partial float? EquipmentPhysicalAttack
     {
         get; set;
     }
 
     [ObservableProperty]
-    public partial int? SeparateAttack
+    public partial float? EquipmentMagicalAttack
     {
         get; set;
     }
 
     [ObservableProperty]
-    public partial int MagicalCriticalHit
+    public partial float? SeparateAttack
+    {
+        get; set;
+    }
+
+    [ObservableProperty]
+    public partial float MagicalCriticalHit
     {
         get; set;
     }
 
 
     [ObservableProperty]
-    public partial int PhysicalCriticalHit
+    public partial float PhysicalCriticalHit
     {
         get; set;
     }
@@ -241,31 +241,31 @@ public partial class Equipments : ObservableObject
     }
 
     [ObservableProperty]
-    public partial int Weight
+    public partial float Weight
     {
         get; set;
     }
 
     [ObservableProperty]
-    public partial int? EquipmentPhysicalDefense
+    public partial float? EquipmentPhysicalDefense
     {
         get; set;
     }
 
     [ObservableProperty]
-    public partial int? EquipmentMagicDefense
+    public partial float? EquipmentMagicDefense
     {
         get; set;
     }
 
     [ObservableProperty]
-    public partial int MagicalDefense
+    public partial float MagicalDefense
     {
         get; set;
     }
 
     [ObservableProperty]
-    public partial int PhysicalDefense
+    public partial float PhysicalDefense
     {
         get; set;
     }
@@ -309,7 +309,7 @@ public partial class Equipments : ObservableObject
     }
 
     [ObservableProperty]
-    public partial int Durability
+    public partial float Durability
     {
         get; set;
     }

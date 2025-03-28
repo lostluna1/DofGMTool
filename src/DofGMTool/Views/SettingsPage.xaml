@@ -80,6 +80,7 @@
                     Click="Button_Click"
                     Content="浏览"
                     Style="{StaticResource AccentButtonStyle}" />
+                <Button Margin="20,25,0,0" Command="{x:Bind ViewModel.OpenLogsFolderCommand}">查看应用程序报错记录</Button>
             </StackPanel>
         </StackPanel>
 

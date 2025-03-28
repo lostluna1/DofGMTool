@@ -79,6 +79,13 @@ public partial class SettingsViewModel : ObservableRecipient
 
         //Connections  = ConnectionHelper.LoadConnectionsAsync();
     }
+
+    [RelayCommand]
+    public static async Task OpenLogsFolderAsync()
+    {
+        await Logger.Instance.OpenLogFolderAsync();
+    }
+
     [RelayCommand]
     public async Task TestConnection()
     {

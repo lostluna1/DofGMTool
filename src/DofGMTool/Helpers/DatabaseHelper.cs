@@ -98,7 +98,8 @@ public static class DatabaseHelper
         ConnectionInfo? connectionInfo = GlobalVariables.Instance.ConnectionInfo;
         if (connectionInfo == null)
         {
-            throw new InvalidOperationException("连接信息未初始化，请检查。");
+            return null;
+            //throw new InvalidOperationException("连接信息未初始化，请检查。");
         }
 
         // 检查必填字段是否为空
@@ -107,7 +108,8 @@ public static class DatabaseHelper
             string.IsNullOrWhiteSpace(connectionInfo.User) ||
             string.IsNullOrWhiteSpace(connectionInfo.Password))
         {
-            throw new InvalidOperationException("连接信息不完整，请检查IP、端口、用户名和密码是否已填写。");
+            return null;
+            //throw new InvalidOperationException("连接信息不完整，请检查IP、端口、用户名和密码是否已填写。");
         }
 
         // 构建连接字符串
@@ -127,7 +129,7 @@ public static class DatabaseHelper
                     }
                     return conn;
                 })
-                .UseAutoSyncStructure(false)
+                .UseAutoSyncStructure(true) // 自动同步实体结构到数据库
                 .UseAdoConnectionPool(true)
                 .UseMonitorCommand(cmd => Debug.WriteLine($"Sql：{cmd.CommandText}"))
                 .Build();

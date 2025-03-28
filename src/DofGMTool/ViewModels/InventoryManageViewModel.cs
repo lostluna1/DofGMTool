@@ -5,6 +5,8 @@ using DofGMTool.Helpers;
 using DofGMTool.Models;
 using pvfLoaderXinyu;
 using System.Collections.ObjectModel;
+using Windows.Storage;
+using Windows.System;
 
 namespace DofGMTool.ViewModels;
 
@@ -124,28 +126,43 @@ public partial class InventoryManageViewModel : ObservableObject
         }
     }
 
+
+
+
     //[RelayCommand]
     public async Task LoadPvfCommandAsync(PvfFile pvfFilename)
     {
-        string? imagePacks2Path = NPKHelper.LoadImagePacks2Path();
-        if (string.IsNullOrEmpty(imagePacks2Path) || !imagePacks2Path.Contains("ImagePacks2"))
+        
+        try
         {
-            throw new Exception("导入前需要到设置中指定ImagePacks2路径");
+            string? imagePacks2Path = NPKHelper.LoadImagePacks2Path();
+            if (string.IsNullOrEmpty(imagePacks2Path) || !imagePacks2Path.Contains("ImagePacks2"))
+            {
+                throw new Exception("导入前需要到设置中指定ImagePacks2路径");
+            }
+            IsLoading = true;
+            ObservableCollection<EquipmentPartset> equipmentsPartset = await PvfExtensionsService.GetPartsets(pvfFilename);
+            ObservableCollection<Equipments> equipments = await PvfExtensionsService.GetEquipments(pvfFilename);
+            ObservableCollection<Equipments> stackable = await PvfExtensionsService.GetStackables(pvfFilename);
+            ObservableCollection<SkillInfo> skills = await PvfExtensionsService.AnalysisSkill(pvfFilename);
+            PvfExtensionsService.PreLoadImagePacks();
+            await InventoryManageService.InsertEquipmentPartsets(equipmentsPartset);
+            await InventoryManageService.InsertSkillData(skills);
+            NPKHelper.GetBitMap(equipments);
+            NPKHelper.GetBitMap(stackable);
+            await InventoryManageService.InsertEquipmentData(equipments);
+            await InventoryManageService.InsertEquipmentData(stackable);
+            await LoadDataAsync();
+            IsLoading = false;
         }
-        IsLoading = true;
-        ObservableCollection<EquipmentPartset> equipmentsPartset = await PvfExtensionsService.GetPartsets(pvfFilename);
-        ObservableCollection<Equipments> equipments = await PvfExtensionsService.GetEquipments(pvfFilename);
-        ObservableCollection<Equipments> stackable = await PvfExtensionsService.GetStackables(pvfFilename);
-        ObservableCollection<SkillInfo> skills = await PvfExtensionsService.AnalysisSkill(pvfFilename);
-        PvfExtensionsService.PreLoadImagePacks();
-        await InventoryManageService.InsertEquipmentPartsets(equipmentsPartset);
-        await InventoryManageService.InsertSkillData(skills);
-        NPKHelper.GetBitMap(equipments);
-        NPKHelper.GetBitMap(stackable);
-        await InventoryManageService.InsertEquipmentData(equipments);
-        await InventoryManageService.InsertEquipmentData(stackable);
-        await LoadDataAsync();
-        IsLoading = false;
+        catch (Exception ex)
+        {
+            await Logger.Instance.WriteLogAsync($"LoadPvfCommandAsync : {ex}", "LoadPvf.txt");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 }
 
